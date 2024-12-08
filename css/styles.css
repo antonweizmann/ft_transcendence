@@ -1,0 +1,24 @@
+:root {
+    /* Custom color palette */
+    --dark-pink: #8A4FFF;
+    --deep-blue: #5D3FD3;
+    --vibrant-purple: #9932CC;
+}
+
+body {
+    background-color: var(--dark-pink);
+    color: white;
+}
+
+.game-board {
+    background-color: var(--deep-blue) !important;
+    border: 3px solid var(--vibrant-purple) !important;
+}
+
+.paddle {
+    background-color: var(--vibrant-purple) !important;
+}
+
+.ball {
+    background-color: white !important;
+}
