@@ -40,3 +40,7 @@ function updateActive(pageName)
 	}
 
 }
+
+window.onload = function () {
+	loadPage('home');
+};
