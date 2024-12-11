@@ -59,6 +59,7 @@ body {
     font-weight: bold; /* Makes text more prominent */
     text-shadow: 1px 1px 2px var(--vibrant-purple); /* Slight glow effect */
     display: flex;
+    max-width: 400px;
     border: 2px solid var(--vibrant-purple); /* Defines each element with a border */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Creates a shadow for depth */
     transition: transform 0.3s, box-shadow 0.3s; /* Smooth animation on hover */
@@ -81,3 +82,22 @@ body {
         padding: 10px; /* Adds some padding for touch devices */
     }
 }
+
+.responsive-title {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+}
+.responsive-subtitle {
+    font-size: clamp(1rem, 2.5vw, 1.5rem);
+    max-width: 80%;
+    margin: 0 auto;
+}
+
+.btn-primary {
+    font-size: clamp(0.8rem, 2vw, 1rem);
+    padding: clamp(0.3rem, 2vw, 0.5rem) clamp(1rem, 4vw, 2rem);
+    display: inline-block;
+    margin: 0 auto;
+    align-items: center;
+    max-width: 200px;
+}
+
