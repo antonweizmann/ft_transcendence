@@ -36,8 +36,48 @@ body {
 .h-100 { height: 100vh; }
 
 .bg-home {
-    background-image: url('../assets/pongboard.png'); /* Update this path to your image's actual location */
-    background-size: cover; /* Makes sure the image covers the entire area */
-    background-position: center; /* Keeps the image centered */
-    background-repeat: no-repeat; /* Prevents repeating the background image */
-  }
+    background-image: url('../assets/pongboard.png'); /* Ensure this is the correct path */
+    background-size: contain; /* Makes the image fit while maintaining its aspect ratio */
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100%; /* Full width of the container */
+    aspect-ratio: 16 / 9; /* Maintains a responsive aspect ratio */
+    max-height: 600px; /* Optional: prevents the image from being too large */
+    min-height: 300px; /* Optional: ensures minimum visibility */
+    margin: auto; /* Centers it within the parent if needed */
+}
+
+.row {
+    gap: 1rem; /* Adjust as needed */
+}
+
+
+/* Special styling for the row items */
+.button {
+    background-color: var(--deep-blue); /* Matches the website's theme */
+    color: white; /* Text color for contrast */
+    font-weight: bold; /* Makes text more prominent */
+    text-shadow: 1px 1px 2px var(--vibrant-purple); /* Slight glow effect */
+    display: flex;
+    border: 2px solid var(--vibrant-purple); /* Defines each element with a border */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Creates a shadow for depth */
+    transition: transform 0.3s, box-shadow 0.3s; /* Smooth animation on hover */
+    border-radius: 8px; /* Adds rounded corners */
+    justify-content: center; /* Aligns content horizontally */
+    align-items: center; /* Aligns content vertically */
+}
+
+/* Hover effect */
+.button:hover {
+    transform: scale(1.05); /* Slight zoom on hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.7); /* Enhances shadow on hover */
+    cursor: pointer; /* Changes cursor to pointer */
+}
+
+/* Media query for small screens */
+@media (max-width: 768px) {
+    .button {
+        font-size: 0.9rem; /* Adjusts font size for readability */
+        padding: 10px; /* Adds some padding for touch devices */
+    }
+}
