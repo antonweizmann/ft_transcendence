@@ -101,3 +101,17 @@ body {
     max-width: 200px;
 }
 
+.login-drop {
+    width: 300px;
+}
+
+@media (max-width: 576px) {
+    .login-drop {
+        width: 100%; /* Full width on small screens */
+    }
+}
+
+.is-invalid {
+    border-color: red;
+    background-color: #ffcccc;
+}
