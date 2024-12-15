@@ -23,6 +23,10 @@ async function loadPage(pageName)
 	}
 }
 
+window.onload = function () {
+	loadPage('signup');
+};
+
 function updateActive(pageName)
 {
 	const activeNavLink = document.querySelector('a.nav-link.active');
@@ -40,10 +44,6 @@ function updateActive(pageName)
 	}
 
 }
-
-window.onload = function () {
-	loadPage('home');
-};
 
 // Stop dropdown menu from closing and validate
 document.addEventListener('DOMContentLoaded', function() {
@@ -107,4 +107,9 @@ function validateLoginForm(event)
 		}
 	}
 	return isValid;
+}
+
+function validateSignupForm()
+{
+
 }

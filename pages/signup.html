@@ -1,4 +1,23 @@
-<!--Validation required-->
-<div class="dropdown">
-	
-</div>
+	<div class="col my-5">
+		<div class="text-center">
+			<h1>Sign up now!</h1>
+		</div>
+	</div>
+	<div class="col d-flex justify-content-center align-items-center">
+		<form class="p-4" onsubmit="return validateSignupForm()">
+			<div class="mb-3">
+				<label for="signupEmail" class="form-label">Email address</label>
+				<input type="email" class="form-control" placeholder="email@example.com" id="signupEmail">
+			</div>
+			<div class="mb-3">
+				<label for="signupPassword" class="form-label" >Password</label>
+				<input type="password" class="form-control" placeholder="Password" id="signupPassword">
+			</div>
+			<div class="mb-3">
+				<label for="signupPassword2" class="form-label" >Repeat Password</label>
+				<input type="password" class="form-control" placeholder="Password" id="signupPassword2">
+			</div>
+
+			<button type="submit" class="btn btn-primary">Sign up</button>
+		</form>
+	</div>

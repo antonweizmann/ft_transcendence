@@ -115,3 +115,7 @@ body {
     border-color: red;
     background-color: #ffcccc;
 }
+
+.form-control{
+    max-width: 400px;
+}
