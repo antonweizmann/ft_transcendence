@@ -42,6 +42,9 @@
                         <button class="btn btn-outline-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Login</button>
                         <form class="dropdown-menu dropdown-menu-end p-4 login-drop" onsubmit="return validateLoginForm()">
                             <div class="mb-3">
+                                <h2>Login</h2>
+                            </div>
+                            <div class="mb-3">
                                 <label for="loginEmail" class="form-label">Email address</label>
                                 <input type="email" class="form-control" placeholder="email@example.com" id="loginEmail">
                             </div>
@@ -60,8 +63,60 @@
                               <button type="submit" class="btn btn-primary">Log in</button>
                         </form>
                     </li>
-                    <li class="nav-item">
-                        <a class="btn btn-outline-light" href="#" onclick="loadPage('signup')">Sign Up</a>
+                        <li class="nav-item dropdown">
+                            <button class="btn btn-outline-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Sign up</button>
+                            <form class="dropdown-menu dropdown-menu-end p-4 signup-drop" onsubmit="return validateSignupForm()">
+                                        <div class="mb-3">
+                                            <h2>Sign up now!</h2>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="signupUsername" class="form-label">Username</label>
+                                            <input type="text" class="form-control" placeholder="Choose a username" id="signupUsername">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="signupEmail" class="form-label">Email address</label>
+                                            <input type="email" class="form-control" placeholder="email@example.com" id="signupEmail">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="signupPassword" class="form-label" >Password</label>
+                                            <input type="password" class="form-control" placeholder="Enter your password" id="signupPassword">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="signupPassword2" class="form-label" >Repeat Password</label>
+                                            <input type="password" class="form-control" placeholder="Password" id="signupPassword2">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="dateOfBirth" class="form-label">Date of Birth</label>
+                                            <div class="row gx-1">
+                                                <div class="col">
+                                                    <select id="dateOfBirth-month" class="form-select">
+                                                        <option selected>Month</option>
+                                                        <option>January</option>
+                                                        <option>February</option>
+                                                        <option>March</option>
+                                                        <option>April</option>
+                                                        <option>May</option>
+                                                        <option>June</option>
+                                                        <option>July</option>
+                                                        <option>August</option>
+                                                        <option>September</option>
+                                                        <option>October</option>
+                                                        <option>November</option>
+                                                        <option>December</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col">
+                                                    <input type="number" class="form-control" id="dateOfBirth-day" placeholder="Day" min="1" max="31">
+                                                </div>
+                                                <div class="col">
+                                                    <input type="number" class="form-control" id="dateOfBirth-year" placeholder="Year" min="1900" max="2024">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary">Sign up</button>
+                            </form>
+                        </li>
                     </li>
                 </ul>
 			</div>

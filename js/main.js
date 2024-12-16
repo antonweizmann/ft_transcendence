@@ -24,7 +24,7 @@ async function loadPage(pageName)
 }
 
 window.onload = function () {
-	loadPage('signup');
+	loadPage('home');
 };
 
 function updateActive(pageName)
@@ -45,20 +45,6 @@ function updateActive(pageName)
 
 }
 
-// Stop dropdown menu from closing and validate
-document.addEventListener('DOMContentLoaded', function() {
-	const loginForm = document.querySelector('.dropdown-menu.login-drop');
-	const dropdownToggle = document.querySelector('.btn.dropdown-toggle');
-	if (loginForm && dropdownToggle)
-	{
-		loginForm.addEventListener('click', function(event) {
-			event.stopPropagation();
-		});
-
-		const loginDrop = document.querySelector('.login-drop');
-        loginDrop.addEventListener('submit', validateLoginForm);
-	}
-	});
 
 function showErrorMessage(input, message)
 {
@@ -75,6 +61,38 @@ function removeErrorMessage(input)
 	existingErrors.forEach(error => error.remove());
 }
 
+
+
+// Stop dropdown menu from closing and validate
+document.addEventListener('DOMContentLoaded', function() {
+	function setupDropdownValidation(formName, validationFunction)
+	{
+		const form = document.querySelector(formName);
+		const dropdownToggle = form.closest('.dropdown').querySelector('.dropdown-toggle');
+		if (form && dropdownToggle)
+		{
+			form.addEventListener('click', function(event) {
+				event.stopPropagation();
+			});
+
+			form.addEventListener('submit', function(event)
+			{
+				if (!validationFunction(event))
+				{
+					event.preventDefault();
+					event.stopPropagation();
+
+					const dropdownInstance = bootstrap.Dropdown.getOrCreateInstance(dropdownToggle);
+					if (dropdownInstance)
+						dropdownInstance.show();
+				}
+			});
+		}
+	}
+	setupDropdownValidation('.login-drop', validateLoginForm);
+	setupDropdownValidation('.signup-drop', validateSignupForm);
+
+	});
 
 function validateLoginForm(event)
 {
@@ -97,19 +115,53 @@ function validateLoginForm(event)
 		password.classList.add('is-invalid');
 		showErrorMessage(password, 'Please enter your password');
 	}
-	if (!isValid)
-	{
-		event.preventDefault();
-		event.stopPropagation();
-		const dropdownInstance = bootstrap.Dropdown.getInstance(dropdownToggle);
-		if (dropdownInstance) {
-			dropdownInstance.show();
-		}
-	}
 	return isValid;
 }
 
-function validateSignupForm()
+function validateSignupForm(event)
 {
+	const username = document.getElementById('signupUsername');
+	const email = document.getElementById('signupEmail');
+	const password = document.getElementById('signupPassword');
+	const password2 = document.getElementById('signupPassword2');
+	let isValid = true;
 
+	removeErrorMessage(username);
+	removeErrorMessage(password);
+	removeErrorMessage(email);
+	removeErrorMessage(password2);
+	if (!username.value.trim())
+	{
+		isValid = false;
+		username.classList.add('is-invalid');
+		showErrorMessage(username, 'Please enter your username');
+	}
+	removeErrorMessage(password2);
+	if (!email.value.trim())
+	{
+		isValid = false;
+		email.classList.add('is-invalid');
+		showErrorMessage(email, 'Please enter your email address');
+	}
+	if (!password.value.trim())
+	{
+		isValid = false;
+		password.classList.add('is-invalid');
+		showErrorMessage(password, 'Please enter your password');
+	}
+	if (!password2.value.trim())
+	{
+		isValid = false;
+		password2.classList.add('is-invalid');
+		showErrorMessage(password2, 'Please enter your password');
+	}
+	else if (password.value != password2.value)
+	{
+		isValid = false;
+		password.classList.add('is-invalid');
+		password2.classList.add('is-invalid');
+		showErrorMessage(password, 'Passwords do not match');
+		showErrorMessage(password2, 'Passwords do not match');
+	}
+	return isValid;
 }
