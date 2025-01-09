@@ -7,7 +7,7 @@
  */
 async function loadPage(pageName)
 {
-	window.history.pushState({page: pageName}, ``);
+	window.history.pushState({page: pageName}, ``, pageName);
 	console.log('Pushing state:', pageName);
 	getPage(pageName);
 }
