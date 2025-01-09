@@ -192,3 +192,139 @@ body {
         width: 100%; /* Full width on small screens */
     }
 }
+
+/* Friends Sidebar (Offcanvas) */
+#friendsSidebar {
+    background-color: var(--deep-blue); /* Deep blue background for the sidebar */
+    color: var(--white); /* White text color */
+}
+
+/* Offcanvas Header */
+#friendsSidebar .offcanvas-header {
+    background-color: var(--dark-pink); /* Dark pink background for the header */
+    color: var(--white); /* White text */
+    border-bottom: 2px solid var(--vibrant-purple); /* Border between header and body */
+}
+
+/* Offcanvas Title */
+#friendsSidebar .offcanvas-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+/* Close Button */
+#friendsSidebar .btn-close {
+    color: var(--white); /* Close button color */
+}
+
+/* Tabs (Friends, Requests, Add Friends) */
+#friendsTab .nav-link {
+    background-color: var(--deep-blue); /* Deep blue background for tabs */
+    color: var(--white); /* White text */
+    border: 1px solid var(--vibrant-purple); /* Vibrant purple border for tabs */
+    transition: background-color 0.3s; /* Smooth transition for background */
+}
+
+/* Active Tab */
+#friendsTab .nav-link.active {
+    background-color: var(--vibrant-purple); /* Purple background for active tab */
+    color: var(--white); /* Text color changes on active tab */
+}
+
+/* Hover Effect on Tabs */
+#friendsTab .nav-link:hover {
+    background-color: var(--dark-pink); /* Background turns purple on hover */
+    color: var(--white); /* Text color turns deep blue */
+}
+
+/* Tab Content */
+#friendsTabContent {
+    background-color: var(--deep-blue); /* Deep blue background for the content */
+    color: var(--white); /* White text color */
+    border-top: 2px solid var(--vibrant-purple); /* Purple border at the top */
+}
+
+/* List Items in Tabs (Friends, Requests) */
+#friendsList, #requestsList {
+    list-style-type: none;
+    padding: 0;
+}
+
+#friendsList .list-group-item, #requestsList .list-group-item {
+    background-color: var(--deep-blue); /* Deep blue background for list items */
+    color: var(--white); /* White text */
+    border: 1px solid var(--vibrant-purple); /* Vibrant purple border */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+/* Hover Effect on List Items */
+#friendsList .list-group-item:hover, #requestsList .list-group-item:hover {
+    background-color: var(--vibrant-purple); /* Purple background on hover */
+    color: var(--deep-blue); /* Deep blue text on hover */
+}
+
+/* Add Friend Form */
+#addFriendForm {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* Input field for Friend's Username */
+#newFriendName {
+    border-radius: 8px;
+    border: 2px solid var(--vibrant-purple); /* Border color matching the theme */
+    background-color: var(--deep-blue);
+    color: var(--white);
+    padding: 0.5rem;
+}
+
+#newFriendName::placeholder {
+    color: var(--white);
+}
+
+/* Add Friend Button */
+#addFriendForm .btn-primary {
+    background-color: var(--vibrant-purple); /* Purple background */
+    color: var(--white); /* White text */
+    border: 2px solid var(--deep-blue); /* Deep blue border */
+    border-radius: 8px;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    text-shadow: 1px 1px 2px var(--deep-blue); /* Text glow effect */
+    transition: background-color 0.3s, transform 0.3s; /* Smooth transition */
+}
+
+/* Add Friend Button Hover Effect */
+#addFriendForm .btn-primary:hover {
+    background-color: var(--deep-blue); /* Change background on hover */
+    transform: scale(1.05); /* Slight zoom on hover */
+    cursor: pointer;
+}
+
+/* Feedback Text */
+#addFriendFeedback {
+    color: var(--vibrant-purple); /* Purple color for feedback text */
+    font-weight: bold;
+    margin-top: 1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    #friendsSidebar .offcanvas-body {
+        padding: 0.5rem;
+    }
+
+    #addFriendForm {
+        flex-direction: column; /* Stack the input and button on small screens */
+        gap: 0.5rem;
+    }
+
+    #addFriendForm .btn-primary {
+        width: 100%; /* Full width on small screens */
+    }
+
+    #friendsList .list-group-item, #requestsList .list-group-item {
+        font-size: 0.9rem; /* Smaller font size for small screens */
+    }
+}
