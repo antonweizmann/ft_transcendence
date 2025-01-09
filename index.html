@@ -29,15 +29,21 @@
                     <li class="nav-item">
                         <a href="#" class="nav-link" onclick="loadPage('tournaments')">Tournaments</a>
                     </li>
-                       <li class="nav-item">
-                        <a href="#" class="nav-link" onclick="loadPage('friends')">Friends</a>
+
+				</ul>
+                <!--Login and Sign up ms-auto used for aligning right-->
+                <!-- ONclick login change to log out button and reverse-->
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <!-- <a href="#" class="nav-link" onclick="loadPage('friends')">Friends</a> -->
+                          <button class="btn btn-secondary position-fixed bottom-0 end-0 m-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#friendsSidebar" aria-controls="friendsSidebar">
+                            Friends Menu
+                        </button>
+
                     </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link" onclick="loadPage('profile')">Profile</a>
                     </li>
-				</ul>
-                <!--Login and Sign up ms-auto used for aligning right-->
-                <ul class="navbar-nav ms-auto">
                     <li class="nav-item dropdown">
                         <button class="btn btn-outline-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Login</button>
                         <form class="dropdown-menu dropdown-menu-end p-4 login-drop" onsubmit="return validateLoginForm()">
@@ -122,6 +128,10 @@
 			</div>
 		</div>
 	</nav>
+    
+
+      <!-- Button to Open Sidebar -->
+
     <!--Main Body-->
     <div id="main-content" class="container-fluid">
 
