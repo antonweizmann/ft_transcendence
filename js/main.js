@@ -7,6 +7,14 @@
  */
 async function loadPage(pageName)
 {
+	window.history.pushState({page: pageName}, ``, pageName);
+	console.log('Pushing state:', pageName);
+	getPage(pageName);
+}
+
+async function getPage(pageName)
+{
+	console.log(`Loading page: ${pageName}`);
 	try
 	{
 		const response = await fetch(`/pages/${pageName}.html`)
@@ -61,7 +69,13 @@ function removeErrorMessage(input)
 	existingErrors.forEach(error => error.remove());
 }
 
-
+window.addEventListener(`popstate`, function (event) {
+	console.log('popping');
+	if (event.state)
+	{
+		getPage(event.state.page);
+	}
+});
 
 // Stop dropdown menu from closing and validate
 document.addEventListener('DOMContentLoaded', function() {
