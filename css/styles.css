@@ -10,6 +10,69 @@ body {
     color: white;
 }
 
+/* Default Layout for Small Screens: Stack the columns */
+.profile-columns {
+    display: block; /* Stack the columns by default */
+}
+
+/* For Screens 1200px and larger: Flex layout for 3 columns */
+@media (min-width: 1200px) {
+    .profile-columns {
+        display: flex; 
+        justify-content: flex-start;
+        gap: 10px;
+    }
+
+    /* Make each column take equal space but with a bit more width */
+    .profile-columns .col-md-4 {
+        flex: 1; /* Make columns flexible */
+        min-width: 280px; /* Set a minimum width for each column */
+    }
+}
+
+/* For the individual columns */
+.profile-columns .col-md-4 {
+    width: 100%; /* By default, each column takes full width on smaller screens */
+    margin-bottom: 20px; /* Optional: Space between stacked columns */
+}
+
+/* Profile Picture Styling */
+.profile-pic {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 3px solid var(--vibrant-purple);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* Card Styling */
+.card {
+    background-color: var(--deep-blue);
+    color: white;
+    border: 2px solid var(--vibrant-purple);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.card-title {
+    font-size: clamp(1.5rem, 4vw, 2rem);
+}
+
+.card-text {
+    font-size: clamp(1rem, 2.5vw, 1.5rem);
+}
+
+/* List Items */
+.list-group-item {
+    background-color: var(--dark-pink);
+    color: white;
+    border: 1px solid var(--vibrant-purple);
+}
+
+.list-group-item:hover {
+    background-color: var(--vibrant-purple);
+    cursor: pointer;
+}
+
 .game-board {
     background-color: var(--deep-blue) !important;
     border: 3px solid var(--vibrant-purple) !important;
