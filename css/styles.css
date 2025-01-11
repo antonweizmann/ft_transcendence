@@ -73,18 +73,6 @@ body {
     cursor: pointer;
 }
 
-.game-board {
-    background-color: var(--deep-blue) !important;
-    border: 3px solid var(--vibrant-purple) !important;
-}
-
-.paddle {
-    background-color: var(--vibrant-purple) !important;
-}
-
-.ball {
-    background-color: white !important;
-}
 
 .h-0 { height: 0vh; }
 .h-10 { height: 10vh; }
@@ -108,6 +96,10 @@ body {
     max-height: 600px; /* Optional: prevents the image from being too large */
     min-height: 300px; /* Optional: ensures minimum visibility */
     margin: auto; /* Centers it within the parent if needed */
+}
+.bg-play {
+    background-color: #5D3FD3;
+    width: 100%;
 }
 
 .row {
