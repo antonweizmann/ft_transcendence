@@ -36,6 +36,18 @@ async function getPage(pageName)
             }
 		}
 		changeLanguage();
+		const scripts = document.getElementById('main-content').getElementsByTagName('script');
+		for (let script of scripts) {
+			if (script.src) {
+                // Load external scripts
+                const newScript = document.createElement('script');
+                newScript.src = script.src;
+                document.body.appendChild(newScript);
+            } else {
+                // Execute inline scripts
+                eval(script.innerHTML);
+            }
+		}
 	}
 	catch (error)
 	{
