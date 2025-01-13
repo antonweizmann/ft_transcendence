@@ -1,0 +1,24 @@
+{
+	"en": {
+	  "home": "Home",
+	  "play": "Play",
+	  "tournaments": "Tournaments",
+	  "profile": "Profile",
+	  "login": "Login",
+	  "signup": "Sign Up",
+	  "friends": "Friends",
+	  "friendsSidebar": "Friends Menu",
+	  "addFriend": "Add Friend"
+	},
+	"es": {
+	  "home": "Inicio",
+	  "play": "Jugar",
+	  "tournaments": "Torneos",
+	  "profile": "Perfil",
+	  "login": "Iniciar sesión",
+	  "signup": "Registrarse",
+	  "friends": "Amigos",
+	  "friendsSidebar": "Menú de Amigos",
+	  "addFriend": "Agregar amigo"
+	}
+  }
