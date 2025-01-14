@@ -18,7 +18,7 @@ body {
 /* For Screens 1200px and larger: Flex layout for 3 columns */
 @media (min-width: 1200px) {
     .profile-columns {
-        display: flex; 
+        display: flex;
         justify-content: flex-start;
         gap: 10px;
     }
@@ -326,5 +326,142 @@ body {
 
     #friendsList .list-group-item, #requestsList .list-group-item {
         font-size: 0.9rem; /* Smaller font size for small screens */
+    }
+}
+
+/* Tournament Page Styles */
+.tournament-title {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    color: white;
+    margin-bottom: 1rem;
+}
+
+.tournament-subtitle {
+    font-size: clamp(1rem, 2.5vw, 1.5rem);
+    color: var(--vibrant-purple);
+    margin-bottom: 2rem;
+}
+
+.player-input-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.player-name-input {
+    width: 70%;
+    border-radius: 8px;
+    border: 2px solid var(--vibrant-purple);
+    background-color: var(--deep-blue);
+    color: white;
+    padding: 0.5rem;
+}
+
+.player-name-input::placeholder {
+    color: white;
+}
+
+.add-player-button {
+    background-color: var(--vibrant-purple);
+    color: white;
+    font-weight: bold;
+    border: 2px solid var(--deep-blue);
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.add-player-button:hover {
+    background-color: var(--deep-blue);
+    transform: scale(1.05);
+    cursor: pointer;
+}
+
+.players-list {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 1rem;
+}
+
+.players-list .player-item {
+    background-color: var(--dark-pink);
+    color: white;
+    border: 1px solid var(--vibrant-purple);
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    border-radius: 8px;
+}
+
+.players-list .player-item:hover {
+    background-color: var(--vibrant-purple);
+    cursor: pointer;
+}
+
+.start-tournament-button {
+    background-color: var(--vibrant-purple);
+    color: white;
+    font-weight: bold;
+    border: 2px solid var(--deep-blue);
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    display: none;
+    transition: background-color 0.3s, transform 0.3s;
+    margin-top: 2rem;
+}
+
+.start-tournament-button:hover {
+    background-color: var(--deep-blue);
+    transform: scale(1.05);
+    cursor: pointer;
+}
+
+/* Bracket Styles */
+#bracket {
+    background-color: var(--deep-blue);
+    margin-top: 3rem;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+#bracket .matchup {
+    background-color: var(--dark-pink);
+    color: white;
+    margin: 10px;
+    padding: 1rem;
+    border-radius: 8px;
+    min-width: 150px;
+    text-align: center;
+    border: 2px solid var(--vibrant-purple);
+}
+
+#bracket .matchup:hover {
+    background-color: var(--vibrant-purple);
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .player-input-container {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .player-name-input {
+        width: 100%;
+    }
+
+    .add-player-button, .start-tournament-button {
+        width: 100%;
+    }
+}
+
+@media (min-width: 768px) {
+    .player-name-input {
+        width: 70%;
     }
 }
