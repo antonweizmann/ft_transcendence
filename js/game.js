@@ -15,17 +15,6 @@ let WIDTHOBJECTS = WIDTHBOARD / 40;
 let HEIGHTOBJECTS = HEIGHTBOARD / 5;
 let player1, player2, ball;
 console.log('game.js started');
-// class Element {
-// 	constructor(options) {
-// 		this.x = typeof options.x === 'function' ? options.x() : options.x;
-// 		this.y = typeof options.y === 'function' ? options.y() : options.y;
-// 		this.height = typeof options.height === 'function' ? options.height() : options.height;
-// 		this.width = typeof options.width === 'function' ? options.width() : options.width;
-// 		this.speed = 2; // Make `variable
-// 		this.gravity = 2;// Make `variable
-// 		this.color = options.color;
-// 	}
-// }
 class Element {
     constructor(options) {
         // Store the functions/values
@@ -44,6 +33,7 @@ class Element {
     get width() { return typeof this._width === 'function' ? this._width() : this._width; }
     get height() { return typeof this._height === 'function' ? this._height() : this._height; }
 }
+
 function gameLoop() {
 	updateElements();
 	requestAnimationFrame(gameLoop);
@@ -60,8 +50,6 @@ function initGame() {
     }
 
     setGameBoardSize(true);
-	// gameBoard.height = HEIGHTBOARD;
-	// gameBoard.width = WIDTHBOARD;
     const ctx = gameBoard.getContext('2d');
     // Rest of your game initialization code
 
@@ -89,8 +77,8 @@ function initGame() {
 	});
 	console.log('Starting game loop with dimensions:', WIDTHBOARD, HEIGHTBOARD);
 
-	// gameLoop();
-	updateElements()
+	gameLoop();
+	// updateElements()
 }
 
 // // Functions Start
@@ -148,15 +136,32 @@ function updateElements(){
 
 
 // At the bottom of game.js, replace your current initialization with:
+// function ensureInit() {
+//     console.log('Ensuring initialization...');
+//     if (document.readyState === 'complete') {
+//         console.log('Document already complete, initializing now');
+//         initGame();
+//     } else {
+//         console.log('Document not ready, adding listeners');
+//         document.addEventListener('DOMContentLoaded', initGame, { once: true });
+//     }
+// }
+let gameInitialized = false;
+
 function ensureInit() {
+    if (gameInitialized) return;
+
     console.log('Ensuring initialization...');
     if (document.readyState === 'complete') {
         console.log('Document already complete, initializing now');
         initGame();
+        gameInitialized = true;
     } else {
-        console.log('Document not ready, adding listeners');
-        document.addEventListener('DOMContentLoaded', initGame);
-        window.addEventListener('load', initGame);
+        console.log('Document not ready, adding listener');
+        document.addEventListener('DOMContentLoaded', () => {
+            initGame();
+            gameInitialized = true;
+        }, { once: true });
     }
 }
 // Add this near the top of your file with other utilities
