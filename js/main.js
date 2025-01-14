@@ -5,7 +5,31 @@
  * and wait until the text method extracts the text for the response of fetch.
  * @param {string} pageName - Page to load.
  */
+let addedScripts = []; // Array to store references to added scripts
 
+function loadScripts(scripts) {
+    for (let script of scripts) {
+        if (script.src) {
+            // Load external scripts
+            const newScript = document.createElement('script');
+            newScript.src = script.src;
+            document.body.appendChild(newScript);
+            addedScripts.push(newScript); // Store reference to the added script
+        } else {
+            // Execute inline scripts
+            eval(script.innerHTML);
+        }
+    }
+}
+
+function removeAddedScripts() {
+    addedScripts.forEach(script => {
+        if (script.parentNode) {
+            script.parentNode.removeChild(script);
+        }
+    });
+    addedScripts = []; // Clear the array
+}
 async function loadPage(pageName)
 {
 	window.history.pushState({page: pageName}, ``);
@@ -16,24 +40,17 @@ async function getPage(pageName)
 {
 	try
 	{
+        removeAddedScripts();
 		const response = await fetch(`/pages/${pageName}.html`)
 		if (!response.ok)
 			throw new Error(`HTTP error! Status: ${response.status}`)
 		const content = await response.text();
 		document.getElementById('main-content').innerHTML = content;
 		updateActive(pageName);
-		const scripts = document.getElementById('main-content').getElementsByTagName('script');
-		for (let script of scripts) {
-			if (script.src) {
-                // Load external scripts
-                const newScript = document.createElement('script');
-                newScript.src = script.src;
-                document.body.appendChild(newScript);
-            } else {
-                // Execute inline scripts
-                eval(script.innerHTML);
-            }
-		}
+        if (pageName === 'play')
+            loadScripts([{ src: 'js/game.js' }]);
+		// const scripts = document.getElementById('main-content').getElementsByTagName('script');
+        // loadScripts(scripts);
 		changeLanguage();
 	}
 	catch (error)

@@ -14,7 +14,11 @@ let WIDTHBOARD = 800;
 let WIDTHOBJECTS = WIDTHBOARD / 40;
 let HEIGHTOBJECTS = HEIGHTBOARD / 5;
 let player1, player2, ball;
+let gameloop, animationId;
+let isAnimating = false;
+let eventListeners = [];
 console.log('game.js started');
+
 class Element {
     constructor(options) {
         // Store the functions/values
@@ -35,8 +39,27 @@ class Element {
 }
 
 function gameLoop() {
+    const gameBoard = document.getElementById('gameBoard');
+    if (!gameBoard) {
+        console.log('Game board not found, stopping game loop');
+        cleanupGame();
+        return; // Stop the loop by not calling requestAnimationFrame
+    }
 	updateElements();
-	requestAnimationFrame(gameLoop);
+    animationId = requestAnimationFrame(gameLoop);
+    isAnimating = true;
+}
+
+function cleanupGame(){
+    if (isAnimating)
+    {
+        isAnimating = false;
+        cancelAnimationFrame(animationId);
+    }
+    eventListeners.forEach(({location, type, listener}) => {
+        location.removeEventListener(type, listener);
+    });
+    eventListeners = [];
 }
 
 function initGame() {
@@ -134,19 +157,11 @@ function updateElements(){
 	console.log('drawn elements');
 }
 
-
-// At the bottom of game.js, replace your current initialization with:
-// function ensureInit() {
-//     console.log('Ensuring initialization...');
-//     if (document.readyState === 'complete') {
-//         console.log('Document already complete, initializing now');
-//         initGame();
-//     } else {
-//         console.log('Document not ready, adding listeners');
-//         document.addEventListener('DOMContentLoaded', initGame, { once: true });
-//     }
-// }
 let gameInitialized = false;
+function listenerGame() {
+    initGame();
+    gameInitialized = true;
+}
 
 function ensureInit() {
     if (gameInitialized) return;
@@ -158,10 +173,8 @@ function ensureInit() {
         gameInitialized = true;
     } else {
         console.log('Document not ready, adding listener');
-        document.addEventListener('DOMContentLoaded', () => {
-            initGame();
-            gameInitialized = true;
-        }, { once: true });
+        document.addEventListener('DOMContentLoaded', listenerGame);
+        eventListeners.push({location: document, type: 'DOMContentLoaded', lisenter: listenerGame});
     }
 }
 // Add this near the top of your file with other utilities
@@ -177,6 +190,11 @@ function debounce(func, wait) {
     };
 }
 
+function listenerResize()
+{
+    debounce(() => setGameBoardSize(), 100)
+}
 // Then update your resize listener
-window.addEventListener('resize', debounce(() => setGameBoardSize(), 100));
+window.addEventListener('resize', listenerResize);
+eventListeners.push({location: window, type: 'resize', listenerResize});
 ensureInit();
