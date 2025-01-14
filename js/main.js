@@ -35,6 +35,7 @@ async function getPage(pageName)
                 eval(script.innerHTML);
             }
 		}
+		changeLanguage();
 	}
 	catch (error)
 	{
