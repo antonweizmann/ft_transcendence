@@ -1,11 +1,6 @@
 // Add this at the very top of game.js
 console.log('=== Game Script Starting ===');
 
-// Add this right after your constants
-window.addEventListener('error', function(e) {
-    console.error('Global error:', e.message);
-});
-
 const PINK = '#8A4FFF';
 const PURPLE = '#9932CC';
 const BLUE = '#5D3FD3';
@@ -17,49 +12,48 @@ let player1, player2, ball;
 let gameloop, animationId;
 let isAnimating = false;
 let eventListeners = [];
+let gameInitialized = false;
+const keysPressed = {};
+let scorePlayer1 = 0;
+let scorePlayer2 = 0;
 console.log('game.js started');
 
+function errorHandler(e) {
+	console.error('Global error:', e.message);
+}
+
+window.addEventListener('error', errorHandler);
+eventListeners.push({element: window, type: 'error', listener: errorHandler});
+//Class definitions
 class Element {
-    constructor(options) {
+	constructor(options) {
         // Store the functions/values
         this._x = options.x;
         this._y = options.y;
         this._height = options.height;
         this._width = options.width;
-        this.speed = 2;
-        this.gravity = 2;
+        this.speed = options.speed;
+        this.dirX = options.dirX;
+        this.dirY = options.dirY;
         this.color = options.color;
+		this.maxY = options.maxY;
+		this.maxX = options.maxX
     }
 
     // Use getters to evaluate positions dynamically
     get x() { return typeof this._x === 'function' ? this._x() : this._x; }
+	set x(value) {
+		const maxXValue = typeof this.maxX === 'function' ? this.maxX() : this.maxX;
+		this._x = Math.min(maxXValue, Math.max(0, value));
+	}
     get y() { return typeof this._y === 'function' ? this._y() : this._y; }
+	set y(value) {
+		const maxYValue = typeof this.maxY === 'function' ? this.maxY() : this.maxY;
+		this._y = Math.min(maxYValue, Math.max(0, value));
+	}
+
     get width() { return typeof this._width === 'function' ? this._width() : this._width; }
     get height() { return typeof this._height === 'function' ? this._height() : this._height; }
-}
-
-function gameLoop() {
-    const gameBoard = document.getElementById('gameBoard');
-    if (!gameBoard) {
-        console.log('Game board not found, stopping game loop');
-        cleanupGame();
-        return; // Stop the loop by not calling requestAnimationFrame
-    }
-	updateElements();
-    animationId = requestAnimationFrame(gameLoop);
-    isAnimating = true;
-}
-
-function cleanupGame(){
-    if (isAnimating)
-    {
-        isAnimating = false;
-        cancelAnimationFrame(animationId);
-    }
-    eventListeners.forEach(({location, type, listener}) => {
-        location.removeEventListener(type, listener);
-    });
-    eventListeners = [];
 }
 
 function initGame() {
@@ -81,6 +75,8 @@ function initGame() {
 		y: () => HEIGHTBOARD / 2 - HEIGHTOBJECTS / 2,
 		height: () => HEIGHTOBJECTS,
 		width: () => WIDTHOBJECTS,
+		maxY: () => HEIGHTBOARD - HEIGHTOBJECTS,
+		maxX: () => WIDTHBOARD - WIDTHOBJECTS,
 		color: PINK,
 	});
 
@@ -89,23 +85,105 @@ function initGame() {
 		y: () => HEIGHTBOARD / 2 - HEIGHTOBJECTS / 2,
 		height: () => HEIGHTOBJECTS,
 		width: () => WIDTHOBJECTS,
+		maxY: () => HEIGHTBOARD - HEIGHTOBJECTS,
+		maxX: () => WIDTHBOARD - WIDTHOBJECTS,
 		color: PINK,
 	});
-	ball = new Element ({
+	let startBallValues = {
 		x: () => WIDTHBOARD / 2 - WIDTHOBJECTS / 2,
 		y: () => HEIGHTBOARD / 2 - HEIGHTOBJECTS / 10,
 		height: () => HEIGHTOBJECTS / 5,
 		width: () => WIDTHOBJECTS,
+		maxY: () => HEIGHTBOARD - HEIGHTOBJECTS / 5,
+		maxX: () => WIDTHBOARD - WIDTHOBJECTS,
+		speed: 2,
+		dirX: Math.round(Math.random()) ? -1 : 1,
+		dirY: Math.round(Math.random()) ? -1 : 1,
 		color: PURPLE,
-	});
+	};
+	ball = new Element(startBallValues);
+	ball.reset = function () {
+		ball.x = startBallValues.x();
+		ball.y = startBallValues.y();
+		ball.speed = startBallValues.speed;
+		ball.dirX = Math.round(Math.random()) ? -1 : 1,
+		ball.dirY = Math.round(Math.random()) ? -1 : 1,
+		console.log('Ball was reset');
+	}
 	console.log('Starting game loop with dimensions:', WIDTHBOARD, HEIGHTBOARD);
 
 	gameLoop();
-	// updateElements()
 }
 
-// // Functions Start
+function listenerGame() {
+    initGame();
+    gameInitialized = true;
+}
 
+function ensureInit() {
+    if (gameInitialized) return;
+
+    console.log('Ensuring initialization...');
+    if (document.readyState === 'complete') {
+        console.log('Document already complete, initializing now');
+        initGame();
+        gameInitialized = true;
+    } else {
+        console.log('Document not ready, adding listener');
+        document.addEventListener('DOMContentLoaded', listenerGame);
+    }
+}
+// Add this near the top of your file with other utilities
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+function listenerResize()
+{
+    debounce(() => setGameBoardSize(), 100)
+}
+// Then update your resize listener
+window.addEventListener('resize', listenerResize);
+eventListeners.push({element: window, type: 'resize', listener: listenerResize});
+ensureInit();
+
+//Main Loop
+function gameLoop() {
+    const gameBoard = document.getElementById('gameBoard');
+    if (!gameBoard) {
+        console.log('Game board not found, stopping game loop');
+        cleanupGame();
+        return; // Stop the loop by not calling requestAnimationFrame
+    }
+	handleMovement();
+	updateElements();
+    animationId = requestAnimationFrame(gameLoop);
+    isAnimating = true;
+}
+
+//Clean Up
+function cleanupGame(){
+    if (isAnimating)
+    {
+        isAnimating = false;
+        cancelAnimationFrame(animationId);
+    }
+    eventListeners.forEach(({element, type, listener}) => {
+		console.log(`Removing ${type} listener from`, element);
+        element.removeEventListener(type, listener);
+    });
+    eventListeners = [];
+}
+
+// Board Size
 function setGameBoardSize(isInitialSetup = false) {
     // Set the game board to 80% of the smaller dimension (height or width)
     const  smallerDimension = Math.min(window.innerWidth, window.innerHeight);
@@ -148,53 +226,73 @@ function updateElements(){
 
     console.log('Canvas dimensions:', gameBoard.width, gameBoard.height);
     console.log('Player 1 position:', player1.x, player1.y);
-    console.log('Drawing elements...');
+    // console.log('Drawing elements...');
 	ctx.clearRect(0, 0, WIDTHBOARD, HEIGHTBOARD);
 
 	drawElements(ctx, player1);
 	drawElements(ctx, player2);
 	drawElements(ctx, ball);
-	console.log('drawn elements');
 }
 
-let gameInitialized = false;
-function listenerGame() {
-    initGame();
-    gameInitialized = true;
-}
-
-function ensureInit() {
-    if (gameInitialized) return;
-
-    console.log('Ensuring initialization...');
-    if (document.readyState === 'complete') {
-        console.log('Document already complete, initializing now');
-        initGame();
-        gameInitialized = true;
-    } else {
-        console.log('Document not ready, adding listener');
-        document.addEventListener('DOMContentLoaded', listenerGame);
-        eventListeners.push({location: document, type: 'DOMContentLoaded', lisenter: listenerGame});
+// Game Controls
+function handleMovement() {
+	if(keysPressed['ArrowUp']) {
+		console.log('Player 1 Up');
+        player1.y -=5;
     }
-}
-// Add this near the top of your file with other utilities
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
+    else if(keysPressed['ArrowDown']) {
+		console.log('Player 1 Down');
+		player1.y +=5;
+    }
+	if(keysPressed['w']) {
+		console.log('Player 2 Up');
+        player2.y -=5;
+    }
+    else if(keysPressed['s']) {
+		console.log('Player 2 Down');
+		player2.y += 5;
+    }
+	ball.x += (ball.speed * ball.dirX);
+	ball.y += (ball.speed * ball.dirY);
+	ballBounce();
 }
 
-function listenerResize()
-{
-    debounce(() => setGameBoardSize(), 100)
+function updateScore() {
+	console.log('Score updated');
 }
-// Then update your resize listener
-window.addEventListener('resize', listenerResize);
-eventListeners.push({location: window, type: 'resize', listenerResize});
-ensureInit();
+
+function increaseScore(score) {
+	score += 1;
+	updateScore();
+}
+
+function ballBounce() {
+	if (ball.y == 0)
+		ball.dixY *= -1;
+	else if (ball.y == ball.maxY())
+		ball.dixY *= -1;
+	if (ball.x == 0)
+	{
+		increaseScore(scorePlayer2);
+		ball.reset();
+	}
+	else if (ball.x == ball.maxX())
+	{
+
+		increaseScore(scorePlayer1);
+		ball.reset();
+	}
+}
+
+function addMovement(event)
+{
+	keysPressed[event.key] = true;
+}
+function stopMovement(event){
+	delete keysPressed[event.key];
+}
+
+document.addEventListener('keydown', addMovement);
+document.addEventListener('keyup', stopMovement);
+eventListeners.push({element: document, type: 'keydown', listener: addMovement});
+eventListeners.push({element: document, type: 'keyup', listener: stopMovement});
