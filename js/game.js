@@ -16,6 +16,7 @@ let gameInitialized = false;
 const keysPressed = {};
 let scorePlayer1 = 0;
 let scorePlayer2 = 0;
+let stopDoubleCollistion;
 console.log('game.js started');
 
 function errorHandler(e) {
@@ -32,7 +33,7 @@ class Element {
         this._y = options.y;
         this._height = options.height;
         this._width = options.width;
-        this.speed = options.speed;
+        this._speed = options.speed;
         this.dirX = options.dirX;
         this.dirY = options.dirY;
         this.color = options.color;
@@ -54,6 +55,8 @@ class Element {
 
     get width() { return typeof this._width === 'function' ? this._width() : this._width; }
     get height() { return typeof this._height === 'function' ? this._height() : this._height; }
+	get speed() { return typeof this._speed === 'function' ? this._speed() : this._speed; }
+	set speed(value) {this._speed = value};
 }
 
 function initGame() {
@@ -77,6 +80,7 @@ function initGame() {
 		width: () => WIDTHOBJECTS,
 		maxY: () => HEIGHTBOARD - HEIGHTOBJECTS,
 		maxX: () => WIDTHBOARD - WIDTHOBJECTS,
+		speed: () => HEIGHTBOARD / 50,
 		color: PINK,
 	});
 
@@ -87,6 +91,7 @@ function initGame() {
 		width: () => WIDTHOBJECTS,
 		maxY: () => HEIGHTBOARD - HEIGHTOBJECTS,
 		maxX: () => WIDTHBOARD - WIDTHOBJECTS,
+		speed: () => HEIGHTBOARD / 50,
 		color: PINK,
 	});
 	let startBallValues = {
@@ -96,18 +101,21 @@ function initGame() {
 		width: () => WIDTHOBJECTS,
 		maxY: () => HEIGHTBOARD - HEIGHTOBJECTS / 5,
 		maxX: () => WIDTHBOARD - WIDTHOBJECTS,
-		speed: 2,
+		speed: () => WIDTHBOARD / 150,
 		dirX: Math.round(Math.random()) ? -1 : 1,
 		dirY: Math.round(Math.random()) ? -1 : 1,
 		color: PURPLE,
 	};
 	ball = new Element(startBallValues);
+	stopDoubleCollistion = ball.dirX;
 	ball.reset = function () {
 		ball.x = startBallValues.x();
 		ball.y = startBallValues.y();
-		ball.speed = startBallValues.speed;
+		ball.speed = startBallValues.speed();
+		// -1 is to the left and 1 to the right
 		ball.dirX = Math.round(Math.random()) ? -1 : 1,
 		ball.dirY = Math.round(Math.random()) ? -1 : 1,
+		stopDoubleCollistion = ball.dirX;
 		console.log('Ball was reset');
 	}
 	console.log('Starting game loop with dimensions:', WIDTHBOARD, HEIGHTBOARD);
@@ -236,25 +244,28 @@ function updateElements(){
 
 // Game Controls
 function handleMovement() {
+	console.log('Player speed', player1.speed);
 	if(keysPressed['ArrowUp']) {
 		console.log('Player 1 Up');
-        player1.y -=5;
+        player1.y -=player1.speed;
     }
     else if(keysPressed['ArrowDown']) {
 		console.log('Player 1 Down');
-		player1.y +=5;
+		player1.y +=player1.speed;
     }
 	if(keysPressed['w']) {
 		console.log('Player 2 Up');
-        player2.y -=5;
+        player2.y -=player2.speed;
     }
     else if(keysPressed['s']) {
 		console.log('Player 2 Down');
-		player2.y += 5;
+		player2.y += player2.speed;
     }
+	console.log('Ball speed', ball.speed);
 	ball.x += (ball.speed * ball.dirX);
 	ball.y += (ball.speed * ball.dirY);
 	ballBounce();
+
 }
 
 function updateScore() {
@@ -266,11 +277,34 @@ function increaseScore(score) {
 	updateScore();
 }
 
+function checkCollision() {
+	if (ball.x <= player1.x + player1.width &&
+        ball.x + ball.width >= player1.x &&
+        ball.y + ball.height >= player1.y &&
+        ball.y <= player1.y + player1.height && stopDoubleCollistion == -1) {
+        ball.dirX *= -1;
+        ball.dirY = ((ball.y + ball.height/2) - (player1.y + player1.height/2)) / (player1.height/2);
+		if (ball.speed <= WIDTHBOARD / 100)
+			ball.speed += WIDTHBOARD / 1000;
+		stopDoubleCollistion = 1;
+	}
+	if (ball.x + ball.width >= player2.x &&
+        ball.x <= player2.x + player2.width &&
+        ball.y + ball.height >= player2.y &&
+        ball.y <= player2.y + player2.height && stopDoubleCollistion == 1) {
+			ball.dirX *= -1;
+			ball.dirY = ((ball.y + ball.height/2) - (player2.y + player2.height/2)) / (player2.height/2);
+		if (ball.speed <= WIDTHBOARD / 80)
+			ball.speed += WIDTHBOARD / 1000 ;
+		stopDoubleCollistion = -1;
+    }
+}
+
 function ballBounce() {
 	if (ball.y == 0)
-		ball.dixY *= -1;
+		ball.dirY *= -1;
 	else if (ball.y == ball.maxY())
-		ball.dixY *= -1;
+		ball.dirY *= -1;
 	if (ball.x == 0)
 	{
 		increaseScore(scorePlayer2);
@@ -278,10 +312,10 @@ function ballBounce() {
 	}
 	else if (ball.x == ball.maxX())
 	{
-
 		increaseScore(scorePlayer1);
 		ball.reset();
 	}
+	checkCollision()
 }
 
 function addMovement(event)
