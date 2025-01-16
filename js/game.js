@@ -101,7 +101,7 @@ function initGame() {
 		width: () => WIDTHOBJECTS,
 		maxY: () => HEIGHTBOARD - HEIGHTOBJECTS / 5,
 		maxX: () => WIDTHBOARD - WIDTHOBJECTS,
-		speed: () => WIDTHBOARD / 150,
+		speed: () => WIDTHBOARD / 120,
 		dirX: Math.round(Math.random()) ? -1 : 1,
 		dirY: Math.round(Math.random()) ? -1 : 1,
 		color: PURPLE,
@@ -156,7 +156,8 @@ function debounce(func, wait) {
 
 function listenerResize()
 {
-    debounce(() => setGameBoardSize(), 100)
+	const debouncedResize = debounce(() => setGameBoardSize(), 100);
+		debouncedResize();
 }
 // Then update your resize listener
 window.addEventListener('resize', listenerResize);
@@ -195,7 +196,7 @@ function cleanupGame(){
 function setGameBoardSize(isInitialSetup = false) {
     // Set the game board to 80% of the smaller dimension (height or width)
     const  smallerDimension = Math.min(window.innerWidth, window.innerHeight);
-    WIDTHBOARD = Math.floor(smallerDimension * 0.8);
+    WIDTHBOARD = Math.floor(smallerDimension * 1);
     HEIGHTBOARD = Math.floor(WIDTHBOARD * 0.625); // Maintain a 8:5 aspect ratio
 
     // Recalculate other dependent variables
@@ -213,13 +214,13 @@ function setGameBoardSize(isInitialSetup = false) {
 }
 
 function drawElements(ctx, element) {
-	console.log('Drawing element:', {
-        x: element.x,
-        y: element.y,
-        width: element.width,
-        height: element.height,
-        color: element.color
-    });
+	// console.log('Drawing element:', {
+    //     x: element.x,
+    //     y: element.y,
+    //     width: element.width,
+    //     height: element.height,
+    //     color: element.color
+    // });
 	ctx.fillStyle	= element.color;
 	ctx.fillRect(element.x, element.y, element.width, element.height);
 }
@@ -232,8 +233,8 @@ function updateElements(){
     }
     const ctx = gameBoard.getContext('2d');
 
-    console.log('Canvas dimensions:', gameBoard.width, gameBoard.height);
-    console.log('Player 1 position:', player1.x, player1.y);
+    // console.log('Canvas dimensions:', gameBoard.width, gameBoard.height);
+    // console.log('Player 1 position:', player1.x, player1.y);
     // console.log('Drawing elements...');
 	ctx.clearRect(0, 0, WIDTHBOARD, HEIGHTBOARD);
 
@@ -244,37 +245,43 @@ function updateElements(){
 
 // Game Controls
 function handleMovement() {
-	console.log('Player speed', player1.speed);
-	if(keysPressed['ArrowUp']) {
+	// console.log('Player speed', player1.speed);
+	if(keysPressed['w']) {
 		console.log('Player 1 Up');
         player1.y -=player1.speed;
     }
-    else if(keysPressed['ArrowDown']) {
+    else if(keysPressed['s']) {
 		console.log('Player 1 Down');
 		player1.y +=player1.speed;
     }
-	if(keysPressed['w']) {
+	if(keysPressed['ArrowUp']) {
 		console.log('Player 2 Up');
         player2.y -=player2.speed;
     }
-    else if(keysPressed['s']) {
+    else if(keysPressed['ArrowDown']) {
 		console.log('Player 2 Down');
 		player2.y += player2.speed;
     }
-	console.log('Ball speed', ball.speed);
-	ball.x += (ball.speed * ball.dirX);
-	ball.y += (ball.speed * ball.dirY);
+	// console.log('Ball speed', ball.speed);
+	//diagonal speed normalized
+	const magnitude = Math.sqrt(ball.dirX * ball.dirX + ball.dirY * ball.dirY);
+	const normalizedX = ball.dirX / magnitude;
+	const normalizedY = ball.dirY / magnitude;
+
+	ball.x += (ball.speed * normalizedX);
+	ball.y += (ball.speed * normalizedY);
+
 	ballBounce();
 
 }
 
-function updateScore() {
-	console.log('Score updated');
-}
 
-function increaseScore(score) {
-	score += 1;
-	updateScore();
+function increaseScore(player) {
+	if (player === 1)
+		scorePlayer1++;
+	else
+		scorePlayer2++;
+	document.getElementById('scoreGame').textContent = `${scorePlayer1} : ${scorePlayer2}`;
 }
 
 function checkCollision() {
@@ -284,7 +291,7 @@ function checkCollision() {
         ball.y <= player1.y + player1.height && stopDoubleCollistion == -1) {
         ball.dirX *= -1;
         ball.dirY = ((ball.y + ball.height/2) - (player1.y + player1.height/2)) / (player1.height/2);
-		if (ball.speed <= WIDTHBOARD / 100)
+		if (ball.speed <= WIDTHBOARD / 60)
 			ball.speed += WIDTHBOARD / 1000;
 		stopDoubleCollistion = 1;
 	}
@@ -307,12 +314,12 @@ function ballBounce() {
 		ball.dirY *= -1;
 	if (ball.x == 0)
 	{
-		increaseScore(scorePlayer2);
+		increaseScore(2);
 		ball.reset();
 	}
 	else if (ball.x == ball.maxX())
 	{
-		increaseScore(scorePlayer1);
+		increaseScore(1);
 		ball.reset();
 	}
 	checkCollision()
