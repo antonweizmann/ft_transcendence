@@ -74,7 +74,7 @@ function initGame() {
     const ctx = gameBoard.getContext('2d');
     // Rest of your game initialization code
 
-	player1 = new Element({
+	let startPlayer1 = {
 		x: () => WIDTHBOARD / 80,
 		y: () => HEIGHTBOARD / 2 - HEIGHTOBJECTS / 2,
 		height: () => HEIGHTOBJECTS,
@@ -83,9 +83,9 @@ function initGame() {
 		maxX: () => WIDTHBOARD - WIDTHOBJECTS,
 		speed: () => HEIGHTBOARD / 50,
 		color: PINK,
-	});
+	};
 
-	player2 = new Element({
+	let startPlayer2 = {
 		x: () => WIDTHBOARD -  WIDTHBOARD / 80 - WIDTHOBJECTS,
 		y: () => HEIGHTBOARD / 2 - HEIGHTOBJECTS / 2,
 		height: () => HEIGHTOBJECTS,
@@ -94,7 +94,7 @@ function initGame() {
 		maxX: () => WIDTHBOARD - WIDTHOBJECTS,
 		speed: () => HEIGHTBOARD / 50,
 		color: PINK,
-	});
+	};
 	let startBallValues = {
 		x: () => WIDTHBOARD / 2 - WIDTHOBJECTS / 2,
 		y: () => HEIGHTBOARD / 2 - HEIGHTOBJECTS / 10,
@@ -107,6 +107,8 @@ function initGame() {
 		dirY: Math.round(Math.random()) ? -1 : 1,
 		color: PURPLE,
 	};
+    player1 = new Element(startPlayer1);
+    player2 = new Element(startPlayer2);
 	ball = new Element(startBallValues);
 	stopDoubleCollistion = ball.dirX;
 	ball.reset = function () {
@@ -119,6 +121,14 @@ function initGame() {
 		stopDoubleCollistion = ball.dirX;
 		console.log('Ball was reset');
 	}
+    player1.reset = function() {
+        player1.x = startPlayer1.x();
+        player1.y = startPlayer1.y();
+    }
+    player2.reset = function() {
+        player2.x = startPlayer2.x();
+        player2.y = startPlayer2.y();
+    }
 	console.log('Starting game loop with dimensions:', WIDTHBOARD, HEIGHTBOARD);
 	setGameBoardSize();
 	document.getElementsByClassName('gameButton')[0].addEventListener('click', gameLoop, { once: true });
@@ -191,6 +201,8 @@ function resetGame(){
 	isAnimating = false;
 	gameButton = document.getElementsByClassName('gameButton')[0]
 	ball.reset();
+    player1.reset();
+    player2.reset();
 	resetScore();
 	updateElements();
 	cancelAnimationFrame(animationId);
