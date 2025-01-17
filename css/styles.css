@@ -457,3 +457,16 @@ body {
         width: 70%;
     }
 }
+
+.gamebutton {
+    background-color: var(--deep-blue); /* Bright color for visibility */
+    color: white;
+    font-size: 2.5rem; /* Large text */
+    padding: 10px 20px; /* Big button size */
+    border: none;
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.3s;
+    z-index: 10; /* Ensure it appears above other elements */
+}

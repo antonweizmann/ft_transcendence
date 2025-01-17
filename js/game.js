@@ -17,6 +17,7 @@ const keysPressed = {};
 let scorePlayer1 = 0;
 let scorePlayer2 = 0;
 let stopDoubleCollistion;
+let gameButton;
 console.log('game.js started');
 
 function errorHandler(e) {
@@ -119,8 +120,9 @@ function initGame() {
 		console.log('Ball was reset');
 	}
 	console.log('Starting game loop with dimensions:', WIDTHBOARD, HEIGHTBOARD);
-
-	gameLoop();
+	setGameBoardSize();
+	document.getElementsByClassName('gameButton')[0].addEventListener('click', gameLoop, { once: true });
+	// gameLoop();
 }
 
 function listenerGame() {
@@ -166,6 +168,12 @@ ensureInit();
 
 //Main Loop
 function gameLoop() {
+	gameButton = document.getElementsByClassName('gameButton')[0]
+	if (gameButton.textContent === 'Start')
+	{
+		gameButton.addEventListener('click', resetGame, { once: true });
+		gameButton.textContent = 'Reset';
+	}
     const gameBoard = document.getElementById('gameBoard');
     if (!gameBoard) {
         console.log('Game board not found, stopping game loop');
@@ -176,6 +184,18 @@ function gameLoop() {
 	updateElements();
     animationId = requestAnimationFrame(gameLoop);
     isAnimating = true;
+}
+
+function resetGame(){
+	console.log('Game was reset');
+	isAnimating = false;
+	gameButton = document.getElementsByClassName('gameButton')[0]
+	ball.reset();
+	resetScore();
+	updateElements();
+	cancelAnimationFrame(animationId);
+	gameButton.textContent = 'Start';
+	gameButton.addEventListener('click', gameLoop, { once: true });
 }
 
 //Clean Up
@@ -189,6 +209,7 @@ function cleanupGame(){
 		console.log(`Removing ${type} listener from`, element);
         element.removeEventListener(type, listener);
     });
+	gameInitialized = false;
     eventListeners = [];
 }
 
@@ -275,6 +296,11 @@ function handleMovement() {
 
 }
 
+function resetScore() {
+	scorePlayer1 = 0;
+	scorePlayer2 = 0;
+	document.getElementById('scoreGame').textContent = `${scorePlayer1} : ${scorePlayer2}`;
+}
 
 function increaseScore(player) {
 	if (player === 1)
