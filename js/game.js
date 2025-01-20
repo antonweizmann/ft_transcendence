@@ -1,4 +1,4 @@
-import { aiLoop } from "./ai.js";
+import { aiLoop, cleanAi } from "./ai.js";
 // Add this at the very top of game.js
 console.log('=== Game Script Starting ===');
 
@@ -14,7 +14,7 @@ let gameloop, animationId;
 let isAnimating = false;
 let eventListeners = [];
 let gameInitialized = false;
-const keysPressed = {};
+export const keysPressed = {};
 let scorePlayer1 = 0;
 let scorePlayer2 = 0;
 let stopDoubleCollistion;
@@ -195,9 +195,9 @@ function gameLoop() {
         console.log('Game board not found, stopping game loop');
         cleanupGame();
     }
-	console.log('ball speed', ball.speed);
 	aiLoop(ball, player2);
 	handleMovement();
+	cleanAi();
 	updateElements();
     animationId = requestAnimationFrame(gameLoop);
     isAnimating = true;
