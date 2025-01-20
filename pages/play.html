@@ -1,14 +1,20 @@
 <div class="container mt-5 d-flex justify-content-center align-items-center flex-column">
-		<canvas id="gameBoard" width="800" height="600" style="background-color: #5D3FD3;" ></canvas>
-		<div class="d-flex justify-content-between align-items-center mt-3" style="width: 100%; padding: 0 200px">
-			<div id="player1Name" style="font-size: 48px; color: #FFFFFF; font-weight: bold; text-align: left;">Player 1</div>
-			<div id="scoreGame" style="font-size: 48px; color: #FFFFFF; font-weight: bold; text-align: center;">0 : 0</div>
-			<div id="player2Name" style="font-size: 48px; color: #FFFFFF; font-weight: bold; text-align: right;">Player 2</div>
-		</div>
-		<button class="gameButton">Start</button>
-		<label for="gameMode">Game Mode:</label>
-		<select id="gameMode">
-		  <option value="human">Human vs Human</option>
-		  <option value="ai">Human vs AI</option>
-		</select>
+    <canvas id="gameBoard" width="800" height="600" style="background-color: #5D3FD3;"></canvas>
+    <div class="d-flex justify-content-between align-items-center mt-3 score-container">
+        <div id="player1Name" class="player-name">Player 1</div>
+        <div id="scoreGame" class="score">0 : 0</div>
+        <div id="player2Name" class="player-name">Player 2</div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mt-3 game-controls">
+        <div class="button-container">
+            <button class="gameButton">Start</button>
+        </div>
+        <div class="select-wrapper">
+            <select id="gameMode">
+                <option value="human">Human vs Human</option>
+                <option value="ai">Human vs AI</option>
+            </select>
+        </div>
+    </div>
 </div>
