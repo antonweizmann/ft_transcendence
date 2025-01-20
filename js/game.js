@@ -198,9 +198,21 @@ function gameLoop() {
         cleanupGame();
     }
 	if (gameMode == 'ai')
-		aiLoop(ball, player2);
+	{	document.getElementById("player2Name").innerText = "AI";
+		aiLoop(ball, player2, "ArrowUp", "ArrowDown");
+	}
+	else if (gameMode == 'ai2')
+	{
+		ball.speed = 40;
+		document.getElementById("player2Name").innerText = "AI";
+		document.getElementById("player1Name").innerText = "AI";
+		aiLoop(ball, player2, "ArrowUp", "ArrowDown");
+		aiLoop(ball, player1, 'w', 's');
+	}
+	else
+		document.getElementById("player2Name").innerText = "Player 2";
 	handleMovement();
-	if (gameMode == 'ai')
+	if (gameMode == 'ai' || gameMode == 'ai2')
 		cleanAi();
 	updateElements();
     animationId = requestAnimationFrame(gameLoop);
@@ -376,7 +388,7 @@ function ballBounce() {
 
 function addMovement(event)
 {
-	if (gameMode =='ai' && !isAi && (event.key === "ArrowUp" || event.key === "ArrowDown"))
+	if ((gameMode =='ai' || gameMode == 'ai2' )&& !isAi && (event.key === "ArrowUp" || event.key === "ArrowDown"))
 		return ;
 	else
 		keysPressed[event.key] = true;

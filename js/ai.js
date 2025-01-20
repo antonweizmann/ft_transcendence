@@ -2,19 +2,19 @@ import {Element, keysPressed} from './game.js'
 
 let predictedY;
 export let isAi = false;
-export function aiLoop(ball, paddle) {
+export function aiLoop(ball, paddle, key1, key2) {
 	// console.log('AiStarted');
-	if (ball.dirX == 1)
-	{
+	// if (ball.dirX == 1)
+	// {
 	predictedY = calculateBallMovement(ball, paddle);
 	// console.log(predictedY);
 	if (predictedY <= paddle.y)
-		simulateKeyPress("ArrowUp");
+		simulateKeyPress(key1);
 	else if (predictedY >= paddle.y + paddle.height)
-		simulateKeyPress("ArrowDown");
+		simulateKeyPress(key2);
 
 	}
-}
+// }
 
 function simulateKeyPress(key) {
 	const event = new KeyboardEvent("keydown", {key});
@@ -28,6 +28,10 @@ export function cleanAi() {
 		key = "ArrowUp";
     else if(keysPressed['ArrowDown'])
 		key = "ArrowDown";
+	if (keysPressed['w'])
+		key = 'w';
+	else if (keysPressed['s'])
+		key = 's';
 	if (key)
 	{
 		const stopEvent = new KeyboardEvent("keyup", {key});

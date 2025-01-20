@@ -521,7 +521,7 @@ body {
 
 #gameMode {
     width: 75%;
-    min-width: 11g0%;
+    min-width: 110%;
     padding: 0.8em;
     font-size: calc(12px + 1vw);
     border-radius: 5px;
