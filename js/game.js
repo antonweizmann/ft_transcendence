@@ -1,3 +1,4 @@
+import { aiLoop } from "./ai.js";
 // Add this at the very top of game.js
 console.log('=== Game Script Starting ===');
 
@@ -27,7 +28,7 @@ function errorHandler(e) {
 window.addEventListener('error', errorHandler);
 eventListeners.push({element: window, type: 'error', listener: errorHandler});
 //Class definitions
-class Element {
+export class Element {
 	constructor(options) {
         // Store the functions/values
         this._x = options.x;
@@ -38,8 +39,8 @@ class Element {
         this.dirX = options.dirX;
         this.dirY = options.dirY;
         this.color = options.color;
-		this.maxY = options.maxY;
-		this.maxX = options.maxX
+		this._maxY = options.maxY;
+		this._maxX = options.maxX
     }
 
     // Use getters to evaluate positions dynamically
@@ -56,6 +57,8 @@ class Element {
 
     get width() { return typeof this._width === 'function' ? this._width() : this._width; }
     get height() { return typeof this._height === 'function' ? this._height() : this._height; }
+    get maxX() { return typeof this._maxX === 'function' ? this._maxX() : this._maxX; }
+    get maxY() { return typeof this._maxY === 'function' ? this._maxY() : this._maxY; }
 	get speed() { return typeof this._speed === 'function' ? this._speed() : this._speed; }
 	set speed(value) {this._speed = value};
 }
@@ -107,10 +110,13 @@ function initGame() {
 		dirY: Math.round(Math.random()) ? -1 : 1,
 		color: PURPLE,
 	};
+
     player1 = new Element(startPlayer1);
     player2 = new Element(startPlayer2);
 	ball = new Element(startBallValues);
+
 	stopDoubleCollistion = ball.dirX;
+
 	ball.reset = function () {
 		ball.x = startBallValues.x();
 		ball.y = startBallValues.y();
@@ -188,8 +194,9 @@ function gameLoop() {
     if (!gameBoard) {
         console.log('Game board not found, stopping game loop');
         cleanupGame();
-        return; // Stop the loop by not calling requestAnimationFrame
     }
+	console.log('ball speed', ball.speed);
+	aiLoop(ball, player2);
 	handleMovement();
 	updateElements();
     animationId = requestAnimationFrame(gameLoop);
@@ -348,14 +355,14 @@ function checkCollision() {
 function ballBounce() {
 	if (ball.y == 0)
 		ball.dirY *= -1;
-	else if (ball.y == ball.maxY())
+	else if (ball.y == ball.maxY)
 		ball.dirY *= -1;
 	if (ball.x == 0)
 	{
 		increaseScore(2);
 		ball.reset();
 	}
-	else if (ball.x == ball.maxX())
+	else if (ball.x == ball.maxX)
 	{
 		increaseScore(1);
 		ball.reset();
@@ -375,3 +382,4 @@ document.addEventListener('keydown', addMovement);
 document.addEventListener('keyup', stopMovement);
 eventListeners.push({element: document, type: 'keydown', listener: addMovement});
 eventListeners.push({element: document, type: 'keyup', listener: stopMovement});
+

@@ -13,6 +13,7 @@ function loadScripts(scripts) {
             // Load external scripts
             const newScript = document.createElement('script');
             newScript.src = script.src;
+            newScript.type = script.type;
             document.body.appendChild(newScript);
             addedScripts.push(newScript); // Store reference to the added script
         } else {
@@ -48,7 +49,7 @@ async function getPage(pageName)
 		document.getElementById('main-content').innerHTML = content;
 		updateActive(pageName);
         if (pageName === 'play')
-            loadScripts([{ src: 'js/game.js' }]);
+            loadScripts([{ type: 'module', src: 'js/game.js' }, {type: 'module', src: 'js/ai.js' }]);
 		// const scripts = document.getElementById('main-content').getElementsByTagName('script');
         // loadScripts(scripts);
 		changeLanguage();
