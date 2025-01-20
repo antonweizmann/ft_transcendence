@@ -18,7 +18,7 @@ export const keysPressed = {};
 let scorePlayer1 = 0;
 let scorePlayer2 = 0;
 let stopDoubleCollistion;
-let gameButton;
+let gameButton, gameMode;
 console.log('game.js started');
 
 function errorHandler(e) {
@@ -184,6 +184,8 @@ ensureInit();
 
 //Main Loop
 function gameLoop() {
+	const gameModeSelector = document.getElementById('gameMode');
+	gameMode = gameModeSelector.value;
 	gameButton = document.getElementsByClassName('gameButton')[0]
 	if (gameButton.textContent === 'Start')
 	{
@@ -195,9 +197,11 @@ function gameLoop() {
         console.log('Game board not found, stopping game loop');
         cleanupGame();
     }
-	aiLoop(ball, player2);
+	if (gameMode == 'ai')
+		aiLoop(ball, player2);
 	handleMovement();
-	cleanAi();
+	if (gameMode == 'ai')
+		cleanAi();
 	updateElements();
     animationId = requestAnimationFrame(gameLoop);
     isAnimating = true;
@@ -294,7 +298,7 @@ function handleMovement() {
 		console.log('Player 1 Down');
 		player1.y +=player1.speed;
     }
-	if(keysPressed['ArrowUp']) {
+	if(keysPressed['ArrowUp']){
 		console.log('Player 2 Up');
         player2.y -=player2.speed;
     }
