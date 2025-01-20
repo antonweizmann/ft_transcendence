@@ -18,7 +18,8 @@ export const keysPressed = {};
 let scorePlayer1 = 0;
 let scorePlayer2 = 0;
 let stopDoubleCollistion;
-let gameButton, gameMode;
+let gameButton
+export let gameMode;
 console.log('game.js started');
 
 function errorHandler(e) {
@@ -198,12 +199,13 @@ function gameLoop() {
         cleanupGame();
     }
 	if (gameMode == 'ai')
-	{	document.getElementById("player2Name").innerText = "AI";
+	{
+		document.getElementById("player2Name").innerText = "AI";
 		aiLoop(ball, player2, "ArrowUp", "ArrowDown");
 	}
 	else if (gameMode == 'ai2')
 	{
-		ball.speed = 40;
+		ball.speed = 30;
 		document.getElementById("player2Name").innerText = "AI";
 		document.getElementById("player1Name").innerText = "AI";
 		aiLoop(ball, player2, "ArrowUp", "ArrowDown");
@@ -388,7 +390,7 @@ function ballBounce() {
 
 function addMovement(event)
 {
-	if ((gameMode =='ai' || gameMode == 'ai2' )&& !isAi && (event.key === "ArrowUp" || event.key === "ArrowDown"))
+	if ((gameMode =='ai' || gameMode == 'ai2' ) && !isAi && (event.key === "ArrowUp" || event.key === "ArrowDown"))
 		return ;
 	else
 		keysPressed[event.key] = true;

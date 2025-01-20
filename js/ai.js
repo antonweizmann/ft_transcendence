@@ -1,4 +1,4 @@
-import {Element, keysPressed} from './game.js'
+import {Element, keysPressed, gameMode} from './game.js'
 
 let predictedY;
 export let isAi = false;
@@ -28,10 +28,13 @@ export function cleanAi() {
 		key = "ArrowUp";
     else if(keysPressed['ArrowDown'])
 		key = "ArrowDown";
-	if (keysPressed['w'])
-		key = 'w';
-	else if (keysPressed['s'])
-		key = 's';
+	if (gameMode == 'ai2')
+	{
+		if (keysPressed['w'])
+			key = 'w';
+		else if (keysPressed['s'])
+			key = 's';
+	}
 	if (key)
 	{
 		const stopEvent = new KeyboardEvent("keyup", {key});
