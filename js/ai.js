@@ -1,7 +1,7 @@
 import {Element, keysPressed} from './game.js'
 
 let predictedY;
-
+export let isAi = false;
 export function aiLoop(ball, paddle) {
 	// console.log('AiStarted');
 	if (ball.dirX == 1)
@@ -12,19 +12,13 @@ export function aiLoop(ball, paddle) {
 		simulateKeyPress("ArrowUp");
 	else if (predictedY >= paddle.y + paddle.height)
 		simulateKeyPress("ArrowDown");
-	// if (predictedY < paddle.y) {
-	// 	paddle.y -= paddle.speed; // Define `paddle.speed` for the AI paddle
-	// } else if (predictedY > paddle.y + paddle.height) {
-	// 	paddle.y += paddle.speed;
-	// }
 
-	// Ensure paddle stays within game boundaries
-	// paddle.y = Math.max(0, Math.min(paddle.y, ball.maxY - paddle.height));
 	}
 }
 
 function simulateKeyPress(key) {
 	const event = new KeyboardEvent("keydown", {key});
+	isAi = true;
 	document.dispatchEvent(event);
 }
 
@@ -37,6 +31,7 @@ export function cleanAi() {
 	if (key)
 	{
 		const stopEvent = new KeyboardEvent("keyup", {key});
+		isAi = false;
 		document.dispatchEvent(stopEvent);
 	}
 }

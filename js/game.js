@@ -1,4 +1,4 @@
-import { aiLoop, cleanAi } from "./ai.js";
+import { aiLoop, cleanAi, isAi } from "./ai.js";
 // Add this at the very top of game.js
 console.log('=== Game Script Starting ===');
 
@@ -376,7 +376,10 @@ function ballBounce() {
 
 function addMovement(event)
 {
-	keysPressed[event.key] = true;
+	if (gameMode =='ai' && !isAi && (event.key === "ArrowUp" || event.key === "ArrowDown"))
+		return ;
+	else
+		keysPressed[event.key] = true;
 }
 function stopMovement(event){
 	delete keysPressed[event.key];
