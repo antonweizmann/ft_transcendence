@@ -55,6 +55,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# It is necessary for the debug toolbar to appear
 INTERNAL_IPS = [
 	'127.0.0.1',
 ]
