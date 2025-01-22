@@ -9,5 +9,9 @@ class User(models.Model):
 	created_at = models.DateTimeField(auto_now_add=True)
 	last_connection = models.DateTimeField(auto_now=True)
 
+	friends = models.ManyToManyField("self", symmetrical=True)
+	friend_requests_sent = models.ManyToManyField("self", symmetrical=False,
+		related_name="friend_requests_received")
+
 	def __str__(self):
 		return self.username + " " + self.email
