@@ -5,6 +5,12 @@
  * and wait until the text method extracts the text for the response of fetch.
  * @param {string} pageName - Page to load.
  */
+
+window.gameState = {
+    initialized: false,
+    cleanup: null
+};
+
 let addedScripts = []; // Array to store references to added scripts
 
 function loadScripts(scripts) {
@@ -41,6 +47,9 @@ async function getPage(pageName)
 {
 	try
 	{
+        if (window.gameState.cleanup) {
+            window.gameState.cleanup();
+        }
         removeAddedScripts();
 		const response = await fetch(`/pages/${pageName}.html`)
 		if (!response.ok)
@@ -49,7 +58,18 @@ async function getPage(pageName)
 		document.getElementById('main-content').innerHTML = content;
 		updateActive(pageName);
         if (pageName === 'play')
+        {
+            window.gameState = {
+            initialized: false,
+            cleanup: null
+        };
             loadScripts([{ type: 'module', src: 'js/game.js' }, {type: 'module', src: 'js/ai.js' }]);
+            setTimeout(() => {
+                if (window.ensureInit) {
+                    window.ensureInit();
+                }
+            }, 50);
+        }
 		// const scripts = document.getElementById('main-content').getElementsByTagName('script');
         // loadScripts(scripts);
 		changeLanguage();
@@ -68,7 +88,7 @@ async function getPage(pageName)
 
 		// If path is empty or 'index.html', default to 'home'
 		if (!path || path === 'index.html') {
-			path = 'play';
+			path = 'home';
 		}
 
 		console.log(`Loading path: ${path}`);

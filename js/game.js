@@ -13,7 +13,6 @@ let player1, player2, ball;
 let gameloop, animationId;
 let isAnimating = false;
 let eventListeners = [];
-let gameInitialized = false;
 export const keysPressed = {};
 let scorePlayer1 = 0;
 let scorePlayer2 = 0;
@@ -144,22 +143,47 @@ function initGame() {
 
 function listenerGame() {
     initGame();
-    gameInitialized = true;
+    window.gameState.initialized = true;
+	window.gameState.cleanup = cleanupGame;
 }
 
 function ensureInit() {
-    if (gameInitialized) return;
+    if (window.gameState.initialized === true) return;
 
     console.log('Ensuring initialization...');
     if (document.readyState === 'complete') {
         console.log('Document already complete, initializing now');
         initGame();
-        gameInitialized = true;
+        window.gameState.initialized = true;
+		window.gameState.cleanup = cleanupGame;
     } else {
         console.log('Document not ready, adding listener');
         document.addEventListener('DOMContentLoaded', listenerGame);
     }
 }
+// (function() {
+//     function ensureInit() {
+//         if (window.gameState.initialized === true) return;
+
+//         console.log('Ensuring initialization...');
+//         if (document.readyState === 'complete') {
+//             console.log('Document already complete, initializing now');
+//             initGame();
+//             window.gameState.initialized = true;
+//             window.gameState.cleanup = cleanupGame;
+//         } else {
+//             console.log('Document not ready, adding listener');
+//             document.addEventListener('DOMContentLoaded', listenerGame);
+//         }
+//     }
+
+//     // Call ensureInit immediately when the script loads
+//     ensureInit();
+
+//     // Also expose ensureInit globally if needed
+// })();
+// window.addEventListener('pageshow', ensureInit);
+// window.addEventListener('pagehide', cleanupGame);
 // Add this near the top of your file with other utilities
 function debounce(func, wait) {
     let timeout;
@@ -182,6 +206,7 @@ function listenerResize()
 window.addEventListener('resize', listenerResize);
 eventListeners.push({element: window, type: 'resize', listener: listenerResize});
 ensureInit();
+window.ensureInit = ensureInit;
 
 //Main Loop
 function gameLoop() {
@@ -237,6 +262,7 @@ function resetGame(){
 
 //Clean Up
 function cleanupGame(){
+	console.log('cleanup GAME called');
     if (isAnimating)
     {
         isAnimating = false;
@@ -246,7 +272,8 @@ function cleanupGame(){
 		console.log(`Removing ${type} listener from`, element);
         element.removeEventListener(type, listener);
     });
-	gameInitialized = false;
+	window.gameState.initialized = false;
+	window.gameState.cleanup = null;
     eventListeners = [];
 }
 
