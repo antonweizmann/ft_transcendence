@@ -171,9 +171,9 @@ body {
     background-color: #ffcccc;
 }
 
-.form-control{
+/* .form-control{
     max-width: 400px;
-}
+} */
 
 .signup-drop {
     width: 400px;
@@ -565,4 +565,19 @@ select {
         flex-direction: column;  /* Stack elements on smaller screens */
         gap: 5px;
     }
+}
+
+.signup-container {
+    max-width: 400px;
+    margin-top: 50px;
+}
+.signup-header {
+    text-align: center;
+}
+
+.profile-pic {
+    border-radius: 100px;
+    width: 50px;
+    height: 50px;
+    justify-content: center;
 }

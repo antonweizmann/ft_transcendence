@@ -133,3 +133,10 @@ window.addEventListener(`popstate`, function (event) {
 	}
 });
 
+function signUpInstead() {
+    const dropdownButton = document.getElementById('loginDropdownButton');
+    const dropdown = new bootstrap.Dropdown(dropdownButton);
+
+    dropdown.hide();
+    loadPage('signUp');
+}
