@@ -567,8 +567,11 @@ body {
 
 /* Responsive adjustments for smaller screens */
 @media (max-width: 768px) {
-    #gameMode, #difficulty {
-        width: 100%; /* Full width for better usability on smaller screens */
+    #gameMode{
+        width: 50%; /* Full width for better usability on smaller screens */
+    }
+    #difficulty {
+        width: 50%; /* Full width for better usability on smaller screens */
     }
     .game-controls {
         flex-direction: column; /* Stack elements vertically */

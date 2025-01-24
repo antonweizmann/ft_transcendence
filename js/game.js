@@ -156,7 +156,8 @@ function listenerMode() {
 	} else if (gameMode === 'ai') {
 		document.getElementById("player2Name").innerText = "AI";
 		console.log('Action for Human vs AI');
-		gameModeSelector.style.width = '50%';
+		if (window.innerWidth > 768)
+			gameModeSelector.style.width = '50%';
 		document.getElementById("difficulty").style.display = "block";
 	} else if (gameMode === 'ai2') {
 		document.getElementById("player1Name").innerText = "AI";
