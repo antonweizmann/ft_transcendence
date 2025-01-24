@@ -1,5 +1,4 @@
 import { aiLoop, cleanAi, isAi } from "./ai.js";
-// Add this at the very top of game.js
 console.log('=== Game Script Starting ===');
 
 const PINK = '#8A4FFF';
@@ -18,6 +17,7 @@ let scorePlayer1 = 0;
 let scorePlayer2 = 0;
 let stopDoubleCollistion;
 let gameButton
+let gameModeSelector
 export let gameMode;
 console.log('game.js started');
 
@@ -30,7 +30,6 @@ eventListeners.push({element: window, type: 'error', listener: errorHandler});
 //Class definitions
 export class Element {
 	constructor(options) {
-        // Store the functions/values
         this._x = options.x;
         this._y = options.y;
         this._height = options.height;
@@ -43,7 +42,6 @@ export class Element {
 		this._maxX = options.maxX
     }
 
-    // Use getters to evaluate positions dynamically
     get x() { return typeof this._x === 'function' ? this._x() : this._x; }
 	set x(value) {
 		const maxXValue = typeof this.maxX === 'function' ? this.maxX() : this.maxX;
@@ -75,7 +73,6 @@ function initGame() {
 
     setGameBoardSize(true);
     const ctx = gameBoard.getContext('2d');
-    // Rest of your game initialization code
 
 	let startPlayer1 = {
 		x: () => WIDTHBOARD / 80,
@@ -138,7 +135,36 @@ function initGame() {
 	console.log('Starting game loop with dimensions:', WIDTHBOARD, HEIGHTBOARD);
 	setGameBoardSize();
 	document.getElementsByClassName('gameButton')[0].addEventListener('click', gameLoop, { once: true });
+    gameModeSelector = document.getElementById('gameMode');
+
+    gameModeSelector.addEventListener('change', listenerMode);
 	// gameLoop();
+}
+
+function listenerMode() {
+	// Get the selected value
+	gameMode = gameModeSelector.value;
+	// Take action based on the selected value
+	console.log('Selected game mode:', gameMode);
+	resetGame();
+	if (gameMode === 'human') {
+		document.getElementById("player1Name").innerText = "Player 1";
+		document.getElementById("player2Name").innerText = "Player 2";
+		console.log('Action for Human vs Human');
+		gameModeSelector.style.width = '100%';
+		document.getElementById("difficulty").style.display = "none";
+	} else if (gameMode === 'ai') {
+		document.getElementById("player2Name").innerText = "AI";
+		console.log('Action for Human vs AI');
+		gameModeSelector.style.width = '50%';
+		document.getElementById("difficulty").style.display = "block";
+	} else if (gameMode === 'ai2') {
+		document.getElementById("player1Name").innerText = "AI";
+		document.getElementById("player2Name").innerText = "AI";
+		console.log('Action for AI vs AI');
+		gameModeSelector.style.width = '100%';
+		document.getElementById("difficulty").style.display = "none";
+	}
 }
 
 function listenerGame() {
@@ -161,30 +187,7 @@ function ensureInit() {
         document.addEventListener('DOMContentLoaded', listenerGame);
     }
 }
-// (function() {
-//     function ensureInit() {
-//         if (window.gameState.initialized === true) return;
 
-//         console.log('Ensuring initialization...');
-//         if (document.readyState === 'complete') {
-//             console.log('Document already complete, initializing now');
-//             initGame();
-//             window.gameState.initialized = true;
-//             window.gameState.cleanup = cleanupGame;
-//         } else {
-//             console.log('Document not ready, adding listener');
-//             document.addEventListener('DOMContentLoaded', listenerGame);
-//         }
-//     }
-
-//     // Call ensureInit immediately when the script loads
-//     ensureInit();
-
-//     // Also expose ensureInit globally if needed
-// })();
-// window.addEventListener('pageshow', ensureInit);
-// window.addEventListener('pagehide', cleanupGame);
-// Add this near the top of your file with other utilities
 function debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {
@@ -202,7 +205,7 @@ function listenerResize()
 	const debouncedResize = debounce(() => setGameBoardSize(), 100);
 		debouncedResize();
 }
-// Then update your resize listener
+
 window.addEventListener('resize', listenerResize);
 eventListeners.push({element: window, type: 'resize', listener: listenerResize});
 ensureInit();
@@ -224,20 +227,14 @@ function gameLoop() {
         cleanupGame();
     }
 	if (gameMode == 'ai')
-	{
-		document.getElementById("player2Name").innerText = "AI";
 		aiLoop(ball, player2, "ArrowUp", "ArrowDown");
-	}
 	else if (gameMode == 'ai2')
 	{
-		ball.speed = 30;
-		document.getElementById("player2Name").innerText = "AI";
-		document.getElementById("player1Name").innerText = "AI";
+		if (ball.speed < WIDTHBOARD / 30)
+			ball.speed = WIDTHBOARD / 30;
 		aiLoop(ball, player2, "ArrowUp", "ArrowDown");
 		aiLoop(ball, player1, 'w', 's');
 	}
-	else
-		document.getElementById("player2Name").innerText = "Player 2";
 	handleMovement();
 	if (gameMode == 'ai' || gameMode == 'ai2')
 		cleanAi();
@@ -347,7 +344,7 @@ function handleMovement() {
 		console.log('Player 2 Down');
 		player2.y += player2.speed;
     }
-	// console.log('Ball speed', ball.speed);
+	console.log('Ball speed', ball.speed);
 	//diagonal speed normalized
 	const magnitude = Math.sqrt(ball.dirX * ball.dirX + ball.dirY * ball.dirY);
 	const normalizedX = ball.dirX / magnitude;
@@ -391,8 +388,10 @@ function checkCollision() {
         ball.y <= player2.y + player2.height && stopDoubleCollistion == 1) {
 			ball.dirX *= -1;
 			ball.dirY = ((ball.y + ball.height/2) - (player2.y + player2.height/2)) / (player2.height/2);
-		if (ball.speed <= WIDTHBOARD / 80)
+		if (ball.speed <= WIDTHBOARD / 60)
 			ball.speed += WIDTHBOARD / 1000 ;
+		else if (gameMode === "ai2")
+			ball.speed += WIDTHBOARD / 1000;
 		stopDoubleCollistion = -1;
     }
 }

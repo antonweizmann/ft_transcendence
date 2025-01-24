@@ -6,6 +6,8 @@
  * @param {string} pageName - Page to load.
  */
 
+const startPage = 'play';
+
 window.gameState = {
     initialized: false,
     cleanup: null
@@ -88,7 +90,7 @@ async function getPage(pageName)
 
 		// If path is empty or 'index.html', default to 'home'
 		if (!path || path === 'index.html') {
-			path = 'home';
+			path = startPage;
 		}
 
 		console.log(`Loading path: ${path}`);
