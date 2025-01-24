@@ -1,3 +1,4 @@
+import { aiLoop, cleanAi, isAi } from "./ai.js";
 // Add this at the very top of game.js
 console.log('=== Game Script Starting ===');
 
@@ -12,12 +13,12 @@ let player1, player2, ball;
 let gameloop, animationId;
 let isAnimating = false;
 let eventListeners = [];
-let gameInitialized = false;
-const keysPressed = {};
+export const keysPressed = {};
 let scorePlayer1 = 0;
 let scorePlayer2 = 0;
 let stopDoubleCollistion;
-let gameButton;
+let gameButton
+export let gameMode;
 console.log('game.js started');
 
 function errorHandler(e) {
@@ -27,7 +28,7 @@ function errorHandler(e) {
 window.addEventListener('error', errorHandler);
 eventListeners.push({element: window, type: 'error', listener: errorHandler});
 //Class definitions
-class Element {
+export class Element {
 	constructor(options) {
         // Store the functions/values
         this._x = options.x;
@@ -38,8 +39,8 @@ class Element {
         this.dirX = options.dirX;
         this.dirY = options.dirY;
         this.color = options.color;
-		this.maxY = options.maxY;
-		this.maxX = options.maxX
+		this._maxY = options.maxY;
+		this._maxX = options.maxX
     }
 
     // Use getters to evaluate positions dynamically
@@ -56,6 +57,8 @@ class Element {
 
     get width() { return typeof this._width === 'function' ? this._width() : this._width; }
     get height() { return typeof this._height === 'function' ? this._height() : this._height; }
+    get maxX() { return typeof this._maxX === 'function' ? this._maxX() : this._maxX; }
+    get maxY() { return typeof this._maxY === 'function' ? this._maxY() : this._maxY; }
 	get speed() { return typeof this._speed === 'function' ? this._speed() : this._speed; }
 	set speed(value) {this._speed = value};
 }
@@ -107,10 +110,13 @@ function initGame() {
 		dirY: Math.round(Math.random()) ? -1 : 1,
 		color: PURPLE,
 	};
+
     player1 = new Element(startPlayer1);
     player2 = new Element(startPlayer2);
 	ball = new Element(startBallValues);
+
 	stopDoubleCollistion = ball.dirX;
+
 	ball.reset = function () {
 		ball.x = startBallValues.x();
 		ball.y = startBallValues.y();
@@ -137,22 +143,47 @@ function initGame() {
 
 function listenerGame() {
     initGame();
-    gameInitialized = true;
+    window.gameState.initialized = true;
+	window.gameState.cleanup = cleanupGame;
 }
 
 function ensureInit() {
-    if (gameInitialized) return;
+    if (window.gameState.initialized === true) return;
 
     console.log('Ensuring initialization...');
     if (document.readyState === 'complete') {
         console.log('Document already complete, initializing now');
         initGame();
-        gameInitialized = true;
+        window.gameState.initialized = true;
+		window.gameState.cleanup = cleanupGame;
     } else {
         console.log('Document not ready, adding listener');
         document.addEventListener('DOMContentLoaded', listenerGame);
     }
 }
+// (function() {
+//     function ensureInit() {
+//         if (window.gameState.initialized === true) return;
+
+//         console.log('Ensuring initialization...');
+//         if (document.readyState === 'complete') {
+//             console.log('Document already complete, initializing now');
+//             initGame();
+//             window.gameState.initialized = true;
+//             window.gameState.cleanup = cleanupGame;
+//         } else {
+//             console.log('Document not ready, adding listener');
+//             document.addEventListener('DOMContentLoaded', listenerGame);
+//         }
+//     }
+
+//     // Call ensureInit immediately when the script loads
+//     ensureInit();
+
+//     // Also expose ensureInit globally if needed
+// })();
+// window.addEventListener('pageshow', ensureInit);
+// window.addEventListener('pagehide', cleanupGame);
 // Add this near the top of your file with other utilities
 function debounce(func, wait) {
     let timeout;
@@ -175,9 +206,12 @@ function listenerResize()
 window.addEventListener('resize', listenerResize);
 eventListeners.push({element: window, type: 'resize', listener: listenerResize});
 ensureInit();
+window.ensureInit = ensureInit;
 
 //Main Loop
 function gameLoop() {
+	const gameModeSelector = document.getElementById('gameMode');
+	gameMode = gameModeSelector.value;
 	gameButton = document.getElementsByClassName('gameButton')[0]
 	if (gameButton.textContent === 'Start')
 	{
@@ -188,9 +222,25 @@ function gameLoop() {
     if (!gameBoard) {
         console.log('Game board not found, stopping game loop');
         cleanupGame();
-        return; // Stop the loop by not calling requestAnimationFrame
     }
+	if (gameMode == 'ai')
+	{
+		document.getElementById("player2Name").innerText = "AI";
+		aiLoop(ball, player2, "ArrowUp", "ArrowDown");
+	}
+	else if (gameMode == 'ai2')
+	{
+		ball.speed = 30;
+		document.getElementById("player2Name").innerText = "AI";
+		document.getElementById("player1Name").innerText = "AI";
+		aiLoop(ball, player2, "ArrowUp", "ArrowDown");
+		aiLoop(ball, player1, 'w', 's');
+	}
+	else
+		document.getElementById("player2Name").innerText = "Player 2";
 	handleMovement();
+	if (gameMode == 'ai' || gameMode == 'ai2')
+		cleanAi();
 	updateElements();
     animationId = requestAnimationFrame(gameLoop);
     isAnimating = true;
@@ -212,6 +262,7 @@ function resetGame(){
 
 //Clean Up
 function cleanupGame(){
+	console.log('cleanup GAME called');
     if (isAnimating)
     {
         isAnimating = false;
@@ -221,7 +272,8 @@ function cleanupGame(){
 		console.log(`Removing ${type} listener from`, element);
         element.removeEventListener(type, listener);
     });
-	gameInitialized = false;
+	window.gameState.initialized = false;
+	window.gameState.cleanup = null;
     eventListeners = [];
 }
 
@@ -287,7 +339,7 @@ function handleMovement() {
 		console.log('Player 1 Down');
 		player1.y +=player1.speed;
     }
-	if(keysPressed['ArrowUp']) {
+	if(keysPressed['ArrowUp']){
 		console.log('Player 2 Up');
         player2.y -=player2.speed;
     }
@@ -348,14 +400,14 @@ function checkCollision() {
 function ballBounce() {
 	if (ball.y == 0)
 		ball.dirY *= -1;
-	else if (ball.y == ball.maxY())
+	else if (ball.y == ball.maxY)
 		ball.dirY *= -1;
 	if (ball.x == 0)
 	{
 		increaseScore(2);
 		ball.reset();
 	}
-	else if (ball.x == ball.maxX())
+	else if (ball.x == ball.maxX)
 	{
 		increaseScore(1);
 		ball.reset();
@@ -365,7 +417,10 @@ function ballBounce() {
 
 function addMovement(event)
 {
-	keysPressed[event.key] = true;
+	if ((gameMode =='ai' || gameMode == 'ai2' ) && !isAi && (event.key === "ArrowUp" || event.key === "ArrowDown"))
+		return ;
+	else
+		keysPressed[event.key] = true;
 }
 function stopMovement(event){
 	delete keysPressed[event.key];
@@ -375,3 +430,4 @@ document.addEventListener('keydown', addMovement);
 document.addEventListener('keyup', stopMovement);
 eventListeners.push({element: document, type: 'keydown', listener: addMovement});
 eventListeners.push({element: document, type: 'keyup', listener: stopMovement});
+

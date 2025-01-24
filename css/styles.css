@@ -458,15 +458,111 @@ body {
     }
 }
 
-.gamebutton {
-    background-color: var(--deep-blue); /* Bright color for visibility */
-    color: white;
-    font-size: 2.5rem; /* Large text */
-    padding: 10px 20px; /* Big button size */
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+}
+
+/* Container for overall page */
+.container {
+    max-width: 100%;
+}
+
+/* Player names and score styling */
+.player-name, .score {
+    color: #FFFFFF;
+    font-weight: bold;
+    text-align: center;
+}
+
+.score-container {
+    width: 100%;
+    padding: 0 15%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Score and Player Names Responsive Font */
+.player-name {
+    font-size: calc(16px + 2vw);
+}
+
+.score {
+    font-size: calc(16px + 2vw);
+}
+
+/* Game Controls Layout */
+.game-controls {
+    /* width: 100%;
+    padding: 0 10%; */
+    gap: 200px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Start Button Styles */
+.button-container {
+    width: 33%;
+    text-align: center;
+}
+
+.gameButton {
+    width: 140%;
+    padding: 1em;
+    font-size: calc(12px + 1vw);
+    border-radius: 5px;
+    background-color: var(--deep-blue);
+    color: #FFFFFF;
     border: none;
-    border-radius: 10px; /* Rounded corners */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     cursor: pointer;
-    transition: transform 0.2s, background-color 0.3s;
-    z-index: 10; /* Ensure it appears above other elements */
+}
+
+#gameMode {
+    width: 75%;
+    min-width: 110%;
+    padding: 0.8em;
+    font-size: calc(12px + 1vw);
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.select-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+select {
+    padding: 10px 40px 10px 10px; /* Add space on the right for the arrow */
+    font-size: 16px;
+    border: 2px solid var(--deep-blue);
+    border-radius: 5px;
+    background-color: var(--deep-blue);
+    color: white;
+    font-family: Arial, sans-serif;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 100%;
+}
+
+/* Custom arrow inside the wrapper */
+.select-wrapper::after {
+    content: '▼';  /* Unicode down arrow */
+    position: absolute;
+    right: 0px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: white;
+    pointer-events: none;
+}
+
+@media (max-width: 768px) {
+    .game-controls {
+        flex-direction: column;  /* Stack elements on smaller screens */
+        gap: 5px;
+    }
 }
