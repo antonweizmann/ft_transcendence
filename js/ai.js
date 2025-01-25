@@ -1,20 +1,30 @@
 import {Element, keysPressed, gameMode} from './game.js'
 
 let predictedY;
+let reactionTime = 150;
+let lastAiMoveTime = 0;
+
 export let isAi = false;
 export function aiLoop(ball, paddle, key1, key2) {
-	// console.log('AiStarted');
-	// if (ball.dirX == 1)
-	// {
+	const now = Date.now();
+	if (now - lastAiMoveTime < reactionTime) return;
+	lastAiMoveTime = now;
 	predictedY = calculateBallMovement(ball, paddle);
-	// console.log(predictedY);
 	if (predictedY <= paddle.y)
 		simulateKeyPress(key1);
 	else if (predictedY >= paddle.y + paddle.height)
 		simulateKeyPress(key2);
+}
 
-	}
-// }
+export function setAiReaction(event) {
+	console.log('ai reacton')
+	if (event.value === "easy")
+		reactionTime = 150;
+	else if (event.value === "medium")
+		reactionTime = 75;
+	else if (event.value === "hard")
+		reactionTime = 0;
+}
 
 function simulateKeyPress(key) {
 	const event = new KeyboardEvent("keydown", {key});

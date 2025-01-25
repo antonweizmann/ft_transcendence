@@ -49,9 +49,8 @@ async function getPage(pageName)
 {
 	try
 	{
-        if (window.gameState.cleanup) {
+        if (window.gameState.cleanup)
             window.gameState.cleanup();
-        }
         removeAddedScripts();
 		const response = await fetch(`/pages/${pageName}.html`)
 		if (!response.ok)

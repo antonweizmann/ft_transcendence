@@ -1,4 +1,4 @@
-import { aiLoop, cleanAi, isAi } from "./ai.js";
+import { aiLoop, cleanAi, isAi, setAiReaction} from "./ai.js";
 console.log('=== Game Script Starting ===');
 
 const PINK = '#8A4FFF';
@@ -144,6 +144,7 @@ function initGame() {
 function listenerMode() {
 	// Get the selected value
 	gameMode = gameModeSelector.value;
+	const difficulty = document.getElementById("difficulty");
 	// Take action based on the selected value
 	console.log('Selected game mode:', gameMode);
 	resetGame();
@@ -152,19 +153,21 @@ function listenerMode() {
 		document.getElementById("player2Name").innerText = "Player 2";
 		console.log('Action for Human vs Human');
 		gameModeSelector.style.width = '100%';
-		document.getElementById("difficulty").style.display = "none";
+		difficulty.style.display = "none";
 	} else if (gameMode === 'ai') {
 		document.getElementById("player2Name").innerText = "AI";
 		console.log('Action for Human vs AI');
 		if (window.innerWidth > 768)
 			gameModeSelector.style.width = '50%';
-		document.getElementById("difficulty").style.display = "block";
+		difficulty.style.display = "block";
+		difficulty.addEventListener('change', setAiReaction);
 	} else if (gameMode === 'ai2') {
 		document.getElementById("player1Name").innerText = "AI";
 		document.getElementById("player2Name").innerText = "AI";
 		console.log('Action for AI vs AI');
 		gameModeSelector.style.width = '100%';
-		document.getElementById("difficulty").style.display = "none";
+		difficulty.style.display = "none";
+		difficulty.addEventListener('change', setAiReaction);
 	}
 }
 
@@ -346,6 +349,7 @@ function handleMovement() {
 		player2.y += player2.speed;
     }
 	console.log('Ball speed', ball.speed);
+
 	//diagonal speed normalized
 	const magnitude = Math.sqrt(ball.dirX * ball.dirX + ball.dirY * ball.dirY);
 	const normalizedX = ball.dirX / magnitude;
@@ -380,6 +384,8 @@ function checkCollision() {
         ball.dirX *= -1;
         ball.dirY = ((ball.y + ball.height/2) - (player1.y + player1.height/2)) / (player1.height/2);
 		if (ball.speed <= WIDTHBOARD / 60)
+			ball.speed += WIDTHBOARD / 1000;
+		else if (gameMode === "ai2")
 			ball.speed += WIDTHBOARD / 1000;
 		stopDoubleCollistion = 1;
 	}
