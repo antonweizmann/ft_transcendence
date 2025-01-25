@@ -38,8 +38,15 @@
                         <a class="nav-link" data-bs-toggle="offcanvas" data-bs-target="#friendsSidebar" aria-controls="friendsSidebar" data-translate="friends">Friends</a>
 
                     </li>
+                    <!-- Language Selector -->
                     <li class="nav-item">
-                        <a class="nav-link" onclick="loadPage('profile')" data-translate="profile">Profile</a>
+                      <!-- <button class="btn btn-outline-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">English</button> -->
+                      <select id="languageDropdown" onchange="changeLanguage(event)" class="form-select btn btn-outline-light dropdown-toggle" data-translate="languageSelector">
+                        <option value="en" data-translate="english">English</option>
+                        <option value="es" data-translate="spanish">Español</option>
+                        <option value="de" data-translate="german">Deutsch</option>
+                        <!-- Add more languages here -->
+                      </select>
                     </li>
                     <li class="nav-item dropdown">
                         <button class="btn btn-outline-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="loginDropdownButton" data-translate="login">Login</button>
@@ -71,19 +78,11 @@
                             </div>
                         </form>
                     </li>
-                    <!-- Language Selector -->
                     <li class="nav-item">
-                        <!-- <button class="btn btn-outline-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">English</button> -->
-                        <select id="languageDropdown" onchange="changeLanguage(event)" class="form-select btn btn-outline-light dropdown-toggle" data-translate="languageSelector">
-                        <option value="en" data-translate="english">English</option>
-                        <option value="es" data-translate="spanish">Español</option>
-                        <option value="de" data-translate="german">Deutsch</option>
-                        <!-- Add more languages here -->
-                        </select>
+                        <a class="nav-link" onclick="loadPage('profile')" id='profileButton' data-translate="profile">Profile</a>
                     </li>
                 </ul>
 			</div>
-
 		</div>
 	</nav>
 

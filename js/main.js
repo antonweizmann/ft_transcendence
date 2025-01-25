@@ -1,11 +1,29 @@
-/**
- * This function loads the requested html page.
- * It is a async func so we are able to use the await keyword.
- * This enable us to wait until the fetch method gets the contents of the file
- * and wait until the text method extracts the text for the response of fetch.
- * @param {string} pageName - Page to load.
- */
 let addedScripts = []; // Array to store references to added scripts
+
+document.addEventListener('DOMContentLoaded', function() {
+    setupDropdownValidation('.login-drop', validateLoginForm);
+	// setupDropdownValidation('.signup-drop', validateSignupForm);
+
+    setupLoginOrProfile();
+});
+
+function setupLoginOrProfile() {
+    //replace by validation of choice
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+    const loginButton = document.getElementById('loginDropdownButton');
+    const profileButton = document.getElementById('profileButton');
+
+    if (isLoggedIn) {
+        loginButton.style.display = 'none';
+        profileButton.style.display = 'block';
+    } else {
+        loginButton.style.display = 'block';
+        profileButton.style.display = 'none';
+    }
+    console.log('Login Button:', loginButton);
+    console.log('Profile Button:', profileButton);
+}
 
 function loadScripts(scripts) {
     for (let script of scripts) {
@@ -31,6 +49,14 @@ function removeAddedScripts() {
     });
     addedScripts = []; // Clear the array
 }
+
+/**
+ * This function loads the requested html page.
+ * It is a async func so we are able to use the await keyword.
+ * This enable us to wait until the fetch method gets the contents of the file
+ * and wait until the text method extracts the text for the response of fetch.
+ * @param {string} pageName - Page to load.
+ */
 async function loadPage(pageName)
 {
 	window.history.pushState({page: pageName}, ``);
