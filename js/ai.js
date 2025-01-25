@@ -5,12 +5,14 @@ let reactionTime = 150;
 let lastAiMoveTime = 0;
 
 export let isAi = false;
+
+
 export function aiLoop(ball, paddle, key1, key2) {
-	const now = Date.now();
-	if (now - lastAiMoveTime < reactionTime) return;
-	lastAiMoveTime = now;
+	// const now = Date.now();
+	// if (now - lastAiMoveTime < reactionTime) return;
+	// lastAiMoveTime = now;
 	predictedY = calculateBallMovement(ball, paddle);
-	if (predictedY <= paddle.y)
+	if (predictedY < paddle.y)
 		simulateKeyPress(key1);
 	else if (predictedY >= paddle.y + paddle.height)
 		simulateKeyPress(key2);
@@ -54,6 +56,10 @@ export function cleanAi() {
 }
 
 function calculateBallMovement(ball, paddle) {
+	let distanceToBall = paddle.x - ball.x;
+	const fov = gameMode === 'easy' ? ball.maxX / 4 : gameMode === 'medium' ? ball.maxX / 2 : ball.maxX;
+	if (distanceToBall > fov) return paddle.y;
+	console.log('fov breached');
 	const magnitude = Math.sqrt(ball.dirX * ball.dirX + ball.dirY * ball.dirY);
 	const normalizedX = ball.dirX / magnitude;
 	const normalizedY = ball.dirY / magnitude;
