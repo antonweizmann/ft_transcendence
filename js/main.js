@@ -6,6 +6,8 @@
  * @param {string} pageName - Page to load.
  */
 
+const startPage = 'play';
+
 window.gameState = {
     initialized: false,
     cleanup: null
@@ -47,9 +49,8 @@ async function getPage(pageName)
 {
 	try
 	{
-        if (window.gameState.cleanup) {
+        if (window.gameState.cleanup)
             window.gameState.cleanup();
-        }
         removeAddedScripts();
 		const response = await fetch(`/pages/${pageName}.html`)
 		if (!response.ok)
@@ -88,7 +89,7 @@ async function getPage(pageName)
 
 		// If path is empty or 'index.html', default to 'home'
 		if (!path || path === 'index.html') {
-			path = 'home';
+			path = startPage;
 		}
 
 		console.log(`Loading path: ${path}`);

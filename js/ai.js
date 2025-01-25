@@ -1,20 +1,28 @@
 import {Element, keysPressed, gameMode} from './game.js'
 
 let predictedY;
+let fov ;
 export let isAi = false;
+
+
 export function aiLoop(ball, paddle, key1, key2) {
-	// console.log('AiStarted');
-	// if (ball.dirX == 1)
-	// {
+	setAiReaction(ball);
 	predictedY = calculateBallMovement(ball, paddle);
-	// console.log(predictedY);
-	if (predictedY <= paddle.y)
+	if (predictedY < paddle.y)
 		simulateKeyPress(key1);
 	else if (predictedY >= paddle.y + paddle.height)
 		simulateKeyPress(key2);
+}
 
-	}
-// }
+export function setAiReaction(ball) {
+	difficulty = document.getElementById("difficulty");
+	if (difficulty.value === "easy")
+		fov = ball.maxX / 4;
+	else if (difficulty.value === "medium")
+		fov = ball.maxX / 2;
+	else if (difficulty.value === "hard")
+		fov = ball.maxX;
+}
 
 function simulateKeyPress(key) {
 	const event = new KeyboardEvent("keydown", {key});
@@ -44,6 +52,9 @@ export function cleanAi() {
 }
 
 function calculateBallMovement(ball, paddle) {
+	let distanceToBall = paddle.x - ball.x;
+	if (gameMode === "ai" && distanceToBall > fov) return paddle.y;
+	console.log('fov breached');
 	const magnitude = Math.sqrt(ball.dirX * ball.dirX + ball.dirY * ball.dirY);
 	const normalizedX = ball.dirX / magnitude;
 	const normalizedY = ball.dirY / magnitude;
@@ -59,6 +70,12 @@ function calculateBallMovement(ball, paddle) {
 		} else if (predictedY > ball.maxY) {
 			// Ball bounces off the bottom wall
 			predictedY = 2 * ball.maxY - predictedY;
+		}
+		if (gameMode === "ai")
+		{
+			difficulty = document.getElementById("difficulty");
+			if (difficulty.value === 'easy') predictedY += (Math.random() - 0.5) * (paddle.height * 20);
+			if (difficulty.value === 'medium') predictedY += (Math.random() - 0.5) * (paddle.height * 10);
 		}
 	}
 	return predictedY;

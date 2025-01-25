@@ -494,9 +494,9 @@ body {
 
 /* Game Controls Layout */
 .game-controls {
-    /* width: 100%;
-    padding: 0 10%; */
-    gap: 200px;
+    width: 80%;
+    padding: 0 10%;
+    gap: 1em;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -509,7 +509,7 @@ body {
 }
 
 .gameButton {
-    width: 140%;
+    width: 70%;
     padding: 1em;
     font-size: calc(12px + 1vw);
     border-radius: 5px;
@@ -519,40 +519,33 @@ body {
     cursor: pointer;
 }
 
+
 #gameMode {
-    width: 75%;
-    min-width: 110%;
-    padding: 0.8em;
-    font-size: calc(12px + 1vw);
+    width: 75%; /* Slightly increase width to prevent squishing */
+    padding: 1em; /* Adjust padding for a balanced look */
+    font-size: calc(12px + 1vw); /* Slightly increase font size */
     border-radius: 5px;
     border: none;
+    background-color: var(--deep-blue);
+    color: white;
     cursor: pointer;
 }
 
-.select-wrapper {
-    position: relative;
-    display: inline-block;
-    width: 100%;
-}
-select {
-    padding: 10px 40px 10px 10px; /* Add space on the right for the arrow */
-    font-size: 16px;
-    border: 2px solid var(--deep-blue);
+#difficulty {
+    width: 35%; /* Keep slightly larger width */
+    padding: 1em; /* Balanced padding */
+    font-size: calc(12px + 1vw); /* Keep larger font size */
     border-radius: 5px;
+    border: none;
     background-color: var(--deep-blue);
     color: white;
-    font-family: Arial, sans-serif;
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    width: 100%;
 }
 
-/* Custom arrow inside the wrapper */
+/* Adjust arrow position for both selects */
 .select-wrapper::after {
-    content: '▼';  /* Unicode down arrow */
+    content: '▼';
     position: absolute;
-    right: 0px;
+    right: 12px; /* Adjust spacing to align with larger boxes */
     top: 50%;
     transform: translateY(-50%);
     font-size: 18px;
@@ -560,9 +553,32 @@ select {
     pointer-events: none;
 }
 
+/* Layout adjustments for the select-wrapper */
+.select-wrapper.d-flex {
+    display: flex;
+    align-items: center; /* Keep vertical alignment */
+    gap: 15px; /* Add space between selects */
+}
+/* Ensure equal spacing between button and selects */
+.game-controls > * {
+    flex-grow: 1; /* Distribute remaining space evenly */
+    text-align: center; /* Keep everything visually aligned */
+}
+
+/* Responsive adjustments for smaller screens */
 @media (max-width: 768px) {
+    #gameMode{
+        width: 50%; /* Full width for better usability on smaller screens */
+    }
+    #difficulty {
+        width: 50%; /* Full width for better usability on smaller screens */
+    }
     .game-controls {
-        flex-direction: column;  /* Stack elements on smaller screens */
-        gap: 5px;
+        flex-direction: column; /* Stack elements vertically */
+        gap: 10px; /* Add more spacing for clarity */
+    }
+    .select-wrapper {
+        flex-direction: column;
+        gap: 10px;
     }
 }
