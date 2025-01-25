@@ -3,7 +3,7 @@ import {Element, keysPressed, gameMode} from './game.js'
 let predictedY;
 let reactionTime = 150;
 let lastAiMoveTime = 0;
-
+let fov ;
 export let isAi = false;
 
 
@@ -11,6 +11,7 @@ export function aiLoop(ball, paddle, key1, key2) {
 	// const now = Date.now();
 	// if (now - lastAiMoveTime < reactionTime) return;
 	// lastAiMoveTime = now;
+	setAiReaction(ball);
 	predictedY = calculateBallMovement(ball, paddle);
 	if (predictedY < paddle.y)
 		simulateKeyPress(key1);
@@ -18,14 +19,14 @@ export function aiLoop(ball, paddle, key1, key2) {
 		simulateKeyPress(key2);
 }
 
-export function setAiReaction(event) {
-	console.log('ai reacton')
-	if (event.value === "easy")
-		reactionTime = 150;
-	else if (event.value === "medium")
-		reactionTime = 75;
-	else if (event.value === "hard")
-		reactionTime = 0;
+export function setAiReaction(ball) {
+	difficulty = document.getElementById("difficulty");
+	if (difficulty.value === "easy")
+		fov = ball.maxX / 4;
+	else if (difficulty.value === "medium")
+		fov = ball.maxX / 2;
+	else if (difficulty.value === "hard")
+		fov = ball.maxX;
 }
 
 function simulateKeyPress(key) {
@@ -57,8 +58,7 @@ export function cleanAi() {
 
 function calculateBallMovement(ball, paddle) {
 	let distanceToBall = paddle.x - ball.x;
-	const fov = gameMode === 'easy' ? ball.maxX / 4 : gameMode === 'medium' ? ball.maxX / 2 : ball.maxX;
-	if (distanceToBall > fov) return paddle.y;
+	if (gameMode === "ai" && distanceToBall > fov) return paddle.y;
 	console.log('fov breached');
 	const magnitude = Math.sqrt(ball.dirX * ball.dirX + ball.dirY * ball.dirY);
 	const normalizedX = ball.dirX / magnitude;
