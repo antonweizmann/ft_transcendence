@@ -1,16 +1,11 @@
 import {Element, keysPressed, gameMode} from './game.js'
 
 let predictedY;
-let reactionTime = 150;
-let lastAiMoveTime = 0;
 let fov ;
 export let isAi = false;
 
 
 export function aiLoop(ball, paddle, key1, key2) {
-	// const now = Date.now();
-	// if (now - lastAiMoveTime < reactionTime) return;
-	// lastAiMoveTime = now;
 	setAiReaction(ball);
 	predictedY = calculateBallMovement(ball, paddle);
 	if (predictedY < paddle.y)
@@ -75,6 +70,12 @@ function calculateBallMovement(ball, paddle) {
 		} else if (predictedY > ball.maxY) {
 			// Ball bounces off the bottom wall
 			predictedY = 2 * ball.maxY - predictedY;
+		}
+		if (gameMode === "ai")
+		{
+			difficulty = document.getElementById("difficulty");
+			if (difficulty.value === 'easy') predictedY += (Math.random() - 0.5) * (paddle.height * 20);
+			if (difficulty.value === 'medium') predictedY += (Math.random() - 0.5) * (paddle.height * 10);
 		}
 	}
 	return predictedY;
