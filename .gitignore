@@ -3,6 +3,7 @@ en.subject.pdf
 credentials.env
 secrets/*
 *.backup
+.vscode/
 
 # Python files
 myenv/
