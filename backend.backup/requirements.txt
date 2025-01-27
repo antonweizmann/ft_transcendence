@@ -1,5 +1,0 @@
-Django
-djangorestframework
-django-debug-toolbar
-psycopg2
-djangorestframework_simplejwt

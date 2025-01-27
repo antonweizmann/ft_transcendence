@@ -2,6 +2,7 @@ en.subject.pdf
 .DS_Store
 credentials.env
 secrets/*
+*.backup
 
 # Python files
 myenv/
