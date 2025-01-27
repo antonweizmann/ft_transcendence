@@ -1,0 +1,54 @@
+services:
+
+  # Backend service
+  Django:
+    image: django
+    container_name: django
+    build: ./services/Django
+    depends_on:
+      - PostgreSQL
+    volumes:
+      - ./services/Django:/app
+    ports:
+      - "8000:8000"
+    restart: always
+    networks:
+      - Ft_Transcendence
+    secrets:
+      - postgres_password
+    environment:
+      - POSTGRES_DB=ft_transcendence_db
+      - POSTGRES_USER=ft_transcendence_user
+      - POSTGRES_PORT=5432
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres_password
+      - POSTGRES_HOST=postgres
+
+  PostgreSQL:
+    image: postgres:17.2
+    container_name: postgres
+    restart: always
+    networks:
+      - Ft_Transcendence
+    volumes:
+      - postgres_volume:/var/lib/postgresql/data
+    secrets:
+      - postgres_password
+    environment:
+      - POSTGRES_DB=ft_transcendence_db
+      - POSTGRES_USER=ft_transcendence_user
+      - POSTGRES_PORT=5432
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres_password
+
+volumes:
+  postgres_volume:
+    name: postgres_volume
+    driver: local
+
+networks:
+  Ft_Transcendence:
+    name: inception
+    driver: bridge
+
+secrets:
+  postgres_password:
+    file: ../secrets/postgres_password.env
