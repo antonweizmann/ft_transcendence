@@ -1,5 +1,4 @@
 Django
 djangorestframework
-django-debug-toolbar
 psycopg2-binary
 djangorestframework_simplejwt
