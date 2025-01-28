@@ -16,6 +16,7 @@ services:
       - Ft_Transcendence
     secrets:
       - postgres_password
+      - django_superuser
     environment:
       - POSTGRES_DB=ft_transcendence_db
       - POSTGRES_USER=ft_transcendence_user
@@ -52,3 +53,5 @@ networks:
 secrets:
   postgres_password:
     file: ../secrets/postgres_password.env
+  django_superuser:
+    file: ../secrets/django_superuser.env
