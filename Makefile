@@ -20,10 +20,11 @@ stop:
 .PHONY: stop
 
 clean:
-	docker system prune -a --volumes -f
+	docker system prune --volumes -f
 .PHONY: clean
 
 fclean: clean
+	docker system prune -a -f
 	$(DOCKER_COMPOSE) down --volumes --remove-orphans
 	$(DOCKER_COMPOSE) down --rmi all
 .PHONY: fclean
