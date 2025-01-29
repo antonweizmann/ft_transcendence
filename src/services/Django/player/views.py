@@ -47,8 +47,13 @@ class PlayerDetailView(APIView):
 
 	def delete(self, request, pk):
 		try:
-			player = Player.objects.get(pk=pk)
+			auth_user = Player.objects.get(pk=request.user.pk)
+			target_player = Player.objects.get(pk=pk)
+			if auth_user != target_player and not auth_user.is_staff:
+				return Response({
+					'detail': 'You can only delete your own account.'},
+					status=status.HTTP_403_FORBIDDEN)
 		except Player.DoesNotExist:
 			return Response(status=status.HTTP_404_NOT_FOUND)
-		player.delete()
+		target_player.delete()
 		return Response(status=status.HTTP_204_NO_CONTENT)
