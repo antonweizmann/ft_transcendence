@@ -11,4 +11,4 @@ class Player(AbstractUser):
 		ordering = ['username']
 
 	def __str__(self):
-		return "{self.id}_{self.username}"
+		return f"{self.id}_{self.username}"
