@@ -2,7 +2,7 @@ from rest_framework import status, generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from player.serializers import PlayerSerializer
+from player.serializers import PlayerSerializer, PublicPlayerSerializer
 from player.models import Player
 
 class PlayerListCreateView(generics.ListCreateAPIView):
@@ -21,10 +21,14 @@ class PlayerDetailView(APIView):
 
 	def get(self, request, pk):
 		try:
-			player = Player.objects.get(pk=pk)
+			auth_user = Player.objects.get(pk=request.user.pk)
+			target_player = Player.objects.get(pk=pk)
 		except Player.DoesNotExist:
 			return Response(status=status.HTTP_404_NOT_FOUND)
-		serializer = PlayerSerializer(player)
+		if auth_user != target_player and not auth_user.is_staff:
+			serializer = PublicPlayerSerializer(target_player)
+		else:
+			serializer = PlayerSerializer(target_player)
 		return Response(serializer.data)
 
 	def put(self, request, pk):

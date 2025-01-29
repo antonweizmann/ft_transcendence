@@ -50,3 +50,25 @@ class PlayerSerializer(serializers.ModelSerializer):
 			'last_login':		{'required': False, 'read_only': True},
 			'date_joined':		{'required': False, 'read_only': True},
 		}
+
+class PublicPlayerSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Player
+		fields = [
+			'id',
+			'username',
+			'groups',
+			'friends',
+			'last_login',
+			'date_joined'
+			]
+
+		extra_kwargs = {
+			'id':				{ 'read_only': True},
+			'username':			{ 'read_only': True},
+			'groups':			{ 'read_only': True},
+			'friends':			{ 'read_only': True},
+			'friend_requests':	{ 'read_only': True},
+			'last_login':		{ 'read_only': True},
+			'date_joined':		{ 'read_only': True},
+		}
