@@ -29,13 +29,20 @@ class PlayerDetailView(APIView):
 
 	def put(self, request, pk):
 		try:
-			player = Player.objects.get(pk=pk)
+			auth_user = Player.objects.get(pk=request.user.pk)
+			target_player = Player.objects.get(pk=pk)
+			if auth_user != target_player and not auth_user.is_staff:
+				return Response({
+					'detail': 'You can only update your own account.'},
+					status=status.HTTP_403_FORBIDDEN)
 		except Player.DoesNotExist:
-			return Response(status=status.HTTP_404_NOT_FOUND)
-		serializer = PlayerSerializer(player, data=request.data)
+			return Response({
+				'detail': 'Player not found.'},
+				status=status.HTTP_404_NOT_FOUND)
+		serializer = PlayerSerializer(target_player, data=request.data)
 		if serializer.is_valid():
 			serializer.save()
-			return Response(serializer.data)
+			return Response(serializer.data, status=status.HTTP_200_OK)
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 	def delete(self, request, pk):
