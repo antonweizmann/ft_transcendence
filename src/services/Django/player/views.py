@@ -1,13 +1,23 @@
 from rest_framework import status, generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from player.serializers import PlayerSerializer, PublicPlayerSerializer
 from player.models import Player
 
-class PlayerListCreateView(generics.ListCreateAPIView):
+class PlayerListView(generics.ListAPIView):
 	queryset = Player.objects.all()
-	serializer_class = PlayerSerializer
+	permission_classes = [IsAuthenticatedOrReadOnly]
+
+	def get_serializer_class(self):
+		try:
+			auth_user = Player.objects.get(pk=self.request.user.pk)
+		except Player.DoesNotExist:
+			return PublicPlayerSerializer
+		print(auth_user.is_staff, auth_user)
+		if auth_user.is_staff:
+			return PlayerSerializer
+		return PublicPlayerSerializer
 
 	def get_queryset(self):
 		queryset = super().get_queryset()
@@ -15,6 +25,10 @@ class PlayerListCreateView(generics.ListCreateAPIView):
 		if username is not None:
 			queryset = queryset.filter(username__icontains=username)
 		return queryset
+
+class PlayerRegisterView(generics.CreateAPIView):
+	queryset = Player.objects.all()
+	serializer_class = PlayerSerializer
 
 class PlayerDetailView(APIView):
 	permission_classes = [IsAuthenticated]
