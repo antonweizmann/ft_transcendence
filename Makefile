@@ -25,9 +25,8 @@ clean:
 
 fclean: clean
 	docker system prune -a -f
-	$(DOCKER_COMPOSE) down --volumes --remove-orphans
-	$(DOCKER_COMPOSE) down --rmi all
+	$(DOCKER_COMPOSE) down --rmi all --volumes --remove-orphans
 .PHONY: fclean
 
-re: clean build
+re: fclean build
 .PHONY: re
