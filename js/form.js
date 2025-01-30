@@ -1,33 +1,28 @@
 // Stop dropdown menu from closing and validate
-document.addEventListener('DOMContentLoaded', function() {
-	function setupDropdownValidation(formName, validationFunction)
+function setupDropdownValidation(formName, validationFunction)
+{
+	const form = document.querySelector(formName);
+	const dropdownToggle = form.closest('.dropdown').querySelector('.dropdown-toggle');
+	if (form && dropdownToggle)
 	{
-		const form = document.querySelector(formName);
-		const dropdownToggle = form.closest('.dropdown').querySelector('.dropdown-toggle');
-		if (form && dropdownToggle)
+		form.addEventListener('click', function(event) {
+			event.stopPropagation();
+		});
+
+		form.addEventListener('submit', function(event)
 		{
-			form.addEventListener('click', function(event) {
-				event.stopPropagation();
-			});
-
-			form.addEventListener('submit', function(event)
+			if (!validationFunction(event))
 			{
-				if (!validationFunction(event))
-				{
-					event.preventDefault();
-					event.stopPropagation();
+				event.preventDefault();
+				event.stopPropagation();
 
-					const dropdownInstance = bootstrap.Dropdown.getOrCreateInstance(dropdownToggle);
-					if (dropdownInstance)
-						dropdownInstance.show();
-				}
-			});
-		}
+				const dropdownInstance = bootstrap.Dropdown.getOrCreateInstance(dropdownToggle);
+				if (dropdownInstance)
+					dropdownInstance.show();
+			}
+		});
 	}
-	setupDropdownValidation('.login-drop', validateLoginForm);
-	setupDropdownValidation('.signup-drop', validateSignupForm);
-
-	});
+}
 
 function validateLoginForm(event)
 {

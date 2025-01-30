@@ -39,11 +39,18 @@
                         <a class="nav-link" data-bs-toggle="offcanvas" data-bs-target="#friendsSidebar" aria-controls="friendsSidebar" data-translate="friends">Friends</a>
 
                     </li>
+                    <!-- Language Selector -->
                     <li class="nav-item">
-                        <a class="nav-link" onclick="loadPage('profile')" data-translate="profile">Profile</a>
+                      <!-- <button class="btn btn-outline-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">English</button> -->
+                      <select id="languageDropdown" onchange="changeLanguage(event)" class="form-select btn btn-outline-light dropdown-toggle" data-translate="languageSelector">
+                        <option value="en" data-translate="english">English</option>
+                        <option value="es" data-translate="spanish">Español</option>
+                        <option value="de" data-translate="german">Deutsch</option>
+                        <!-- Add more languages here -->
+                      </select>
                     </li>
                     <li class="nav-item dropdown">
-                        <button class="btn btn-outline-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-translate="login">Login</button>
+                        <button class="btn btn-outline-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="loginDropdownButton" data-translate="login">Login</button>
                         <form class="dropdown-menu dropdown-menu-end p-4 login-drop" onsubmit="return validateLoginForm()">
                             <div class="mb-3">
                                 <h2 data-translate="loginHeader">Login</h2>
@@ -61,78 +68,22 @@
                                   <input type="checkbox" class="form-check-input" id="loginCheck">
                                   <label class="form-check-label" for="loginCheck" data-translate="rememberMe">Remember me</label>
                                 </div>
+                            </div>
+                            <div class="row g-2 align-items-center">
+                              <div class="col-auto">
+                                <button type="submit" class="btn btn-primary" data-translate="loginButton">Log in</button>
                               </div>
-                              <button type="submit" class="btn btn-primary" data-translate="loginButton">Log in</button>
+                              <div class="col-auto">
+                                <button type="button" class="sign-up-instead" onclick="signUpInstead()" data-translate="signUpButton">Sign up instead</button>
+                              </div>
+                            </div>
                         </form>
                     </li>
-                        <li class="nav-item dropdown">
-                            <button class="btn btn-outline-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-translate="signup">Sign up</button>
-                            <form class="dropdown-menu dropdown-menu-end p-4 signup-drop" onsubmit="return validateSignupForm()">
-                                        <div class="mb-3">
-                                            <h2 data-translate="signupHeader">Sign up now!</h2>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="signupUsername" class="form-label" data-translate="usernameLabel">Username</label>
-                                            <input type="text" class="form-control" placeholder="Choose a username" id="signupUsername">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="signupEmail" class="form-label" data-translate="emailLabel">Email address</label>
-                                            <input type="email" class="form-control" placeholder="email@example.com" id="signupEmail">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="signupPassword" class="form-label" data-translate="passwordLabel">Password</label>
-                                            <input type="password" class="form-control" placeholder="Enter your password" id="signupPassword">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="signupPassword2" class="form-label" data-translate="repeatPasswordLabel">Repeat Password</label>
-                                            <input type="password" class="form-control" placeholder="Password" id="signupPassword2">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="dateOfBirth" class="form-label" data-translate="dobLabel">Date of Birth</label>
-                                            <div class="row gx-1">
-                                                <div class="col">
-                                                    <select id="dateOfBirth-month" class="form-select" data-translate="monthLabel">
-                                                        <option selected>Month</option>
-                                                        <option>January</option>
-                                                        <option>February</option>
-                                                        <option>March</option>
-                                                        <option>April</option>
-                                                        <option>May</option>
-                                                        <option>June</option>
-                                                        <option>July</option>
-                                                        <option>August</option>
-                                                        <option>September</option>
-                                                        <option>October</option>
-                                                        <option>November</option>
-                                                        <option>December</option>
-                                                    </select>
-                                                </div>
-                                                <div class="col">
-                                                    <input type="number" class="form-control" id="dateOfBirth-day" placeholder="Day" min="1" max="31">
-                                                </div>
-                                                <div class="col">
-                                                    <input type="number" class="form-control" id="dateOfBirth-year" placeholder="Year" min="1900" max="2024">
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <button type="submit" class="btn btn-primary" data-translate="signupButton">Sign up</button>
-                            </form>
-                        </li>
-                    </li>
-                    <!-- Language Selector -->
                     <li class="nav-item">
-                        <!-- <button class="btn btn-outline-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">English</button> -->
-                        <select id="languageDropdown" onchange="changeLanguage(event)" class="form-select btn btn-outline-light dropdown-toggle" data-translate="languageSelector">
-                        <option value="en" data-translate="english">English</option>
-                        <option value="es" data-translate="spanish">Español</option>
-                        <option value="de" data-translate="german">Deutsch</option>
-                        <!-- Add more languages here -->
-                        </select>
+                        <a class="nav-link" onclick="loadPage('profile')" id='profileButton' data-translate="profile">Profile</a>
                     </li>
                 </ul>
 			</div>
-
 		</div>
 	</nav>
 

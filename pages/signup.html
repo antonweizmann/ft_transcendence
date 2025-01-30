@@ -1,0 +1,75 @@
+<div class="container-sm mx-auto signup-container">
+    <!-- Signup Form -->
+    <form id="signupForm" onsubmit="return validateSignupForm()">
+        <div class="mb-3 signup-header">
+            <h2>Sign up now!</h2>
+        </div>
+
+        <!-- Username -->
+        <div class="mb-3">
+            <label for="signupUsername" class="form-label">Username</label>
+            <input type="text" class="form-control" placeholder="Choose a username" id="signupUsername">
+        </div>
+
+        <!-- Email Address -->
+        <div class="mb-3">
+            <label for="signupEmail" class="form-label">Email address</label>
+            <input type="email" class="form-control" placeholder="email@example.com" id="signupEmail">
+        </div>
+
+        <!-- Password -->
+        <div class="mb-3">
+            <label for="signupPassword" class="form-label">Password</label>
+            <input type="password" class="form-control" placeholder="Enter your password" id="signupPassword">
+        </div>
+
+        <!-- Repeat Password -->
+        <div class="mb-3">
+            <label for="signupPassword2" class="form-label">Repeat Password</label>
+            <input type="password" class="form-control" placeholder="Password" id="signupPassword2">
+        </div>
+
+        <!-- Date of Birth -->
+        <div class="mb-3">
+            <label for="dateOfBirth" class="form-label">Date of Birth</label>
+            <div class="row gx-1">
+                <div class="col">
+                    <select id="dateOfBirth-month" class="form-select">
+                        <option selected>Month</option>
+                        <option>January</option>
+                        <option>February</option>
+                        <option>March</option>
+                        <option>April</option>
+                        <option>May</option>
+                        <option>June</option>
+                        <option>July</option>
+                        <option>August</option>
+                        <option>September</option>
+                        <option>October</option>
+                        <option>November</option>
+                        <option>December</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <input type="number" class="form-control" id="dateOfBirth-day" placeholder="Day" min="1" max="31">
+                </div>
+                <div class="col">
+                    <input type="number" class="form-control" id="dateOfBirth-year" placeholder="Year" min="1900" max="2024">
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <div class="row align-items-center">
+                <div class="col-8">
+                    <label for="formFile" class="form-label">Pick profile picture</label>
+                    <input class="form-control" type="file" id="formFile">
+                </div>
+                <div class="col-3">
+                    <img src="..." class="profile-pic" alt="...">
+                </div>
+            </div>
+        </div>
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary w-100">Sign up</button>
+    </form>
+</div>
