@@ -1,5 +1,10 @@
 en.subject.pdf
 .DS_Store
+credentials.env
+secrets/*
+*.backup
+.vscode/
+
 # Python files
 myenv/
 __pycache__/
