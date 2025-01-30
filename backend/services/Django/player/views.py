@@ -14,7 +14,6 @@ class PlayerListView(generics.ListAPIView):
 			auth_user = Player.objects.get(pk=self.request.user.pk)
 		except Player.DoesNotExist:
 			return PublicPlayerSerializer
-		# print(auth_user.is_staff, auth_user)
 		if auth_user.is_staff:
 			return PlayerSerializer
 		return PublicPlayerSerializer
