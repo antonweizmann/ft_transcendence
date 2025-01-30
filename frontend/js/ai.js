@@ -34,7 +34,7 @@ export function cleanAi() {
 	let key;
 	if(keysPressed['ArrowUp'])
 		key = "ArrowUp";
-    else if(keysPressed['ArrowDown'])
+	else if(keysPressed['ArrowDown'])
 		key = "ArrowDown";
 	if (gameMode == 'ai2')
 	{
