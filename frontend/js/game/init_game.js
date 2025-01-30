@@ -1,4 +1,7 @@
-import { Element } from "./element";
+import { Element } from "./element.js";
+import { updateElements } from "./draw_game.js";
+import {setAiReaction} from "./ai.js"
+import {gameLoop, cleanupGame, resetGame} from "./game.js"
 const PINK = '#8A4FFF';
 const PURPLE = '#9932CC';
 const BLUE = '#5D3FD3';
@@ -8,7 +11,6 @@ export let WIDTHBOARD = 800;
 export let WIDTHOBJECTS = WIDTHBOARD / 40;
 export let HEIGHTOBJECTS = HEIGHTBOARD / 5;
 export let player1, player2, ball;
-export let stopDoubleCollision;
 export function ensureInit() {
 	if (window.gameState.initialized === true) return;
 
@@ -81,7 +83,7 @@ function initGame() {
 	player2 = new Element(startPlayer2);
 	ball = new Element(startBallValues);
 
-	stopDoubleCollision = ball.dirX;
+
 
 	ball.reset = function () {
 		ball.x = startBallValues.x();
@@ -90,7 +92,6 @@ function initGame() {
 		// -1 is to the left and 1 to the right
 		ball.dirX = Math.round(Math.random()) ? -1 : 1,
 		ball.dirY = Math.round(Math.random()) ? -1 : 1,
-		stopDoubleCollision = ball.dirX;
 		console.log('Ball was reset');
 	}
 	player1.reset = function() {

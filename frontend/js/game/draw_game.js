@@ -1,4 +1,4 @@
-import { WIDTHBOARD, HEIGHTBOARD } from "./init_game";
+import { WIDTHBOARD, HEIGHTBOARD, player1, player2, ball } from "./init_game.js";
 
 export function updateElements(){
 	const gameBoard = document.getElementById('gameBoard');

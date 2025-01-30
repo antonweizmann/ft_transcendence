@@ -90,7 +90,7 @@ async function getPage(pageName)
 			initialized: false,
 			cleanup: null
 		};
-			loadScripts([ 'game/game.js','ai.js', 'game/init_game.js', 'game/movement_game.js', 'game/listeners_game.js', 'game/element.js', 'game/draw_game.js']);
+			loadScripts([ 'game/game.js','game/ai.js', 'game/init_game.js', 'game/movement_game.js', 'game/listeners_game.js', 'game/element.js', 'game/draw_game.js']);
 			setTimeout(() => {
 				if (window.ensureInit) {
 					window.ensureInit();

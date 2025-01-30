@@ -1,15 +1,13 @@
-import { aiLoop, cleanAi, isAi} from "./ai.js";
-import { ensureInit, setGameBoardSize, gameModeSelector, HEIGHTBOARD, WIDTHBOARD, HEIGHTOBJECTS, WIDTHOBJECTS, player1, player2, ball} from "./init_game.js";
+import { aiLoop, cleanAi} from "./ai.js";
+import { ensureInit,  gameModeSelector, WIDTHBOARD, player1, player2, ball} from "./init_game.js";
 import { updateElements } from "./draw_game.js";
-import { handleMovement } from "./movement_game.js";
-import { errorHandler, listenerResize } from "./listeners_game.js";
-
+import { handleMovement , addMovement, stopMovement, resetScore } from "./movement_game.js";
+import { errorHandler, listenerResize} from "./listeners_game.js";
 console.log('=== Game Script Starting ===');
 
 let animationId, gameButton;
 let isAnimating = false;
 let eventListeners = [];
-export const keysPressed = {};
 
 console.log('game.js started');
 
@@ -19,11 +17,19 @@ eventListeners.push({element: window, type: 'error', listener: errorHandler});
 window.addEventListener('resize', listenerResize);
 eventListeners.push({element: window, type: 'resize', listener: listenerResize});
 
+document.addEventListener('keydown', addMovement);
+eventListeners.push({element: document, type: 'keydown', listener: addMovement});
+
+document.addEventListener('keyup', stopMovement);
+eventListeners.push({element: document, type: 'keyup', listener: stopMovement});
+
+
+
 ensureInit();
 window.ensureInit = ensureInit;
 
 //Main Loop
-function gameLoop() {
+export function gameLoop() {
 	gameMode = gameModeSelector.value;
 	gameButton = document.getElementsByClassName('gameButton')[0]
 	if (gameButton.textContent === 'Start')
@@ -53,7 +59,7 @@ function gameLoop() {
 	isAnimating = true;
 }
 
-function resetGame(){
+export function resetGame(){
 	console.log('Game was reset');
 	isAnimating = false;
 	gameButton = document.getElementsByClassName('gameButton')[0]
@@ -68,7 +74,7 @@ function resetGame(){
 }
 
 //Clean Up
-function cleanupGame(){
+export function cleanupGame(){
 	console.log('cleanup GAME called');
 	if (isAnimating)
 	{

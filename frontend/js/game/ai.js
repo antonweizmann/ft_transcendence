@@ -1,4 +1,4 @@
-import {keysPressed} from './game.js'
+import {keysPressed} from './movement_game.js'
 import { gameMode } from './init_game.js';
 
 let predictedY;
@@ -15,7 +15,7 @@ export function aiLoop(ball, paddle, key1, key2) {
 		simulateKeyPress(key2);
 }
 
-function setAiReaction(ball) {
+export function setAiReaction(ball) {
 	difficulty = document.getElementById("difficulty");
 	if (difficulty.value === "easy")
 		fov = ball.maxX / 4;
