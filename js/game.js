@@ -15,7 +15,7 @@ let eventListeners = [];
 export const keysPressed = {};
 let scorePlayer1 = 0;
 let scorePlayer2 = 0;
-let stopDoubleCollistion;
+let stopDoubleCollision;
 let gameButton
 let gameModeSelector
 export let gameMode;
@@ -112,7 +112,7 @@ function initGame() {
     player2 = new Element(startPlayer2);
 	ball = new Element(startBallValues);
 
-	stopDoubleCollistion = ball.dirX;
+	stopDoubleCollision = ball.dirX;
 
 	ball.reset = function () {
 		ball.x = startBallValues.x();
@@ -121,7 +121,7 @@ function initGame() {
 		// -1 is to the left and 1 to the right
 		ball.dirX = Math.round(Math.random()) ? -1 : 1,
 		ball.dirY = Math.round(Math.random()) ? -1 : 1,
-		stopDoubleCollistion = ball.dirX;
+		stopDoubleCollision = ball.dirX;
 		console.log('Ball was reset');
 	}
     player1.reset = function() {
@@ -283,10 +283,10 @@ function setGameBoardSize(isInitialSetup = false) {
     // Set the game board to 80% of the smaller dimension (height or width)
     const  smallerDimension = Math.min(window.innerWidth, window.innerHeight);
     WIDTHBOARD = Math.floor(smallerDimension * 1);
-    HEIGHTBOARD = Math.floor(WIDTHBOARD * 0.625); // Maintain a 8:5 aspect ratio
+    HEIGHTBOARD = Math.floor(WIDTHBOARD * (5/9)); // Maintain a 8:5 aspect ratio
 
     // Recalculate other dependent variables
-    WIDTHOBJECTS = WIDTHBOARD / 40;
+    WIDTHOBJECTS = WIDTHBOARD / 45;
     HEIGHTOBJECTS = HEIGHTBOARD / 5;
 	const gameBoard = document.getElementById('gameBoard');
     if (gameBoard) {
@@ -348,7 +348,7 @@ function handleMovement() {
 		console.log('Player 2 Down');
 		player2.y += player2.speed;
     }
-	console.log('Ball speed', ball.speed);
+	// console.log('Ball speed', ball.speed);
 
 	//diagonal speed normalized
 	const magnitude = Math.sqrt(ball.dirX * ball.dirX + ball.dirY * ball.dirY);
@@ -380,26 +380,26 @@ function checkCollision() {
 	if (ball.x <= player1.x + player1.width &&
         ball.x + ball.width >= player1.x &&
         ball.y + ball.height >= player1.y &&
-        ball.y <= player1.y + player1.height && stopDoubleCollistion == -1) {
+        ball.y <= player1.y + player1.height && stopDoubleCollision == -1) {
         ball.dirX *= -1;
         ball.dirY = ((ball.y + ball.height/2) - (player1.y + player1.height/2)) / (player1.height/2);
 		if (ball.speed <= WIDTHBOARD / 60)
 			ball.speed += WIDTHBOARD / 1000;
 		else if (gameMode === "ai2")
 			ball.speed += WIDTHBOARD / 1000;
-		stopDoubleCollistion = 1;
+		stopDoubleCollision = 1;
 	}
 	if (ball.x + ball.width >= player2.x &&
         ball.x <= player2.x + player2.width &&
         ball.y + ball.height >= player2.y &&
-        ball.y <= player2.y + player2.height && stopDoubleCollistion == 1) {
+        ball.y <= player2.y + player2.height && stopDoubleCollision == 1) {
 			ball.dirX *= -1;
 			ball.dirY = ((ball.y + ball.height/2) - (player2.y + player2.height/2)) / (player2.height/2);
 		if (ball.speed <= WIDTHBOARD / 60)
 			ball.speed += WIDTHBOARD / 1000 ;
 		else if (gameMode === "ai2")
 			ball.speed += WIDTHBOARD / 1000;
-		stopDoubleCollistion = -1;
+		stopDoubleCollision = -1;
     }
 }
 
