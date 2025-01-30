@@ -35,11 +35,11 @@ function setupLoginOrProfile() {
 
 function loadScripts(scripts) {
 	for (let script of scripts) {
-		if (script.src) {
+		if (script) {
 			// Load external scripts
 			const newScript = document.createElement('script');
-			newScript.src = script.src;
-			newScript.type = script.type;
+			newScript.src = `js/${script}`;
+			newScript.type = 'module';
 			document.body.appendChild(newScript);
 			addedScripts.push(newScript); // Store reference to the added script
 		} else {
@@ -90,7 +90,7 @@ async function getPage(pageName)
 			initialized: false,
 			cleanup: null
 		};
-			loadScripts([{ type: 'module', src: 'js/game.js' }, {type: 'module', src: 'js/ai.js' }]);
+			loadScripts([ 'game/game.js','ai.js', 'game/init_game.js', 'game/movement_game.js', 'game/listeners_game.js', 'game/element.js', 'game/draw_game.js']);
 			setTimeout(() => {
 				if (window.ensureInit) {
 					window.ensureInit();
@@ -104,14 +104,14 @@ async function getPage(pageName)
 	catch (error)
 	{
 		console.error('Error loading page:', error)
-		document.getElementById('main-content').innerHTML = '<p>Error loading content. Please try again later.</p>'
+		document.getElementById('main-content').innerHTML = `<p>Error loading content ${pageName} . Please try again later.</p>`
 	}
 }
 
 	window.onload = function () {
 		let path = window.location.pathname;
 		// Remove leading and trailing slashes, and get the first segment of the path
-		path = path.replace(/^\/|\/$/g, '').split('/')[0];
+		path = path.replace(/^\/|\/$/g, '').split('/')[1];
 
 		// If path is empty or 'index.html', default to 'home'
 		if (!path || path === 'index.html') {
@@ -134,7 +134,7 @@ function changeLanguage(event) {
 
 function loadTranslations(language) {
 	// Fetch the translations JSON file
-	fetch('/languages.json')
+	fetch('/frontend/languages.json')
 		.then(response => response.json())
 		.then(data => {
 			// If the selected language exists in the translations file
