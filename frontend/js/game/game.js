@@ -1,5 +1,5 @@
 import { aiLoop, cleanAi} from "./ai.js";
-import { ensureInit,  gameModeSelector, WIDTHBOARD, player1, player2, ball} from "./init_game.js";
+import { gameModeSelector, WIDTHBOARD, player1, player2, ball} from "./init_game.js";
 import { updateElements } from "./draw_game.js";
 import { handleMovement , addMovement, stopMovement, resetScore } from "./movement_game.js";
 import { errorHandler, listenerResize} from "./listeners_game.js";
@@ -23,10 +23,6 @@ eventListeners.push({element: document, type: 'keydown', listener: addMovement})
 document.addEventListener('keyup', stopMovement);
 eventListeners.push({element: document, type: 'keyup', listener: stopMovement});
 
-
-
-ensureInit();
-window.ensureInit = ensureInit;
 
 //Main Loop
 export function gameLoop() {
@@ -89,3 +85,55 @@ export function cleanupGame(){
 	window.gameState.cleanup = null;
 	eventListeners = [];
 }
+
+
+const socket = new WebSocket('ws://');
+
+		// Open WebSocket connection
+		socket.onopen = () => {
+			console.log('WebSocket connection established');
+		};
+
+		// Handle incoming messages
+        socket.onmessage = (event) => {
+            try {
+                const message = JSON.parse(event.data);
+                console.log('Received message:', message);
+            } catch (e) {
+                console.error('Error parsing received JSON:', e);
+            }
+        };
+		// Handle WebSocket errors
+		socket.onerror = (error) => {
+			console.error('WebSocket Error:', error);
+		};
+
+		// Handle WebSocket close
+		socket.onclose = () => {
+			console.log('WebSocket connection closed');
+		};
+
+function startGameListener() {
+	const message = {
+		action: 'send_message',
+		content: 'Game Start',
+		timestamp: new Date().toISOString
+	};
+	const messageJSON = JSON.stringify(message);
+	onsole.log("Sending message:", messageJSON);
+    socket.send(messageJSON);
+}
+
+function joinGameListener() {
+	const message = {
+		action: 'send_message',
+		content: 'Join Game',
+		timestamp: new Date().toISOString
+	};
+	const messageJSON = JSON.stringify(message);
+	onsole.log("Sending message:", messageJSON);
+    socket.send(messageJSON);
+}
+
+document.getElementById("startGame").addEventListener('click', startGameListener);
+document.getElementById("joinGame").addEventListener('click', joinGameListener);

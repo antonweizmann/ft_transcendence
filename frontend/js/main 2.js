@@ -1,5 +1,5 @@
 
-const startPage = 'home';
+const startPage = 'play';
 
 window.gameState = {
 	initialized: false,
@@ -67,7 +67,7 @@ function removeAddedScripts() {
  */
 async function loadPage(pageName)
 {
-	window.history.pushState({page: pageName}, '', `/${pageName}`);
+	window.history.pushState({page: pageName}, ``);
 	getPage(pageName);
 }
 
@@ -78,7 +78,7 @@ async function getPage(pageName)
 		if (window.gameState.cleanup)
 			window.gameState.cleanup();
 		removeAddedScripts();
-		const response = await fetch(`/pages/${pageName}.html`)
+		const response = await fetch(`/frontend/pages/${pageName}.html`)
 		if (!response.ok)
 			throw new Error(`HTTP error! Status: ${response.status}`)
 		const content = await response.text();
@@ -134,7 +134,7 @@ function changeLanguage(event) {
 
 function loadTranslations(language) {
 	// Fetch the translations JSON file
-	fetch('/languages.json')
+	fetch('/frontend/languages.json')
 		.then(response => response.json())
 		.then(data => {
 			// If the selected language exists in the translations file
