@@ -1,6 +1,6 @@
 import { resizeElement } from "./element.js";
 import { updateElements } from "./draw_game.js";
-import { player1, player2, ball } from "./init_game.js";
+import { player1, player2, ball, setGameBoardSize	 } from "./init_game.js";
 
 function debounce(func, wait) {
 	let timeout;

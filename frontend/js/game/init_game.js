@@ -11,6 +11,7 @@ export let WIDTHBOARD = 800;
 export let WIDTHOBJECTS = WIDTHBOARD / 40;
 export let HEIGHTOBJECTS = HEIGHTBOARD / 5;
 export let player1, player2, ball;
+
 export function ensureInit() {
 	if (window.gameState.initialized === true) return;
 
@@ -80,8 +81,11 @@ function initGame() {
 	};
 
 	player1 = new Element(startPlayer1);
+	player1.original = startPlayer1;
 	player2 = new Element(startPlayer2);
+	player2.original = startPlayer2;
 	ball = new Element(startBallValues);
+	ball.original = startBallValues;
 
 
 
