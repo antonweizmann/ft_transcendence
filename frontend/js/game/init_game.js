@@ -2,6 +2,7 @@ import { Element } from "./element.js";
 import { updateElements } from "./draw_game.js";
 import {setAiReaction} from "./ai.js"
 import {gameLoop, cleanupGame, resetGame} from "./game.js"
+
 const PINK = '#8A4FFF';
 const PURPLE = '#9932CC';
 const BLUE = '#5D3FD3';
@@ -11,6 +12,7 @@ export let WIDTHBOARD = 800;
 export let WIDTHOBJECTS = WIDTHBOARD / 40;
 export let HEIGHTOBJECTS = HEIGHTBOARD / 5;
 export let player1, player2, ball;
+
 export function ensureInit() {
 	if (window.gameState.initialized === true) return;
 
@@ -80,8 +82,11 @@ function initGame() {
 	};
 
 	player1 = new Element(startPlayer1);
+	player1.original = startPlayer1;
 	player2 = new Element(startPlayer2);
+	player2.original = startPlayer2;
 	ball = new Element(startBallValues);
+	ball.original = startBallValues;
 
 
 
@@ -121,20 +126,20 @@ function listenerMode() {
 		document.getElementById("player1Name").innerText = "Player 1";
 		document.getElementById("player2Name").innerText = "Player 2";
 		console.log('Action for Human vs Human');
-		gameModeSelector.style.width = '100%';
+		// gameModeSelector.style.width = '60%';
 		difficulty.style.display = "none";
 	} else if (gameMode === 'ai') {
 		document.getElementById("player2Name").innerText = "AI";
 		console.log('Action for Human vs AI');
 		if (window.innerWidth > 768)
-			gameModeSelector.style.width = '50%';
+			// gameModeSelector.style.width = '60%';
 		difficulty.style.display = "block";
 		difficulty.addEventListener('change', setAiReaction);
 	} else if (gameMode === 'ai2') {
 		document.getElementById("player1Name").innerText = "AI";
 		document.getElementById("player2Name").innerText = "AI";
 		console.log('Action for AI vs AI');
-		gameModeSelector.style.width = '100%';
+		// gameModeSelector.style.width = '60%';
 		difficulty.style.display = "none";
 		difficulty.addEventListener('change', setAiReaction);
 	}
@@ -158,3 +163,6 @@ export function setGameBoardSize(isInitialSetup = false) {
 			updateElements();
 	}
 }
+
+ensureInit();
+window.ensureInit = ensureInit;
