@@ -1,10 +1,14 @@
 import json
 from channels.generic.websocket import WebsocketConsumer # type: ignore
 from player.models import Player
+from pong.game_logic import GameLogic
 
 class PongConsumer(WebsocketConsumer):
-	player_1 = None
-	player_2 = None
+	def __init__(self, *args, **kwargs):
+		super().__init__(*args, **kwargs)
+		self.game_logic = GameLogic()
+		self.player_1 = None
+		self.player_2 = None
 
 	def connect(self):
 		self.accept()
@@ -27,15 +31,33 @@ class PongConsumer(WebsocketConsumer):
 					return
 				self.log_join(player)
 			except Player.DoesNotExist:
-				self.send(text_data=json.dumps({'message': 'Player not found.'}))
+				self.send(json.dumps({'message': 'Player not found.'}))
 				self.close()
+		elif action == 'move_paddle':
+			if not self.player_1 or not self.player_2:
+				self.send(json.dumps({'message': 'Waiting for other player.'}))
+				return
+			if self.player_1 == self.scope.get('player'):
+				player_number = 1
+			elif self.player_2 == self.scope.get('player'):
+				player_number = 2
+			self.move_paddle(player_number, text_data_json.get('position'))
+		elif action == 'start_game':
+			if not self.player_1 or not self.player_2:
+				self.send(json.dumps({'message': 'Waiting for other player.'}))
+				return
+			self.game_logic.start_game()
 		else:
 			message = text_data_json.get('message')
-			self.send(text_data=json.dumps({
+			self.send(json.dumps({
 				'message': message
 			}))
 
 	def assign_player(self, player):
+		if self.player_1 == player or self.player_2 == player:
+			self.send(json.dumps({'message': 'You are already in the game.'}))
+			self.close()
+			return False
 		if not self.player_1:
 			self.player_1 = player
 			self.scope['player'] = player
@@ -43,14 +65,14 @@ class PongConsumer(WebsocketConsumer):
 			self.player_2 = player
 			self.scope['player'] = player
 		else:
-			self.send(text_data=json.dumps({'message': 'Game is full.'}))
+			self.send(json.dumps({'message': 'Game is full.'}))
 			self.close()
 			return False
 		return True
 
 	def log_join(self, player):
-		self.send(text_data=json.dumps({
+		self.send(json.dumps({
 			'message': f'{player.username} connected.'}))
 		if not self.player_1 or not self.player_2:
-			self.send(text_data=json.dumps({
+			self.send(json.dumps({
 				'message': 'Waiting for other player.'}))
