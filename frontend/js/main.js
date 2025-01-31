@@ -78,7 +78,7 @@ async function getPage(pageName)
 		if (window.gameState.cleanup)
 			window.gameState.cleanup();
 		removeAddedScripts();
-		const response = await fetch(`/frontend/pages/${pageName}.html`)
+		const response = await fetch(`/pages/${pageName}.html`)
 		if (!response.ok)
 			throw new Error(`HTTP error! Status: ${response.status}`)
 		const content = await response.text();
