@@ -19,5 +19,9 @@ else:
 	print('Superuser already exists.')
 "
 
+cp /app/static/js/main.js /app/static/js/b_main.js
+sed -i 's|frontend|static|g' /app/static/js/b_main.js
+sed -i 's|`js/${script}`|`static/js/${script}`|g' /app/static/js/b_main.js
+
 echo "Starting Django server..."
 exec python manage.py runserver 0.0.0.0:8000

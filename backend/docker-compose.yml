@@ -9,6 +9,7 @@ services:
       - PostgreSQL
     volumes:
       - ./services/Django:/app
+      - ../frontend:/app/static
     ports:
       - "8000:8000"
     restart: always

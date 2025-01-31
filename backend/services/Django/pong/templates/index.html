@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+	integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  {% load static %}
+	<link href="{% static 'css/styles.css' %}" rel="stylesheet">
+	<title>Pong Master</title>
+</head>
+<body>
+    <!--Navbar-->
+	<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+		<div class="container-fluid">
+			<a class="navbar-brand" onclick="loadPage('home')">Pong Master</a>
+
+            <!--Hamburger for Mobile and small pages-->
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle Navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+            <!--Nav Links  have to update whichever link is active-->
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav">
+					<li class="nav-item">
+						<a class="nav-link active" aria-current="page" onclick="loadPage('home')" data-translate="home">Home</a>
+					</li>
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="loadPage('play')" data-translate="play">Play</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="loadPage('tournaments')" data-translate="tournaments">Tournaments</a>
+                    </li>
+
+				</ul>
+                <!--Login and Sign up ms-auto used for aligning right-->
+                <!-- ONclick login change to log out button and reverse-->
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="offcanvas" data-bs-target="#friendsSidebar" aria-controls="friendsSidebar" data-translate="friends">Friends</a>
+
+                    </li>
+                    <!-- Language Selector -->
+                    <li class="nav-item">
+                      <!-- <button class="btn btn-outline-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">English</button> -->
+                      <select id="languageDropdown" onchange="changeLanguage(event)" class="form-select btn btn-outline-light dropdown-toggle" data-translate="languageSelector">
+                        <option value="en" data-translate="english">English</option>
+                        <option value="es" data-translate="spanish">Español</option>
+                        <option value="de" data-translate="german">Deutsch</option>
+                        <!-- Add more languages here -->
+                      </select>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <button class="btn btn-outline-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="loginDropdownButton" data-translate="login">Login</button>
+                        <form class="dropdown-menu dropdown-menu-end p-4 login-drop" onsubmit="return validateLoginForm()">
+                            <div class="mb-3">
+                                <h2 data-translate="loginHeader">Login</h2>
+                            </div>
+                            <div class="mb-3">
+                                <label for="loginEmail" class="form-label" data-translate="emailLabel">Email address</label>
+                                <input type="email" class="form-control" placeholder="email@example.com" id="loginEmail">
+                            </div>
+                            <div class="mb-3">
+                                <label for="loginPassword" class="form-label" data-translate="passwordLabel">Password</label>
+                                <input type="password" class="form-control" placeholder="Password" id="loginPassword">
+                            </div>
+                            <div class="mb-3">
+                                <div class="form-check">
+                                  <input type="checkbox" class="form-check-input" id="loginCheck">
+                                  <label class="form-check-label" for="loginCheck" data-translate="rememberMe">Remember me</label>
+                                </div>
+                            </div>
+                            <div class="row g-2 align-items-center">
+                              <div class="col-auto">
+                                <button type="submit" class="btn btn-primary" data-translate="loginButton">Log in</button>
+                              </div>
+                              <div class="col-auto">
+                                <button type="button" class="sign-up-instead" onclick="signUpInstead()" data-translate="signUpButton">Sign up instead</button>
+                              </div>
+                            </div>
+                        </form>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="loadPage('profile')" id='profileButton' data-translate="profile">Profile</a>
+                    </li>
+                </ul>
+			</div>
+		</div>
+	</nav>
+
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="friendsSidebar" aria-labelledby="friendsSidebarLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="friendsSidebarLabel" data-translate="friendsSidebar">Friends Menu</h5>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body p-0">
+      <!-- Tabs for Friends, Requests, and Add Friends -->
+      <ul class="nav nav-tabs nav-fill" id="friendsTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="friends-tab" data-bs-toggle="tab" data-bs-target="#friends" type="button" role="tab" aria-controls="friends" aria-selected="true" data-translate="friendsTab">Friends</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="requests-tab" data-bs-toggle="tab" data-bs-target="#requests" type="button" role="tab" aria-controls="requests" aria-selected="false" data-translate="requestsTab">Requests</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="add-friends-tab" data-bs-toggle="tab" data-bs-target="#add-friends" type="button" role="tab" aria-controls="add-friends" aria-selected="false" data-translate="addFriendsTab">Add Friends</button>
+      </li>
+      </ul>
+
+      <!-- Tab Content -->
+      <div class="tab-content p-3" id="friendsTabContent">
+      <!-- Friends Tab -->
+      <div class="tab-pane fade show active" id="friends" role="tabpanel" aria-labelledby="friends-tab">
+        <ul id="friendsList" class="list-group">
+        <!-- Friends will be dynamically populated here -->
+        </ul>
+      </div>
+      <!-- Requests Tab -->
+      <div class="tab-pane fade" id="requests" role="tabpanel" aria-labelledby="requests-tab">
+        <ul id="requestsList" class="list-group">
+        <!-- Friend requests will be dynamically populated here -->
+        </ul>
+      </div>
+      <!-- Add Friends Tab -->
+      <div class="tab-pane fade" id="add-friends" role="tabpanel" aria-labelledby="add-friends-tab">
+        <form id="addFriendForm" class="input-group">
+        <input type="text" id="newFriendName" class="form-control" placeholder="Enter friend's username" data-translate="newFriendPlaceholder">
+        <button type="submit" class="btn btn-primary" data-translate="addFriendButton">Add Friend</button>
+        </form>
+        <div id="addFriendFeedback" class="mt-2"></div>
+      </div>
+      </div>
+    </div>
+    </div>
+
+    <!--Main Body-->
+    <div id="main-content" class="container-fluid">
+      {% block content %}{% endblock %}
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+ integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+ <script src="{% static 'js/b_main.js' %}"></script>
+ <script src="{% static 'js/form.js' %}"></script>
+</body>
+</html>
