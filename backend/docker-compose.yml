@@ -47,7 +47,7 @@ services:
     depends_on:
       - Django
     ports:
-      - "8080:8080" #random ports
+      - "443:443" #random ports
     restart: always
     networks:
       - Ft_Transcendence
