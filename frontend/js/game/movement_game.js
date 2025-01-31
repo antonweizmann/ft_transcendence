@@ -3,6 +3,7 @@ import { isAi } from "./ai.js";
 export const keysPressed = {};
 let scorePlayer1 = 0;
 let scorePlayer2 = 0;
+let stopDoubleCollision;
 export function handleMovement() {
 	// console.log('Player speed', player1.speed);
 	if(keysPressed['w']) {
@@ -30,7 +31,6 @@ export function handleMovement() {
 
 	ball.x += (ball.speed * normalizedX);
 	ball.y += (ball.speed * normalizedY);
-
 	ballBounce();
 }
 
@@ -49,6 +49,7 @@ function ballBounce() {
 		increaseScore(1);
 		ball.reset();
 	}
+	stopDoubleCollision = ball.dirX;
 	checkCollision()
 }
 
@@ -56,7 +57,8 @@ function checkCollision() {
 	if (ball.x <= player1.x + player1.width &&
 		ball.x + ball.width >= player1.x &&
 		ball.y + ball.height >= player1.y &&
-		ball.y <= player1.y + player1.height) {
+		ball.y <= player1.y + player1.height &&
+		ball.dirX === stopDoubleCollision) {
 		ball.dirX *= -1;
 		ball.dirY = ((ball.y + ball.height/2) - (player1.y + player1.height/2)) / (player1.height/2);
 		if (ball.speed <= WIDTHBOARD / 60)
@@ -67,7 +69,8 @@ function checkCollision() {
 	if (ball.x + ball.width >= player2.x &&
 		ball.x <= player2.x + player2.width &&
 		ball.y + ball.height >= player2.y &&
-		ball.y <= player2.y + player2.height) {
+		ball.y <= player2.y + player2.height &&
+		ball.dirX === stopDoubleCollision) {
 			ball.dirX *= -1;
 			ball.dirY = ((ball.y + ball.height/2) - (player2.y + player2.height/2)) / (player2.height/2);
 		if (ball.speed <= WIDTHBOARD / 60)
