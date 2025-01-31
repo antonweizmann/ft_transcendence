@@ -1,4 +1,4 @@
-DOCKER_COMPOSE=docker compose -f backend/docker-compose.yml
+DOCKER_COMPOSE=docker compose -f docker-compose.yml
 
 ifeq ($(DETACH), 1)
 DOCKER_COMPOSE += -d

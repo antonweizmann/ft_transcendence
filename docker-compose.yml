@@ -4,11 +4,11 @@ services:
   Django:
     image: django
     container_name: django
-    build: ./services/Django
+    build: ./backend/services/Django
     depends_on:
       - PostgreSQL
     volumes:
-      - ./services/Django:/app
+      - ./backend/services/Django:/app
     ports:
       - "8000:8000"
     restart: always
@@ -52,6 +52,6 @@ networks:
 
 secrets:
   postgres_password:
-    file: ../secrets/postgres_password.env
+    file: ./secrets/postgres_password.env
   django_superuser:
-    file: ../secrets/django_superuser.env
+    file: ./secrets/django_superuser.env
