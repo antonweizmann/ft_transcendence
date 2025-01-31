@@ -30,3 +30,27 @@ export class Element {
 	get speed() { return typeof this._speed === 'function' ? this._speed() : this._speed; }
 	set speed(value) {this._speed = value};
 }
+
+function resizeElement(element) {
+    const oldWidth = element.maxX;
+    const oldHeight = element.maxY;
+
+    // Update the element's properties based on new dimensions
+    element._maxX = typeof element.original.maxX === 'function' ? element.original.maxX() : element.original.maxX;
+    element._maxY = typeof element.original.maxY === 'function' ? element.original.maxY() : element.original.maxY;
+    element._width = typeof element.original.width === 'function' ? element.original.width() : element.original.width;
+    element._height = typeof element.original.height === 'function' ? element.original.height() : element.original.height;
+
+    // Calculate the scale factors
+    const scaleX = element.maxX / oldWidth;
+    const scaleY = element.maxY / oldHeight;
+
+    // Adjust the position
+    element.x = (element.x / oldWidth) * element.maxX;
+    element.y = (element.y / oldHeight) * element.maxY;
+
+    // Update speed if it's relative to board size
+    if (typeof element.original.speed === 'function') {
+        element.speed = element.original.speed();
+    }
+}
