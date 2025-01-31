@@ -43,7 +43,7 @@ services:
   nginx:
     image: nginx
     container_name: nginx
-    build: ./services/nginx
+    build: ./backend/services/nginx
     depends_on:
       - Django
     ports:
@@ -52,7 +52,7 @@ services:
     networks:
       - Ft_Transcendence
     volumes:
-      - ./../frontend:/var/www/transcendence
+      - ./frontend:/var/www/transcendence
 
 volumes:
   postgres_volume:
@@ -71,6 +71,5 @@ secrets:
   postgres_password:
     file: ./secrets/postgres_password.env
   django_superuser:
-    file: ../secrets/django_superuser.env
 
     file: ./secrets/django_superuser.env
