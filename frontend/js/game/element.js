@@ -10,6 +10,7 @@ export class Element {
 		this.color = options.color;
 		this._maxY = options.maxY;
 		this._maxX = options.maxX
+		this.original = options.original;
 	}
 
 	get x() { return typeof this._x === 'function' ? this._x() : this._x; }
@@ -31,7 +32,7 @@ export class Element {
 	set speed(value) {this._speed = value};
 }
 
-function resizeElement(element) {
+export function resizeElement(element) {
     const oldWidth = element.maxX;
     const oldHeight = element.maxY;
 

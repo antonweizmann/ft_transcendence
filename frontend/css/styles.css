@@ -541,18 +541,6 @@ body {
     color: white;
 }
 
-/* Adjust arrow position for both selects */
-.select-wrapper::after {
-    content: '▼';
-    position: absolute;
-    right: 12px; /* Adjust spacing to align with larger boxes */
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 18px;
-    color: white;
-    pointer-events: none;
-}
-
 /* Layout adjustments for the select-wrapper */
 .select-wrapper.d-flex {
     display: flex;
