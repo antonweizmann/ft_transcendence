@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 	'rest_framework_simplejwt',
 	'player',
 	'pong',
+	'channels',
 ]
 
 AUTH_USER_MODEL = 'player.Player'
@@ -67,6 +68,12 @@ from datetime import timedelta
 SIMPLE_JWT = {
 	'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
 	'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+}
+
+CHANNEL_LAYERS = {
+	'default': {
+		'BACKEND': 'channels.layers.InMemoryChannelLayer',
+	},
 }
 
 ROOT_URLCONF = 'core.urls'
