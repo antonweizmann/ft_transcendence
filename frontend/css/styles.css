@@ -494,10 +494,11 @@ body {
 
 /* Game Controls Layout */
 .game-controls {
-    width: 80%;
+    width: 50%;
     padding: 0 10%;
     gap: 1em;
     display: flex;
+    flex: 1;
     justify-content: space-between;
     align-items: center;
 }
@@ -509,10 +510,9 @@ body {
 }
 
 .gameButton {
-    width: 70%;
+    width: 40%;
     padding: 1em;
     font-size: calc(12px + 1vw);
-    border-radius: 5px;
     background-color: var(--deep-blue);
     color: #FFFFFF;
     border: none;
@@ -521,21 +521,21 @@ body {
 
 
 #gameMode {
-    width: 75%; /* Slightly increase width to prevent squishing */
+    width: 60%; /* Slightly increase width to prevent squishing */
     padding: 1em; /* Adjust padding for a balanced look */
     font-size: calc(12px + 1vw); /* Slightly increase font size */
-    border-radius: 5px;
     border: none;
     background-color: var(--deep-blue);
     color: white;
     cursor: pointer;
 }
-
+.gameButton, #gameMode, #difficulty {
+    height: calc(30px + 8vh);
+}
 #difficulty {
     width: 35%; /* Keep slightly larger width */
     padding: 1em; /* Balanced padding */
     font-size: calc(12px + 1vw); /* Keep larger font size */
-    border-radius: 5px;
     border: none;
     background-color: var(--deep-blue);
     color: white;
@@ -544,6 +544,7 @@ body {
 /* Layout adjustments for the select-wrapper */
 .select-wrapper.d-flex {
     display: flex;
+    width: 60;
     align-items: center; /* Keep vertical alignment */
     gap: 15px; /* Add space between selects */
 }

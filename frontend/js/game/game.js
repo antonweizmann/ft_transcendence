@@ -1,5 +1,5 @@
 import { aiLoop, cleanAi} from "./ai.js";
-import { ensureInit,  gameModeSelector, WIDTHBOARD, player1, player2, ball} from "./init_game.js";
+import { gameModeSelector, WIDTHBOARD, player1, player2, ball} from "./init_game.js";
 import { updateElements } from "./draw_game.js";
 import { handleMovement , addMovement, stopMovement, resetScore } from "./movement_game.js";
 import { errorHandler, listenerResize} from "./listeners_game.js";
@@ -23,10 +23,6 @@ eventListeners.push({element: document, type: 'keydown', listener: addMovement})
 document.addEventListener('keyup', stopMovement);
 eventListeners.push({element: document, type: 'keyup', listener: stopMovement});
 
-
-
-ensureInit();
-window.ensureInit = ensureInit;
 
 //Main Loop
 export function gameLoop() {
