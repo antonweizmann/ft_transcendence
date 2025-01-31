@@ -52,7 +52,7 @@ services:
     networks:
       - Ft_Transcendence
     volumes:
-      - nginx_volume:/var/www/transcendence
+      - ./../frontend:/var/www/transcendence
 
 volumes:
   postgres_volume:
