@@ -1,5 +1,5 @@
 
-const startPage = 'play';
+const startPage = 'home';
 
 window.gameState = {
 	initialized: false,
