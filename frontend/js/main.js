@@ -67,7 +67,7 @@ function removeAddedScripts() {
  */
 async function loadPage(pageName)
 {
-	window.history.pushState({page: pageName}, ``);
+	window.history.pushState({page: pageName}, '', `/${pageName}`);
 	getPage(pageName);
 }
 
@@ -134,7 +134,7 @@ function changeLanguage(event) {
 
 function loadTranslations(language) {
 	// Fetch the translations JSON file
-	fetch('/frontend/languages.json')
+	fetch('/languages.json')
 		.then(response => response.json())
 		.then(data => {
 			// If the selected language exists in the translations file
