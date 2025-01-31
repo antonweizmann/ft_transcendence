@@ -40,9 +40,26 @@ services:
       - POSTGRES_PORT=5432
       - POSTGRES_PASSWORD_FILE=/run/secrets/postgres_password
 
+  nginx:
+    image: nginx
+    container_name: nginx
+    build: ./services/nginx
+    depends_on:
+      - Django
+    ports:
+      - "443:443" #random ports
+    restart: always
+    networks:
+      - Ft_Transcendence
+    volumes:
+      - ./../frontend:/var/www/transcendence
+
 volumes:
   postgres_volume:
     name: postgres_volume
+    driver: local
+  nginx_volume:
+    name: nginx_volume
     driver: local
 
 networks:
@@ -54,4 +71,6 @@ secrets:
   postgres_password:
     file: ./secrets/postgres_password.env
   django_superuser:
+    file: ../secrets/django_superuser.env
+
     file: ./secrets/django_superuser.env
