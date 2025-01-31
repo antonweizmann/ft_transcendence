@@ -19,6 +19,10 @@ from django.urls import path
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from player.views import PlayerDetailView, PlayerListView, PlayerRegisterView
 from pong.views import pong_game
+from django.shortcuts import redirect
+
+def redirect_to_home(request):
+	return redirect('/')
 
 urlpatterns = [
 	path('admin/', admin.site.urls),
@@ -28,4 +32,6 @@ urlpatterns = [
 	path('api/player/register/', PlayerRegisterView.as_view(), name='player_register'),
 	path('api/player/<int:pk>/', PlayerDetailView.as_view(), name='player_detail'),
 	path('', pong_game, name='pong_game'),
+	path('home/', redirect_to_home, name='home'),
 ]
+

@@ -87,7 +87,7 @@ export function cleanupGame(){
 }
 
 
-const socket = new WebSocket('ws://');
+const socket = new WebSocket('ws://localhost:8000/ws/pong/');
 
 		// Open WebSocket connection
 		socket.onopen = () => {
@@ -95,14 +95,14 @@ const socket = new WebSocket('ws://');
 		};
 
 		// Handle incoming messages
-        socket.onmessage = (event) => {
-            try {
-                const message = JSON.parse(event.data);
-                console.log('Received message:', message);
-            } catch (e) {
-                console.error('Error parsing received JSON:', e);
-            }
-        };
+		socket.onmessage = (event) => {
+			try {
+				const message = JSON.parse(event.data);
+				console.log('Received message:', message);
+			} catch (e) {
+				console.error('Error parsing received JSON:', e);
+			}
+		};
 		// Handle WebSocket errors
 		socket.onerror = (error) => {
 			console.error('WebSocket Error:', error);
@@ -115,24 +115,25 @@ const socket = new WebSocket('ws://');
 
 function startGameListener() {
 	const message = {
-		action: 'send_message',
-		content: 'Game Start',
+		action: 'start_game',
+		message: 'Game Start',
 		timestamp: new Date().toISOString
 	};
 	const messageJSON = JSON.stringify(message);
-	onsole.log("Sending message:", messageJSON);
-    socket.send(messageJSON);
+	console.log("Sending message:", messageJSON);
+	socket.send(messageJSON);
 }
 
 function joinGameListener() {
 	const message = {
-		action: 'send_message',
-		content: 'Join Game',
+		action: 'join_match',
+		player_pk: '1',
+		message: 'Join Game',
 		timestamp: new Date().toISOString
 	};
 	const messageJSON = JSON.stringify(message);
-	onsole.log("Sending message:", messageJSON);
-    socket.send(messageJSON);
+	console.log("Sending message:", messageJSON);
+	socket.send(messageJSON);
 }
 
 document.getElementById("startGame").addEventListener('click', startGameListener);

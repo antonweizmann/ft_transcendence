@@ -18,10 +18,16 @@ if not User.objects.filter(username='$DJANGO_SUPERUSER_USERNAME').exists():
 else:
 	print('Superuser already exists.')
 "
-
-cp /app/static/js/main.js /app/static/js/b_main.js
-sed -i 's|frontend|static|g' /app/static/js/b_main.js
-sed -i 's|`js/${script}`|`static/js/${script}`|g' /app/static/js/b_main.js
+if [[ -f /app/static/js/b_main.js ]]; then
+	echo "Static files already configured."
+else
+	echo "Configuring static files..."
+	cp /app/static/js/main.js /app/static/js/b_main.js
+	sed -i 's|frontend|static|g' /app/static/js/b_main.js
+	sed -i 's|pages/|static/pages/|g' /app/static/js/b_main.js
+	sed -i 's|`js/${script}`|`static/js/${script}`|g' /app/static/js/b_main.js
+	sed -i 's|/languages.json|/static/languages.json|g' /app/static/js/b_main.js
+fi
 
 echo "Starting Django server..."
 exec python manage.py runserver 0.0.0.0:8000
