@@ -5,6 +5,7 @@ secrets/*
 *.backup
 .vscode/
 b_main.js
+media/
 
 # Python files
 myenv/

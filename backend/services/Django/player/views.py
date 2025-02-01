@@ -1,7 +1,8 @@
-from rest_framework import status, generics
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework import status, generics # type: ignore
+from rest_framework.views import APIView # type: ignore
+from rest_framework.response import Response # type: ignore
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly # type: ignore
+from rest_framework.parsers import MultiPartParser, FormParser # type: ignore
 from player.serializers import PlayerSerializer, PublicPlayerSerializer
 from player.models import Player
 
@@ -26,11 +27,13 @@ class PlayerListView(generics.ListAPIView):
 		return queryset
 
 class PlayerRegisterView(generics.CreateAPIView):
+	parser_classes = (MultiPartParser, FormParser)
 	queryset = Player.objects.all()
 	serializer_class = PlayerSerializer
 
 class PlayerDetailView(APIView):
 	permission_classes = [IsAuthenticated]
+	parser_classes = (MultiPartParser, FormParser)
 
 	def get(self, request, pk):
 		try:
@@ -56,7 +59,7 @@ class PlayerDetailView(APIView):
 			return Response({
 				'detail': 'Player not found.'},
 				status=status.HTTP_404_NOT_FOUND)
-		serializer = PlayerSerializer(target_player, data=request.data)
+		serializer = PlayerSerializer(target_player, data=request.data, partial=True)
 		if serializer.is_valid():
 			serializer.save()
 			return Response(serializer.data, status=status.HTTP_200_OK)
