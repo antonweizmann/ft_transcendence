@@ -187,3 +187,17 @@ function signUpInstead() {
 	dropdown.hide();
 	loadPage('signup');
 }
+
+function previewImageFunction(inputElement) {
+    const previewImage = document.getElementById('previewImage');
+
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            previewImage.src = e.target.result; // Update the src attribute
+        };
+        reader.readAsDataURL(file); // Read the file as a Data URL
+    } else {
+        previewImage.src = '../assets/default_profile.png'; // Reset to placeholder if no file is selected
+    }
+}
