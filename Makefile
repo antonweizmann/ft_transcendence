@@ -26,6 +26,7 @@ clean:
 fclean: clean
 	docker system prune -a -f
 	$(DOCKER_COMPOSE) down --rmi all --volumes --remove-orphans
+	rm -rf ./backend/services/django/media/*_*.*
 .PHONY: fclean
 
 re: fclean build
