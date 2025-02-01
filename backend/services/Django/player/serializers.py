@@ -4,11 +4,14 @@ from player.models import Player
 class PlayerSerializer(serializers.ModelSerializer):
 
 	def create(self, validated_data):
+		groups_data = validated_data.pop('groups', None)
 		password = validated_data.pop('password', None)
 		profile_picture = validated_data.pop('profile_picture', None)
 		if password is None:
 			raise serializers.ValidationError({"password": "Password is required."})
 		instance = self.Meta.model(**validated_data)
+		if groups_data:
+			instance.groups.set(groups_data)
 		instance.set_password(password)
 		if profile_picture:
 			instance.profile_picture = profile_picture
@@ -18,12 +21,15 @@ class PlayerSerializer(serializers.ModelSerializer):
 		return instance
 
 	def update(self, instance, validated_data):
+		groups_data = validated_data.pop('groups', None)
 		password = validated_data.pop('password', None)
 		profile_picture = validated_data.pop('profile_picture', None)
 		for attr, value in validated_data.items():
 			setattr(instance, attr, value)
 		if password is not None:
 			instance.set_password(password)
+		if groups_data:
+			instance.groups.set(groups_data)
 		if profile_picture:
 			instance.profile_picture = profile_picture
 		instance.save()
