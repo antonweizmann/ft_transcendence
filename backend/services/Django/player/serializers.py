@@ -13,10 +13,10 @@ class PlayerSerializer(serializers.ModelSerializer):
 		if groups_data:
 			instance.groups.set(groups_data)
 		instance.set_password(password)
+		instance.profile_picture = 'profile_pictures/default.png'
+		instance.save()
 		if profile_picture:
 			instance.profile_picture = profile_picture
-		else:
-			instance.profile_picture = 'profile_pictures/default.png'
 		instance.save()
 		return instance
 
