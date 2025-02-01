@@ -21,3 +21,8 @@ class Player(AbstractUser):
 
 	def __str__(self):
 		return f"{self.id}_{self.username}"
+	
+	def delete(self, *args, **kwargs):
+		if self.profile_picture and self.profile_picture.name != 'profile_pictures/default.png':
+			self.profile_picture.delete(save=False)
+		super(Player, self).delete(*args, **kwargs)
