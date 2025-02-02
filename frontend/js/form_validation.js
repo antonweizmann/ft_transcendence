@@ -110,7 +110,10 @@ function validateSignupForm(event)
 	}
 	// return isValid;
 	if (isValid)
+	{
+		console.log('Try')
 		window.registerUser(username, firstname, lastname, email, password);
+	}
 	return isValid;
 }
 
