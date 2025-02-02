@@ -119,7 +119,7 @@ window.onload = function () {
 	}
 
 	console.log(`Loading path: ${path}`);
-	loadPage(path);
+	getPage(path);
 };
 
 function changeLanguage(event) {
