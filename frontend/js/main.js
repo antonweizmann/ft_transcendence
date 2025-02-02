@@ -115,7 +115,8 @@ window.onload = function () {
 
 	// If path is empty or 'index.html', default to 'home'
 	if (!path || path === 'index.html') {
-		path = startPage;
+		loadPage(startPage);
+		return;
 	}
 
 	console.log(`Loading path: ${path}`);
