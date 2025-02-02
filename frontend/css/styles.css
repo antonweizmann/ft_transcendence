@@ -597,3 +597,19 @@ body {
     font-size: 13px;
     color: var(--deep-blue);
 }
+
+.form-select {
+    color: var(--white);
+    background-color: var(--black);
+    min-width: 105px;
+}
+
+.form-select:hover {
+    color: black;
+    background-color: white;
+}
+
+.form-select:focus {
+    box-shadow: none;
+    border-color: white;
+}
