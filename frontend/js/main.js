@@ -71,6 +71,12 @@ async function loadPage(pageName)
 	getPage(pageName);
 }
 
+async function loadPageReplace(pageName)
+{
+	window.history.replaceState({page: pageName}, '', `/${pageName}`);
+	getPage(pageName);
+}
+
 async function getPage(pageName)
 {
 	try
@@ -79,8 +85,14 @@ async function getPage(pageName)
 			window.gameState.cleanup();
 		removeAddedScripts();
 		const response = await fetch(`/pages/${pageName}.html`)
+		if (response.status === 404)
+		{
+			loadPageReplace(startPage);
+			return;
+		}
+		console.log("TEST %s %s", response.status, response.url);
 		if (!response.ok)
-			throw new Error(`HTTP error! Status: ${response.status}`)
+			throw new Error(`HTTP error! Status: ${response.status}`);
 		const content = await response.text();
 		document.getElementById('main-content').innerHTML = content;
 		updateActive(pageName);
@@ -110,12 +122,14 @@ async function getPage(pageName)
 
 window.onload = function () {
 	let path = window.location.pathname;
+	console.log(path);
 	// Remove leading and trailing slashes, and get the first segment of the path
-	path = path.replace(/^\/|\/$/g, '').split('/')[0];
+	path = path.replace(/^\/|\/$/g, '');
+	console.log(path);
 
 	// If path is empty or 'index.html', default to 'home'
 	if (!path || path === 'index.html') {
-		loadPage(startPage);
+		loadPageReplace(startPage);
 		return;
 	}
 
