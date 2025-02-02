@@ -108,18 +108,18 @@ async function getPage(pageName)
 	}
 }
 
-	window.onload = function () {
-		let path = window.location.pathname;
-		// Remove leading and trailing slashes, and get the first segment of the path
-		path = path.replace(/^\/|\/$/g, '').split('/')[1];
+window.onload = function () {
+	let path = window.location.pathname;
+	// Remove leading and trailing slashes, and get the first segment of the path
+	path = path.replace(/^\/|\/$/g, '').split('/')[0];
 
-		// If path is empty or 'index.html', default to 'home'
-		if (!path || path === 'index.html') {
-			path = startPage;
-		}
+	// If path is empty or 'index.html', default to 'home'
+	if (!path || path === 'index.html') {
+		path = startPage;
+	}
 
-		console.log(`Loading path: ${path}`);
-		loadPage(path);
+	console.log(`Loading path: ${path}`);
+	loadPage(path);
 };
 
 function changeLanguage(event) {
