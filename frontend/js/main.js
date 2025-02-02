@@ -188,9 +188,10 @@ function signUpInstead() {
 	loadPage('signup');
 }
 
-function previewImageFunction(inputElement) {
+function setImagePreview(inputElement) {
     const previewImage = document.getElementById('previewImage');
 
+    file = inputElement.files[0];
     if (file) {
         const reader = new FileReader();
         reader.onload = function (e) {
@@ -199,5 +200,5 @@ function previewImageFunction(inputElement) {
         reader.readAsDataURL(file); // Read the file as a Data URL
     } else {
         previewImage.src = '../assets/default_profile.png'; // Reset to placeholder if no file is selected
-    }
+	}
 }
