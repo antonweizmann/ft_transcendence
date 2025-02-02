@@ -4,6 +4,7 @@ credentials.env
 secrets/*
 *.backup
 .vscode/
+b_main.js
 
 # Python files
 myenv/
