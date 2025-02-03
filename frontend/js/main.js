@@ -79,6 +79,14 @@ async function loadPageReplace(pageName)
 
 async function getPage(pageName)
 {
+	// Closing the mobile hamburger menu when loading new page
+	var collapseElement = document.getElementById('navbarNav');
+    if (collapseElement.classList.contains('show')) {
+		console.log("TEST");
+        var collapse = new bootstrap.Collapse(collapseElement);
+        collapse.hide();
+    }
+
 	try
 	{
 		if (window.gameState.cleanup)
@@ -90,7 +98,6 @@ async function getPage(pageName)
 			loadPageReplace(startPage);
 			return;
 		}
-		console.log("TEST %s %s", response.status, response.url);
 		if (!response.ok)
 			throw new Error(`HTTP error! Status: ${response.status}`);
 		const content = await response.text();
