@@ -509,7 +509,7 @@ body {
     text-align: center;
 }
 
-.gameButton {
+/* .gameButton {
     width: 40%;
     padding: 1em;
     font-size: calc(12px + 1vw);
@@ -517,29 +517,7 @@ body {
     color: #FFFFFF;
     border: none;
     cursor: pointer;
-}
-
-
-#gameMode {
-    width: 60%; /* Slightly increase width to prevent squishing */
-    padding: 1em; /* Adjust padding for a balanced look */
-    font-size: calc(12px + 1vw); /* Slightly increase font size */
-    border: none;
-    background-color: var(--deep-blue);
-    color: white;
-    cursor: pointer;
-}
-.gameButton, #gameMode, #difficulty {
-    height: calc(30px + 8vh);
-}
-#difficulty {
-    width: 35%; /* Keep slightly larger width */
-    padding: 1em; /* Balanced padding */
-    font-size: calc(12px + 1vw); /* Keep larger font size */
-    border: none;
-    background-color: var(--deep-blue);
-    color: white;
-}
+} */
 
 /* Layout adjustments for the select-wrapper */
 .select-wrapper.d-flex {
@@ -556,12 +534,6 @@ body {
 
 /* Responsive adjustments for smaller screens */
 @media (max-width: 768px) {
-    #gameMode{
-        width: 50%; /* Full width for better usability on smaller screens */
-    }
-    #difficulty {
-        width: 50%; /* Full width for better usability on smaller screens */
-    }
     .game-controls {
         flex-direction: column; /* Stack elements vertically */
         gap: 10px; /* Add more spacing for clarity */
@@ -612,4 +584,20 @@ body {
 .form-select:focus {
     box-shadow: none;
     border-color: white;
+}
+
+.form-select-primary {
+    color: var(--white);
+    background-color: var(--vibrant-purple);
+    min-width: 105px;
+    border-color: transparent;
+}
+
+.form-select-primary:hover {
+    color: var(--white);
+    background-color: var(--deep-blue);
+}
+
+.form-select-primary:focus {
+    box-shadow: none;
 }
