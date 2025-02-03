@@ -79,14 +79,17 @@ class WSConsumerBase(WebsocketConsumer):
 				self.send(json.dumps({'message': str(e)}))
 
 		elif action == 'move':
+			move = text_data_json.get('move')
 			if not self.game_handler:
 				self.send(json.dumps({'message': 'You are not in a game.'}))
 				return
-			move = text_data_json.get('move')
 			self.send(json.dumps({
-				'message': f'Move: {move}'
+				'message': f'Move: {move}, Player index: {self.player_index}'
 			}))
-			self.game_handler.move(self.player_index, move)
+			try:
+				self.game_handler.move(self.player_index, move)
+			except ValueError as e:
+				self.send(json.dumps({'message': str(e)}))
 
 		else:
 			message = text_data_json.get('message')

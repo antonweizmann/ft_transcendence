@@ -52,7 +52,7 @@ class GameHandlerBase:
 			return
 		self.players.append(player)
 		self.send_func = send_func
-		player_index = self.players.index(player)
+		player_index = len(self.players) - 1
 		send_func(json.dumps({
 			'type': 'lobby_update',
 			'game_id': self.game_id,
@@ -68,7 +68,7 @@ class GameHandlerBase:
 		self.send_func(json.dumps({
 			'type': 'lobby_update',
 			'game_id': self.game_id,
-			'players': [{'username': player.user.username, 'index': index} for index, player in enumerate(self.players)]
+			'players': [{'username': player.username, 'index': index} for index, player in enumerate(self.players)]
 		}))
 		if len(self.players) == 0:
 			self.is_game_running = False
