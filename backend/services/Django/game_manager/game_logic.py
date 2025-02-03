@@ -69,7 +69,7 @@ class GameHandlerBase:
 	def start_game(self):
 		if self.send_func is None:
 			raise ValueError('You must join a match before starting the game.')
-		if self.required_players != self.players.count():
+		if self.required_players != len(self.players):
 			self.send_func(json.dumps({
 				'type': 'error',
 				'message': 'Waiting for other players to join.'
