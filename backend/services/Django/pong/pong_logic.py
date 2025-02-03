@@ -1,7 +1,9 @@
 import time
-from game_manager.game_logic import GameLogicBase
+from game_manager.game_logic import GameHandlerBase
 
-class PongLogic(GameLogicBase):
+class PongHandler(GameHandlerBase):
+	required_players = 2
+
 	def __init__(self, player_ws, game_id: str):
 		super().__init__(player_ws, game_id, 'pong')
 		self.game_state = {
@@ -10,9 +12,8 @@ class PongLogic(GameLogicBase):
 			'paddle_1_position': 0,
 			'paddle_2_position': 0,
 		}
-		self.player_2 = None
 
-	def run_game(self, send_func):
+	def run_game(self):
 		target_fps = 60
 		target_frame_duration = 1 / target_fps
 
@@ -20,7 +21,7 @@ class PongLogic(GameLogicBase):
 			start_time = time.time()
 
 			self.update_game_state()
-			self.send_game_state(send_func)
+			self.send_game_state()
 
 			elapsed_time = time.time() - start_time
 			sleep_time = max(0, target_frame_duration - elapsed_time)
@@ -30,7 +31,6 @@ class PongLogic(GameLogicBase):
 		# Update ball position
 		self.game_state['ball_position'][0] += self.game_state['ball_velocity'][0]
 		self.game_state['ball_position'][1] += self.game_state['ball_velocity'][1]
-
 		# Check for collisions and update velocities
 		# (Add your collision detection and response logic here)
 

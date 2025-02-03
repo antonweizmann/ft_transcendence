@@ -1,4 +1,4 @@
-from .game_logic import GameLogicBase
+from .game_logic import GameHandlerBase
 from channels.generic.websocket import WebsocketConsumer # type: ignore
 
 class GameManager:
@@ -10,13 +10,13 @@ class GameManager:
 			cls.__instance.games = {}
 		return cls.__instance
 
-	def get_game(self, player_ws: WebsocketConsumer, GameHandler: GameLogicBase, game_id: str):
+	def get_game(self, GameHandler: GameHandlerBase, game_id: str):
 		if game_id not in self.games:
-			self.games[game_id] = GameHandler(player_ws, game_id)
+			self.games[game_id] = GameHandler._create(game_id)
 		return self.games[game_id]
 
-	def remove_game(self, game_id: str):
-		if game_id in self.games:
-			del self.games[game_id]
+	# def remove_game(self, game_id: str):
+	# 	if game_id in self.games:
+	# 		del self.games[game_id]
 
 game_manager = GameManager()

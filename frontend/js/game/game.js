@@ -126,8 +126,10 @@ function startGameListener() {
 
 function joinGameListener() {
 	const message = {
-		action: 'join_match',
+		action: 'join_lobby',
 		player_pk: '1',
+		game_id: 'hello2pong',
+		game_type: 'pong',
 		message: 'Join Game',
 		timestamp: new Date().toISOString
 	};
