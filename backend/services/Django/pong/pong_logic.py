@@ -4,8 +4,8 @@ from game_manager.game_logic import GameHandlerBase
 class PongHandler(GameHandlerBase):
 	required_players = 2
 
-	def __init__(self, player_ws, game_id: str):
-		super().__init__(player_ws, game_id, 'pong')
+	def __init__(self, game_id: str):
+		super().__init__(game_id, 'pong')
 		self.game_state = {
 			'ball_position': [0, 0],
 			'ball_velocity': [1, 1],

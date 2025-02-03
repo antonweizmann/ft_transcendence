@@ -33,7 +33,7 @@ class GameHandlerBase:
 
 	def join_match(self, player, send_func):
 		self.send_func = send_func
-		if self.game_running:
+		if self.is_game_running:
 			send_func(json.dumps({
 				'type': 'error',
 				'message': 'Game has already started.'
@@ -45,18 +45,21 @@ class GameHandlerBase:
 				'message': 'Player already joined.'
 			}))
 			return
-		if self.players.count() >= self.required_players:
+		if len(self.players) >= self.required_players:
 			send_func(json.dumps({
 				'type': 'error',
 				'message': 'Game lobby is full.'
 			}))
 			return
 		self.players.append(player)
+		player_index = self.players.index(player)
 		send_func(json.dumps({
 			'type': 'lobby_update',
 			'game_id': self.game_id,
-			'players': [player.user.username for player in self.players]
+			'players': [{'username': player.username, 'index': index} for\
+				index, player in enumerate(self.players)]
 		}))
+		return player_index
 
 	def leave_match(self, player):
 		if player not in self.players:
@@ -89,4 +92,7 @@ class GameHandlerBase:
 		raise NotImplementedError
 
 	def update_game_state(self):
+		raise NotImplementedError
+
+	def move(self, player_index, move):
 		raise NotImplementedError
