@@ -75,7 +75,7 @@ class GameHandlerBase:
 				'message': 'Waiting for other players to join.'
 			}))
 			return
-		self.game_running = True
+		self.is_game_running = True
 		game_thread = threading.Thread(target=self.run_game)
 		game_thread.start()
 

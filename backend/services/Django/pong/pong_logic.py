@@ -17,7 +17,7 @@ class PongHandler(GameHandlerBase):
 		target_fps = 60
 		target_frame_duration = 1 / target_fps
 
-		while self.game_running:
+		while self.is_game_running:
 			start_time = time.time()
 
 			self.update_game_state()
