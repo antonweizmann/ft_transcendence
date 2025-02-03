@@ -7,6 +7,7 @@ services:
     build: ./backend/services/Django
     depends_on:
       - PostgreSQL
+      - redis
     volumes:
       - ./backend/services/Django:/app
       - ./frontend:/app/static
@@ -55,6 +56,13 @@ services:
       - Ft_Transcendence
     volumes:
       - ./frontend:/var/www/transcendence
+
+  redis:
+    image: redis:7.4.2
+    container_name: redis
+    restart: always
+    networks:
+      - Ft_Transcendence
 
 volumes:
   postgres_volume:

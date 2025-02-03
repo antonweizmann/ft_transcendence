@@ -4,4 +4,5 @@ psycopg2-binary==2.9.10
 djangorestframework_simplejwt==5.4.0
 channels==4.2.0
 daphne==4.1.2
-Pillow
+Pillow==11.1.0
+channels-redis==4.2.1
