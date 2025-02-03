@@ -87,7 +87,7 @@ export function cleanupGame(){
 }
 
 
-const socket = new WebSocket('ws://localhost:8000/ws/pong/');
+export const socket = new WebSocket('ws://localhost:8000/ws/pong/');
 
 		// Open WebSocket connection
 		socket.onopen = () => {

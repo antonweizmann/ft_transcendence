@@ -11,10 +11,24 @@ export function handleMovement() {
 	if(keysPressed['w']) {
 		console.log('Player 1 Up');
 		player1.y -=player1.speed;
+		const message = {
+			action: 'move',
+			move: 'up'
+		};
+		const messageJSON = JSON.stringify(message);
+		console.log('Sending message', messageJSON);
+		socket.send(messageJSON);
 	}
 	else if(keysPressed['s']) {
 		console.log('Player 1 Down');
 		player1.y +=player1.speed;
+		const message = {
+			action: 'move',
+			move: 'down'
+		};
+		const messageJSON = JSON.stringify(message);
+		console.log('Sending message', messageJSON);
+		socket.send(messageJSON);
 	}
 	if(keysPressed['ArrowUp']){
 		console.log('Player 2 Up');
@@ -101,16 +115,7 @@ export function addMovement(event)
 	if ((gameMode =='ai' || gameMode == 'ai2' ) && !isAi && (event.key === "ArrowUp" || event.key === "ArrowDown"))
 		return ;
 	else
-	{
 		keysPressed[event.key] = true;
-		const message = {
-			action: 'move',
-			move: 'up'
-		};
-		const messageJSON = JSON.stringify(message);
-		console.log('Sending message', messageJSON);
-		socket.send(messageJSON);
-	}
 }
 export function stopMovement(event){
 	delete keysPressed[event.key];
