@@ -32,7 +32,6 @@ class GameHandlerBase:
 		self.players = []
 
 	def join_match(self, player, send_func):
-		self.send_func = send_func
 		if self.is_game_running:
 			send_func(json.dumps({
 				'type': 'error',
@@ -52,6 +51,7 @@ class GameHandlerBase:
 			}))
 			return
 		self.players.append(player)
+		self.send_func = send_func
 		player_index = self.players.index(player)
 		send_func(json.dumps({
 			'type': 'lobby_update',
@@ -65,9 +65,16 @@ class GameHandlerBase:
 		if player not in self.players:
 			return
 		self.players.remove(player)
+		self.send_func(json.dumps({
+			'type': 'lobby_update',
+			'game_id': self.game_id,
+			'players': [{'username': player.user.username, 'index': index} for index, player in enumerate(self.players)]
+		}))
+		if len(self.players) == 0:
+			self.is_game_running = False
 
-	def start_game(self):
-		if self.send_func is None:
+	def start_game(self, player_index):
+		if self.send_func is None or player_index == None:
 			raise ValueError('You must join a match before starting the game.')
 		if self.required_players != len(self.players):
 			self.send_func(json.dumps({

@@ -15,8 +15,8 @@ class GameManager:
 			self.games[game_id] = GameHandler._create(game_id)
 		return self.games[game_id]
 
-	# def remove_game(self, game_id: str):
-	# 	if game_id in self.games:
-	# 		del self.games[game_id]
+	def remove_game(self, game_id: str):
+		if game_id in self.games:
+			del self.games[game_id]
 
 game_manager = GameManager()

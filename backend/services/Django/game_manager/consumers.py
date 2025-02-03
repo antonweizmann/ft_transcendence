@@ -19,8 +19,12 @@ class WSConsumerBase(WebsocketConsumer):
 		self.game_id = None
 		self.player = None
 		self.player_index = None
+		self.in_Match = False
 
 	def send_to_group(self, message):
+		if not self.in_Match:
+			self.send(json.dumps(message))
+			return
 		async_to_sync(self.channel_layer.group_send)(self.game_id, {
 			'type': 'group.message',
 			'message': message
@@ -31,16 +35,23 @@ class WSConsumerBase(WebsocketConsumer):
 		self.send(text_data=json.dumps(message))
 
 	def join_lobby(self, player, game_id, game_handler: GameHandlerBase):
+		if self.in_Match:
+			self.send(json.dumps({
+				'message': 'You are already in a match.'
+			}))
+			return
 		self.player = player
 		self.game_id = game_id
 		self.game_handler = self.game_manager.get_game(game_handler, game_id)
-		async_to_sync(self.channel_layer.group_add)(game_id, self.channel_name)
 		self.player_index = self.game_handler.join_match(player,
 			self.send_to_group)
 		if self.player_index is None:
 			self.send(json.dumps({
 				'message': 'Failed to join lobby.'
 			}))
+			return
+		self.in_Match = True
+		async_to_sync(self.channel_layer.group_add)(game_id, self.channel_name)
 
 	def receive(self, text_data):
 		text_data_json = json.loads(text_data)
@@ -60,7 +71,10 @@ class WSConsumerBase(WebsocketConsumer):
 			if not self.game_handler:
 				self.send(json.dumps({'message': 'You are not in a game.'}))
 				return
-			self.game_handler.start_game()
+			try:
+				self.game_handler.start_game(self.player_index)
+			except ValueError as e:
+				self.send(json.dumps({'message': str(e)}))
 
 		elif action == 'move':
 			if not self.game_handler:
@@ -82,3 +96,5 @@ class WSConsumerBase(WebsocketConsumer):
 		if self.game_handler:
 			async_to_sync(self.channel_layer.group_discard)(self.game_id, self.channel_name)
 			self.game_handler.leave_match(self.player)
+			if not self.game_handler.is_game_running:
+				self.game_manager.remove_game(self.game_id)
