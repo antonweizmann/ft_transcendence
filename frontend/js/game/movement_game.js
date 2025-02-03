@@ -1,5 +1,7 @@
 import { ball, player1, player2, WIDTHBOARD} from "./init_game.js";
 import { isAi } from "./ai.js";
+import { socket } from "./game.js";
+
 export const keysPressed = {};
 let scorePlayer1 = 0;
 let scorePlayer2 = 0;
@@ -99,7 +101,16 @@ export function addMovement(event)
 	if ((gameMode =='ai' || gameMode == 'ai2' ) && !isAi && (event.key === "ArrowUp" || event.key === "ArrowDown"))
 		return ;
 	else
+	{
 		keysPressed[event.key] = true;
+		const message = {
+			action: 'move',
+			move: 'up'
+		};
+		const messageJSON = JSON.stringify(message);
+		console.log('Sending message', messageJSON);
+		socket.send(messageJSON);
+	}
 }
 export function stopMovement(event){
 	delete keysPressed[event.key];

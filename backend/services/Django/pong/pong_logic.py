@@ -34,13 +34,12 @@ class PongHandler(GameHandlerBase):
 		# Check for collisions and update velocities
 		# (Add your collision detection and response logic here)
 
-	def move_paddle(self, player: int, up_or_down: str):
-		if up_or_down not in ['up', 'down']:
-			return
-		direction = 1 if up_or_down == 'up' else -1
-		if player == 1:
-			self.game_state['paddle_1_position'] += direction
-		elif player == 2:
-			self.game_state['paddle_2_position'] += direction
-		else:
-			raise ValueError('Invalid player number')
+	def move(self, player_index: int, move: str):
+		if player_index not in [0, 1]:
+			raise ValueError('Invalid player index.')
+		if move not in ['up', 'down']:
+			raise ValueError('Invalid move.')
+		if move == 'up':
+			self.game_state[f'paddle_{player_index + 1}_position'] -= 1
+		elif move == 'down':
+			self.game_state[f'paddle_{player_index + 1}_position'] += 1
