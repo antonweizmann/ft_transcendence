@@ -36,19 +36,19 @@ class GameHandlerBase:
 			send_func(json.dumps({
 				'type': 'error',
 				'message': 'Game has already started.'
-			}))
+			}), True)
 			return
 		if player in self.players:
 			send_func(json.dumps({
 				'type': 'error',
 				'message': 'Player already joined.'
-			}))
+			}), True)
 			return
 		if len(self.players) >= self.required_players:
 			send_func(json.dumps({
 				'type': 'error',
 				'message': 'Game lobby is full.'
-			}))
+			}), True)
 			return
 		self.players.append(player)
 		self.send_func = send_func

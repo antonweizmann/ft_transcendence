@@ -21,8 +21,8 @@ class WSConsumerBase(WebsocketConsumer):
 		self.player_index = None
 		self.in_Match = False
 
-	def send_to_group(self, message):
-		if not self.in_Match:
+	def send_to_group(self, message, error=False):
+		if error:
 			self.send(json.dumps(message))
 			return
 		async_to_sync(self.channel_layer.group_send)(self.game_id, {
@@ -43,15 +43,17 @@ class WSConsumerBase(WebsocketConsumer):
 		self.player = player
 		self.game_id = game_id
 		self.game_handler = self.game_manager.get_game(game_handler, game_id)
+		async_to_sync(self.channel_layer.group_add)(game_id, self.channel_name)
 		self.player_index = self.game_handler.join_match(player,
 			self.send_to_group)
 		if self.player_index is None:
 			self.send(json.dumps({
 				'message': 'Failed to join lobby.'
 			}))
+			async_to_sync(self.channel_layer.group_discard)(game_id,
+				self.channel_name)
 			return
 		self.in_Match = True
-		async_to_sync(self.channel_layer.group_add)(game_id, self.channel_name)
 
 	def receive(self, text_data):
 		text_data_json = json.loads(text_data)
