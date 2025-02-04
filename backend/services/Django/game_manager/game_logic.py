@@ -32,23 +32,7 @@ class GameHandlerBase:
 		self.players = []
 
 	def join_match(self, player, send_func):
-		if self.is_game_running:
-			send_func(json.dumps({
-				'type': 'error',
-				'message': 'Game has already started.'
-			}), True)
-			return
-		if player in self.players:
-			send_func(json.dumps({
-				'type': 'error',
-				'message': 'Player already joined.'
-			}), True)
-			return
-		if len(self.players) >= self.required_players:
-			send_func(json.dumps({
-				'type': 'error',
-				'message': 'Game lobby is full.'
-			}), True)
+		if not self.allowed_to_join(player, send_func):
 			return
 		self.players.append(player)
 		self.send_func = send_func
@@ -68,7 +52,8 @@ class GameHandlerBase:
 		self.send_func(json.dumps({
 			'type': 'lobby_update',
 			'game_id': self.game_id,
-			'players': [{'username': player.username, 'index': index} for index, player in enumerate(self.players)]
+			'players': [{'username': player.username, 'index': index} for\
+				index, player in enumerate(self.players)]
 		}))
 		if len(self.players) == 0:
 			self.is_game_running = False
@@ -94,6 +79,27 @@ class GameHandlerBase:
 			'game_id': self.game_id,
 			'game_state': self.game_state
 		}))
+
+	def allowed_to_join(self, player, send_func):
+		if self.is_game_running:
+			send_func(json.dumps({
+				'type': 'error',
+				'message': 'Game has already started.'
+			}), True)
+			return False
+		if player in self.players:
+			send_func(json.dumps({
+				'type': 'error',
+				'message': 'Player already joined.'
+			}), True)
+			return False
+		if len(self.players) >= self.required_players:
+			send_func(json.dumps({
+				'type': 'error',
+				'message': 'Game lobby is full.'
+			}), True)
+			return False
+		return True
 
 	def run_game(self):
 		raise NotImplementedError
