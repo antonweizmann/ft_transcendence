@@ -4,7 +4,7 @@ import inspect
 from typing import Protocol, Optional
 
 class SendFunc(Protocol):
-	def __call__(self, message: str, error: Optional[bool] = False) -> None:
+	def __call__(self, message, error: bool = False) -> None:
 		pass
 
 class GameHandlerBase:
@@ -24,10 +24,10 @@ class GameHandlerBase:
 					"created using the GameManager.get_game().")
 		return super(GameHandlerBase, cls).__new__(cls)
 
-	def __init__(self, game_id: str, game_type: str):
+	def __init__(self, game_id: str):
 		self.is_game_running = False
 		self.send_func : Optional[SendFunc] = None
-		self.game_type = game_type
+		self.game_type : str = 'Unknown'
 		self.game_id = game_id
 		self.game_state = {}
 		self.players = []

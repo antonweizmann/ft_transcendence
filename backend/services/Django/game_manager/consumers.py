@@ -4,6 +4,7 @@ from asgiref.sync import async_to_sync # type: ignore
 from channels.generic.websocket import WebsocketConsumer # type: ignore
 from django.contrib.auth import get_user_model # type: ignore
 from game_manager.managers import GameManager
+from game_manager.game_logic import GameHandlerBase
 
 Player = get_user_model()
 
@@ -13,14 +14,14 @@ class WSConsumerBase(WebsocketConsumer):
 
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
-		self.game_handler = None
+		self.game_handler: type[GameHandlerBase]
 		self.game_manager = GameManager()
 		self.game_id = None
 		self.player = None
 		self.player_index = None
 		self.in_Match = False
 
-	def send_to_group(self, message, error=False):
+	def send_to_group(self, message, error: bool = False) -> None:
 		if error:
 			self.send(json.dumps(message))
 			return
@@ -33,7 +34,7 @@ class WSConsumerBase(WebsocketConsumer):
 		message = event['message']
 		self.send(text_data=json.dumps(message))
 
-	def _join_lobby(self, player, game_id, game_type: str):
+	def _join_lobby(self, player, game_id, game_handler: type[GameHandlerBase]):
 		if self.in_Match:
 			self.send(json.dumps({
 				'message': 'You are already in a match.'
@@ -41,7 +42,7 @@ class WSConsumerBase(WebsocketConsumer):
 			return
 		self.player = player
 		self.game_id = game_id
-		self.game_handler = self.game_manager.get_game(game_type, game_id)
+		self.game_handler = self.game_manager.get_game(game_handler, game_id)
 		try:
 			async_to_sync(self.channel_layer.group_add)(game_id, self.channel_name)
 		except TypeError as e:
@@ -109,5 +110,5 @@ class WSConsumerBase(WebsocketConsumer):
 
 	def join_lobby(self, player, game_id):
 		raise NotImplementedError('You must implement this method in the child'
-							+ ' class to specify the game type.')
-		return self._join_lobby(player, game_id, 'example')
+							+ ' class to specify the game handler.')
+		return self._join_lobby(player, game_id, GameHandlerBase)
