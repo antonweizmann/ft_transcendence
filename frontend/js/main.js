@@ -29,8 +29,6 @@ function setupLoginOrProfile() {
 		loginButton.style.display = 'block';
 		profileButton.style.display = 'none';
 	}
-	console.log('Login Button:', loginButton);
-	console.log('Profile Button:', profileButton);
 }
 
 function loadScripts(scripts) {
