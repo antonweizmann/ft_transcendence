@@ -43,7 +43,11 @@ class WSConsumerBase(WebsocketConsumer):
 		self.player = player
 		self.game_id = game_id
 		self.game_handler = self.game_manager.get_game(game_handler, game_id)
-		async_to_sync(self.channel_layer.group_add)(game_id, self.channel_name)
+		try:
+			async_to_sync(self.channel_layer.group_add)(game_id, self.channel_name)
+		except TypeError as e:
+			self.send(json.dumps({'error': str(e)}))
+			return
 		self.player_index = self.game_handler.join_match(player,
 			self.send_to_group)
 		if self.player_index is None:
