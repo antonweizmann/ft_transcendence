@@ -3,9 +3,7 @@ from .game_logic import GameHandlerBase
 
 class GameManager:
 	__instance = None
-
-	def __init__(self):
-		self.games = {}
+	__games = {}
 
 	def __new__(cls, *args, **kwargs):
 		if not cls.__instance:
@@ -13,12 +11,12 @@ class GameManager:
 		return cls.__instance
 
 	def get_game(self, game_handler: type[GameHandlerBase], game_id: str):
-		if game_id not in self.games:
-			self.games[game_id] = game_handler(game_id)
-		return self.games[game_id]
+		if game_id not in self.__games:
+			self.__games[game_id] = game_handler(game_id)
+		return self.__games[game_id]
 
 	def remove_game(self, game_id: str):
-		if game_id in self.games:
-			del self.games[game_id]
+		if game_id in self.__games:
+			del self.__games[game_id]
 
 game_manager = GameManager()
