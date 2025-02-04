@@ -138,5 +138,22 @@ function joinGameListener() {
 	socket.send(messageJSON);
 }
 
+function joinGame() {
+	const player_pk = document.getElementById('playerPk').value;
+	const lobby = document.getElementById('lobbyId').value;
+
+	const message = {
+		action: 'join_lobby',
+		player_pk: player_pk,
+		game_id: lobby,
+		game_type: 'pong',
+		message: 'Join Game',
+		timestamp: new Date().toISOString
+	};
+	const messageJSON = JSON.stringify(message);
+	console.log("Sending message:", messageJSON);
+	socket.send(messageJSON);
+}
+
 document.getElementById("startGame").addEventListener('click', startGameListener);
-document.getElementById("joinGame").addEventListener('click', joinGameListener);
+document.getElementById("joinGame").addEventListener('click', joinGame);

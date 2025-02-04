@@ -12,7 +12,21 @@
         <!-- <div class="select-wrapper d-flex"> -->
             <!-- <div class="button-container"> -->
             <button class="gameButton" id="startGame">Start</button>
-            <button class="gameButton" id="joinGame">Join</button>
+            <!-- <button class="gameButton" id="joinGame">Join</button> -->
+            <li class="dropdown">
+                <button class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-translate="join">Join</button>
+                <form class="dropdown-menu dropdown-menu-end p-4">
+                    <div class="mb-3">
+                        <label for="lobbyId" class="form-label" data-translate="lobbyId">Lobby id</label>
+                        <input type="text" class="form-control" placeholder="Input lobby id here" id="lobbyId">
+                    </div>
+                    <div class="mb-3">
+                        <label for="playerPk" class="form-label">playerPk</label>
+                        <input type="text" class="form-control" placeholder="player_pk" id="playerPk">
+                    </div>
+                </form>
+            </li>
+            <button class="btn btn-primary" id="joinGame" onclick="" data-translate="join">Join</button>
             <!-- </div> -->
             <select id="gameMode" >
                 <option value="human">Human vs Human</option>

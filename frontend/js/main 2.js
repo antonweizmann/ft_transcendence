@@ -29,8 +29,6 @@ function setupLoginOrProfile() {
 		loginButton.style.display = 'block';
 		profileButton.style.display = 'none';
 	}
-	console.log('Login Button:', loginButton);
-	console.log('Profile Button:', profileButton);
 }
 
 function loadScripts(scripts) {
@@ -186,4 +184,21 @@ function signUpInstead() {
 
 	dropdown.hide();
 	loadPage('signup');
+}
+
+function joinGame() {
+	const player_pk = document.getElementById('playerPk').value;
+	const lobby = document.getElementById('lobbyId').value;
+
+	const message = {
+		action: 'join_lobby',
+		player_pk: player_pk,
+		game_id: lobby,
+		game_type: 'pong',
+		message: 'Join Game',
+		timestamp: new Date().toISOString
+	};
+	const messageJSON = JSON.stringify(message);
+	console.log("Sending message:", messageJSON);
+	socket.send(messageJSON);
 }
