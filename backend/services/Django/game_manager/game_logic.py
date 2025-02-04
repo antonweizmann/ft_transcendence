@@ -1,6 +1,11 @@
 import json
 import threading
 import inspect
+from typing import Protocol, Optional
+
+class SendFunc(Protocol):
+	def __call__(self, message: str, error: Optional[bool] = False) -> None:
+		pass
 
 class GameHandlerBase:
 	class Meta:
@@ -8,14 +13,10 @@ class GameHandlerBase:
 
 	required_players = 1
 
-	@classmethod
-	def _create(cls, game_id: str):
-		return cls(game_id)
-
 	def __new__(cls, *args, **kwargs):
 		stack = inspect.stack()
 		try:
-			caller = stack[2].function
+			caller = stack[1].function
 		except IndexError:
 			caller = ''
 		if caller != 'get_game':
@@ -25,13 +26,13 @@ class GameHandlerBase:
 
 	def __init__(self, game_id: str, game_type: str):
 		self.is_game_running = False
-		self.send_func = None
+		self.send_func : Optional[SendFunc] = None
 		self.game_type = game_type
 		self.game_id = game_id
 		self.game_state = {}
 		self.players = []
 
-	def join_match(self, player, send_func):
+	def join_match(self, player, send_func: SendFunc):
 		if not self.allowed_to_join(player, send_func):
 			return
 		self.players.append(player)
@@ -49,6 +50,8 @@ class GameHandlerBase:
 		if player not in self.players:
 			return
 		self.players.remove(player)
+		if self.send_func is None:
+			return
 		self.send_func(json.dumps({
 			'type': 'lobby_update',
 			'game_id': self.game_id,
@@ -80,7 +83,7 @@ class GameHandlerBase:
 			'game_state': self.game_state
 		}))
 
-	def allowed_to_join(self, player, send_func):
+	def allowed_to_join(self, player, send_func: SendFunc):
 		if self.is_game_running:
 			send_func(json.dumps({
 				'type': 'error',
