@@ -14,7 +14,7 @@ class WSConsumerBase(WebsocketConsumer):
 
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
-		self.game_handler: type[GameHandlerBase]
+		self.game_handler: type[GameHandlerBase] = None
 		self.game_manager = GameManager()
 		self.game_id = None
 		self.player = None
