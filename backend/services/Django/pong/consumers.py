@@ -1,5 +1,5 @@
 from game_manager.consumers import WSConsumerBase
-from pong.pong_logic import PongHandler
+from pong.pong_handler import PongHandler
 
 class PongConsumer(WSConsumerBase):
 	def join_lobby(self, player, game_id):

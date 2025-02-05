@@ -1,5 +1,5 @@
 from channels.generic.websocket import WebsocketConsumer # type: ignore
-from .game_logic import GameHandlerBase
+from .game_handler import GameHandlerBase
 
 class GameManager:
 	__instance = None

@@ -4,7 +4,7 @@ from asgiref.sync import async_to_sync # type: ignore
 from channels.generic.websocket import WebsocketConsumer # type: ignore
 from django.contrib.auth import get_user_model # type: ignore
 from game_manager.managers import GameManager
-from game_manager.game_logic import GameHandlerBase
+from game_manager.game_handler import GameHandlerBase
 
 Player = get_user_model()
 

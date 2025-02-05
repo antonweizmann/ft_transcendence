@@ -1,5 +1,5 @@
 import time
-from game_manager.game_logic import GameHandlerBase
+from game_manager.game_handler import GameHandlerBase
 
 class PongHandler(GameHandlerBase):
 	required_players = 2
