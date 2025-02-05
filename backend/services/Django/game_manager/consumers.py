@@ -71,7 +71,6 @@ class WSConsumerBase(WebsocketConsumer):
 				self.join_lobby(self.player, game_id)
 			except Player.DoesNotExist:
 				self.send(json.dumps({'message': 'Player not found.'}))
-				self.close()
 
 		elif action == 'start_game':
 			if not self.game_handler:
