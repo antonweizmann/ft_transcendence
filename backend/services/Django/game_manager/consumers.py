@@ -14,7 +14,7 @@ class WSConsumerBase(WebsocketConsumer):
 
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
-		self.game_handler: type[GameHandlerBase] = None
+		self.game_handler: type[GameHandlerBase] | None = None
 		self.game_manager = GameManager()
 		self.game_id = None
 		self.player = None
@@ -65,12 +65,19 @@ class WSConsumerBase(WebsocketConsumer):
 		player_pk = text_data_json.get('player_pk')
 		game_id = text_data_json.get('game_id')
 
-		if action == 'join_lobby' and player_pk:
+		if action == 'join_lobby':
 			try:
+				player_pk = int(player_pk)
 				self.player = Player.objects.get(pk=player_pk)
-				self.join_lobby(self.player, game_id)
+				if self.player == None:
+					raise Player.DoesNotExist
 			except Player.DoesNotExist:
 				self.send(json.dumps({'message': 'Player not found.'}))
+				return
+			except ValueError as e:
+				self.send(json.dumps({'message': 'Invalid player ID.'}))
+				return
+			self.join_lobby(self.player, game_id)
 
 		elif action == 'start_game':
 			if not self.game_handler:
