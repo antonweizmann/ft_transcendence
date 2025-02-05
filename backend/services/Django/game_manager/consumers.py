@@ -105,7 +105,7 @@ class WSConsumerBase(WebsocketConsumer):
 		if self.game_handler:
 			async_to_sync(self.channel_layer.group_discard)(self.game_id, self.channel_name)
 			self.game_handler.leave_match(self.player)
-			if not self.game_handler.is_game_running and self.game_id:
+			if len(self.game_handler.players) == 0 and self.game_id:
 				self.game_manager.remove_game(self.game_id)
 
 	def join_lobby(self, player, game_id):

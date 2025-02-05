@@ -58,8 +58,6 @@ class GameHandlerBase:
 			'players': [{'username': player.username, 'index': index} for\
 				index, player in enumerate(self.players)]
 		}))
-		if len(self.players) == 0:
-			self.is_game_running = False
 
 	def start_game(self, player_index):
 		if self.send_func is None or player_index == None:
