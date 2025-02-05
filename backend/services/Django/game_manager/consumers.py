@@ -2,6 +2,7 @@ import json
 
 from asgiref.sync import async_to_sync # type: ignore
 from channels.generic.websocket import WebsocketConsumer # type: ignore
+from channels.exceptions import StopConsumer # type: ignore
 from django.contrib.auth import get_user_model # type: ignore
 from game_manager.managers import GameManager
 from game_manager.game_handler import GameHandlerBase
@@ -22,13 +23,17 @@ class WSConsumerBase(WebsocketConsumer):
 		self.in_Match = False
 
 	def send_to_group(self, message, error: bool = False) -> None:
-		if error:
-			self.send(json.dumps(message))
-			return
-		async_to_sync(self.channel_layer.group_send)(self.game_id, {
-			'type': 'group.message',
-			'message': message
-		})
+		try:
+			if error:
+				self.send(json.dumps(message))
+				return
+			async_to_sync(self.channel_layer.group_send)(self.game_id, {
+				'type': 'group.message',
+				'message': message
+			})
+		except Exception as e:
+			print("Error sending message to group:", e)
+			raise StopConsumer()
 
 	def group_message(self, event):
 		message = event['message']
