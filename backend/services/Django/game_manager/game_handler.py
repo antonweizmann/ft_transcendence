@@ -2,6 +2,7 @@ import json
 import threading
 import inspect
 from typing import Protocol, Optional
+from .models import GameMatchBase
 
 class SendFunc(Protocol):
 	def __call__(self, message, error: bool = False) -> None:
@@ -25,6 +26,7 @@ class GameHandlerBase:
 		return super(GameHandlerBase, cls).__new__(cls)
 
 	def __init__(self, game_id: str):
+		self.results: type[GameMatchBase] | None = None
 		self.is_game_running = False
 		self.send_func : Optional[SendFunc] = None
 		self.game_type : str = 'Unknown'
@@ -33,9 +35,12 @@ class GameHandlerBase:
 		self.players = []
 
 	def join_match(self, player, send_func: SendFunc):
-		if not self.allowed_to_join(player, send_func):
+		if not self._allowed_to_join(player, send_func):
 			return
 		self.players.append(player)
+		if self.results is None:
+			raise ValueError('Results object must be set in __init__ from the child class.')
+		self.results.players.add(player)
 		self.send_func = send_func
 		player_index = len(self.players) - 1
 		send_func(json.dumps({
@@ -50,6 +55,7 @@ class GameHandlerBase:
 		if player not in self.players:
 			return
 		self.players.remove(player)
+		self.results.players.remove(player)
 		if self.send_func is None:
 			return
 		self.send_func(json.dumps({
@@ -69,10 +75,12 @@ class GameHandlerBase:
 			}))
 			return
 		self.is_game_running = True
-		game_thread = threading.Thread(target=self.run_game)
+		self.results.status = 'in_progress'
+		self.results.save()
+		game_thread = threading.Thread(target=self._run_game)
 		game_thread.start()
 
-	def send_game_state(self):
+	def _send_game_state(self):
 		if self.send_func is None:
 			raise ValueError('You must join a match before sending game state.')
 		self.send_func(json.dumps({
@@ -81,7 +89,7 @@ class GameHandlerBase:
 			'game_state': self.game_state
 		}))
 
-	def allowed_to_join(self, player, send_func: SendFunc):
+	def _allowed_to_join(self, player, send_func: SendFunc):
 		if self.is_game_running:
 			send_func(json.dumps({
 				'type': 'error',
@@ -102,11 +110,19 @@ class GameHandlerBase:
 			return False
 		return True
 
-	def run_game(self):
+	def _run_game(self):
 		raise NotImplementedError
 
-	def update_game_state(self):
+	def _update_game_state(self):
 		raise NotImplementedError
+	
+	def _check_win_conditions(self):
+		raise NotImplementedError
+
+# Don't forget to add the following code to the child class when the game is finished:
+		self.is_game_running = False
+		self.results.status = 'finished'
+		self.results.save()
 
 	def move(self, player_index, move):
 		raise NotImplementedError
