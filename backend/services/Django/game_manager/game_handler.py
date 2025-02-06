@@ -31,7 +31,7 @@ class GameHandlerBase:
 		self.send_func : Optional[SendFunc] = None
 		self.game_type : str = 'Unknown'
 		self.game_id = game_id
-		self.game_state = {}
+		self.game_state = { 'score': {} }
 		self.players = []
 
 	def join_match(self, player, send_func: SendFunc):
@@ -66,14 +66,9 @@ class GameHandlerBase:
 		}))
 
 	def start_game(self, player_index):
-		if self.send_func is None or player_index == None:
-			raise ValueError('You must join a match before starting the game.')
-		if self.required_players != len(self.players):
-			self.send_func(json.dumps({
-				'type': 'error',
-				'message': 'Waiting for other players to join.'
-			}))
+		if not self._allowed_to_start(player_index):
 			return
+		self.game_state['score'] = {player.__str__(): 0 for player in self.players}
 		self.is_game_running = True
 		self.results.status = 'in_progress'
 		self.results.save()
@@ -107,6 +102,17 @@ class GameHandlerBase:
 				'type': 'error',
 				'message': 'Game lobby is full.'
 			}), True)
+			return False
+		return True
+	
+	def _allowed_to_start(self, player_index) -> bool:
+		if self.send_func is None or player_index == None:
+			raise ValueError('You must join a match before starting the game.')
+		if self.required_players != len(self.players):
+			self.send_func(json.dumps({
+				'type': 'error',
+				'message': 'Waiting for other players to join.'
+			}))
 			return False
 		return True
 

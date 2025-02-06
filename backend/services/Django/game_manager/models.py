@@ -33,11 +33,10 @@ class GameMatchBase(models.Model):
 		if self.players.count() == 0 and self.status != 'waiting':
 			self.delete()
 			return
-		# FIX Match results
 		if self.status == 'finished' and self.result is None and self.scores:
 			self.result = {
 				'player_scores': {
-					player.username: self.scores.get(str(player.id), 0)
+					player.username: self.scores.get(str(player.__str__()), 0)
 					for player in self.players.all()
 				}
 			}

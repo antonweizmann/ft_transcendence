@@ -39,7 +39,6 @@ class PongHandler(GameHandlerBase):
 			'ball_direction': self.__set_random_ball_direction(),
 			'paddle_1_position': 250,
 			'paddle_2_position': 250,
-			'score': {'player_1': 0, 'player_2': 0}
 		}
 
 	def _run_game(self):
@@ -62,9 +61,9 @@ class PongHandler(GameHandlerBase):
 
 	def __score_goal(self):
 		if self.game_state['ball_position'][X] <= MIN_BALL_X:
-			self.game_state['score']['player_2'] += 1
+			self.game_state['score'][self.players[1].__str__()] += 1
 		elif self.game_state['ball_position'][X] >= MAX_BALL_X:
-			self.game_state['score']['player_1'] += 1
+			self.game_state['score'][self.players[0].__str__()] += 1
 		self.results.scores = self.game_state['score']
 
 	def __check_for_collisions(self):
@@ -89,8 +88,8 @@ class PongHandler(GameHandlerBase):
 		self.game_state['ball_position'][Y] += normalized_direction[Y] * BALL_SPEED
 
 	def __check_win_conditions(self):
-		if (self.game_state['score']['player_1'] >= 10
-				or self.game_state['score']['player_2'] >= 10):
+		if (self.game_state['score'][self.players[1].__str__()] >= 10
+				or self.game_state['score'][self.players[0].__str__()] >= 10):
 			self.send_func(json.dumps({
 				'type': 'game_over',
 				'game_id': self.game_id,
