@@ -40,6 +40,7 @@ class PongHandler(GameHandlerBase):
 			'paddle_1_position': 250,
 			'paddle_2_position': 250,
 		}
+		self.ball_speed = BALL_SPEED
 
 	def _run_game(self):
 		target_fps = 60
@@ -77,8 +78,26 @@ class PongHandler(GameHandlerBase):
 			self.__score_goal()
 			self.__reset_ball()
 
+	def __bounce_from_paddle(self, paddle_position: float):
+		print('Bouncing from paddle')
+		self.game_state['ball_direction'][X] *= -1
+		self.game_state['ball_direction'][Y] = (
+			self.game_state['ball_position'][Y] - paddle_position) / 50
+		if self.ball_speed < 11:
+			self.ball_speed += 0.66
+
 	def __check_paddle_collisions(self):
-		pass
+		# Paddle 1 collision
+		if (self.game_state['ball_position'][X] <= 20
+			and self.game_state['ball_position'][Y] >= self.game_state['paddle_1_position'] - 50
+			and self.game_state['ball_position'][Y] <= self.game_state['paddle_1_position'] + 50):
+			self.__bounce_from_paddle(self.game_state['paddle_1_position'])
+
+		# Paddle 2 collision
+		if (self.game_state['ball_position'][X] >= 780
+			and self.game_state['ball_position'][Y] >= self.game_state['paddle_2_position'] - 50
+			and self.game_state['ball_position'][Y] <= self.game_state['paddle_2_position'] + 50):
+			self.__bounce_from_paddle(self.game_state['paddle_2_position'])
 
 	def __move_ball(self):
 		magnitude = sqrt(self.game_state['ball_direction'][X] ** 2
