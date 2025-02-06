@@ -8,15 +8,15 @@ from .models import PongMatch
 X = 0
 Y = 1
 
-BOARD_WIDTH = 800
-BOARD_HEIGHT = 500
+BOARD_WIDTH = 800.0
+BOARD_HEIGHT = 500.0
 
 MIN_BALL_X = 10
 MIN_BALL_Y = 10
 MAX_BALL_X = BOARD_WIDTH - 10
 MAX_BALL_Y = BOARD_HEIGHT - 10
 BALL_SPEED = 6.66
-INITIAL_BALL_POSITION = [(BOARD_WIDTH / 2), (BOARD_HEIGHT / 2)]
+INITIAL_BALL_POSITION: list[float, float] = [BOARD_WIDTH / 2, BOARD_HEIGHT / 2]
 
 MIN_PLAYER_Y = 50
 MAX_PLAYER_Y = BOARD_HEIGHT - 50
@@ -35,7 +35,7 @@ class PongHandler(GameHandlerBase):
 		self.results= PongMatch.objects.create()
 		self.game_type = 'pong'
 		self.game_state = {
-			'ball_position': INITIAL_BALL_POSITION,
+			'ball_position': INITIAL_BALL_POSITION.copy(),
 			'ball_direction': self.__set_random_ball_direction(),
 			'paddle_1_position': 250,
 			'paddle_2_position': 250,
@@ -56,7 +56,7 @@ class PongHandler(GameHandlerBase):
 			time.sleep(sleep_time)
 
 	def __reset_ball(self):
-		self.game_state['ball_position'] = INITIAL_BALL_POSITION
+		self.game_state['ball_position'] = INITIAL_BALL_POSITION.copy()
 		self.game_state['ball_direction'] = self.__set_random_ball_direction()
 
 	def __score_goal(self):
@@ -65,6 +65,7 @@ class PongHandler(GameHandlerBase):
 		elif self.game_state['ball_position'][X] >= MAX_BALL_X:
 			self.game_state['score'][self.players[0].__str__()] += 1
 		self.results.scores = self.game_state['score']
+		self.results.save()
 
 	def __check_for_collisions(self):
 		if (self.game_state['ball_position'][Y] <= MIN_BALL_Y
@@ -73,8 +74,8 @@ class PongHandler(GameHandlerBase):
 
 		if (self.game_state['ball_position'][X] <= MIN_BALL_X
 			or self.game_state['ball_position'][X] >= MAX_BALL_X):
-			self.__reset_ball()
 			self.__score_goal()
+			self.__reset_ball()
 
 	def __check_paddle_collisions(self):
 		pass
@@ -101,9 +102,9 @@ class PongHandler(GameHandlerBase):
 
 
 	def _update_game_state(self):
+		self.__move_ball()
 		self.__check_for_collisions()
 		self.__check_paddle_collisions()
-		self.__move_ball()
 		self.__check_win_conditions()
 
 	def move(self, player_index: int, move: str):
