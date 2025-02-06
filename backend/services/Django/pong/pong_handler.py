@@ -59,6 +59,7 @@ class PongHandler(GameHandlerBase):
 	def __reset_ball(self):
 		self.game_state['ball_position'] = INITIAL_BALL_POSITION.copy()
 		self.game_state['ball_direction'] = self.__set_random_ball_direction()
+		self.ball_speed = BALL_SPEED
 
 	def __score_goal(self):
 		if self.game_state['ball_position'][X] <= MIN_BALL_X:
