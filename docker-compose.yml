@@ -1,5 +1,20 @@
 services:
 
+  # Blockchain service
+  Blockchain:
+    image: node:20-alpine
+    container_name: blockchain
+    build: ./blockchain
+    depends_on:
+      - Django
+    volumes:
+      - ./blockchain:/contracts
+    ports:
+      - "8545:8545"
+    restart: always
+    networks:
+      - Ft_Transcendence
+
   # Backend service
   Django:
     image: django
@@ -81,5 +96,4 @@ secrets:
   postgres_password:
     file: ./secrets/postgres_password.env
   django_superuser:
-
     file: ./secrets/django_superuser.env
