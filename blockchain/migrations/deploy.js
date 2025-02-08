@@ -1,5 +1,5 @@
-const SimpleContract = artifacts.require("SimpleContract");
+const Score = artifacts.require("Score");
 
 module.exports = function (deployer) {
-  deployer.deploy(SimpleContract, "Hello, world!");
+  deployer.deploy(Score);
 };
