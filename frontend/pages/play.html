@@ -14,19 +14,24 @@
         </div>
     </div>
 
-    <div class="container-fluid row mt-3 justify-content-between">
-        <button class="col-md gameButton" id="startGame">Start</button>
-        <button class="col-md gameButton" id="joinGame">Join</button>
-        <select id="gameMode" class="col-md" >
-            <option value="human">Human vs Human</option>
-            <option value="ai">Human vs AI</option>
-            <option value="ai2">AI vs AI</option>
-        </select>
-        <!-- New Difficulty Select -->
-        <select id="difficulty" class="col-md" style="display: none;">
-            <option value="easy">Easy</option>
-            <option value="medium">Medium</option>
-            <option value="hard">Hard</option>
-        </select>
+    <div class="container-fluid row mt-3 justify-content-center">
+        <div class="col-md">
+            <button id="startGame" class="w-100 gameButton">Start</button>
+        </div>
+        <div class="col-sm">
+            <select id="gameMode" class="w-100 h-100">
+                <option value="human">Human vs Human</option>
+                <option value="ai">Human vs AI</option>
+                <option value="ai2">AI vs AI</option>
+            </select>
+        </div>
+        <div id="difficultyCol" class="col-sm" style="display: none;">
+            <select id="difficulty" class="w-100 h-100">
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+            </select>
+        </div>
     </div>
+    <button class="col-md mt-2 gameButton" id="joinGame">Join</button>
 </div>

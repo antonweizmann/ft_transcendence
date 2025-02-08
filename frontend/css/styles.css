@@ -111,11 +111,6 @@ html {
     width: 100%;
 }
 
-.row {
-    gap: 1rem; /* Adjust as needed */
-}
-
-
 /* Special styling for the row items */
 .button {
     background-color: var(--deep-blue); /* Matches the website's theme */
@@ -481,7 +476,6 @@ body {
 .player-name, .score {
     color: #FFFFFF;
     font-weight: bold;
-    text-align: center;
 }
 
 .score-container {
@@ -494,11 +488,11 @@ body {
 
 /* Score and Player Names Responsive Font */
 .player-name {
-    font-size: calc(16px + 2vw);
+    font-size: 1.5em;
 }
 
 .score {
-    font-size: calc(16px + 2vw);
+    font-size: 1.5em;
 }
 
 /* Game Controls Layout */
@@ -512,16 +506,9 @@ body {
     align-items: center;
 }
 
-/* Start Button Styles */
-.button-container {
-    width: 33%;
-    text-align: center;
-}
-
 .gameButton {
-    width: 40%;
     padding: 1em;
-    font-size: calc(12px + 1vw);
+    font-size: 1.2em;
     background-color: var(--deep-blue);
     color: #FFFFFF;
     border: none;
@@ -529,23 +516,17 @@ body {
 }
 
 #gameMode {
-    width: 60%; /* Slightly increase width to prevent squishing */
-    padding: 1em; /* Adjust padding for a balanced look */
-    font-size: calc(12px + 1vw); /* Slightly increase font size */
+    padding: 1em;
+    font-size: 1.2em;
     border: none;
     background-color: var(--deep-blue);
     color: white;
     cursor: pointer;
 }
 
-.gameButton, #gameMode, #difficulty {
-    height: calc(30px + 8vh);
-}
-
 #difficulty {
-    width: 35%; /* Keep slightly larger width */
-    padding: 1em; /* Balanced padding */
-    font-size: calc(12px + 1vw); /* Keep larger font size */
+    padding: 1em;
+    font-size: 1.2em;
     border: none;
     background-color: var(--deep-blue);
     color: white;
