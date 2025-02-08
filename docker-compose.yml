@@ -10,7 +10,7 @@ services:
     volumes:
       - ./blockchain:/contracts
     ports:
-      - "8545:8545"
+      - "7545:7545"
     restart: always
     networks:
       - Ft_Transcendence
