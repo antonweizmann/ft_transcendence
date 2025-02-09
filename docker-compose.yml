@@ -55,6 +55,7 @@ services:
     volumes:
       - ./frontend:/var/www/transcendence
       - ./backend/services/nginx/certs:/etc/nginx/certs
+      - ./backend/services/Django/media:/var/www/transcendence/media
     environment:
       - DOMAIN=transcendence.de
 
