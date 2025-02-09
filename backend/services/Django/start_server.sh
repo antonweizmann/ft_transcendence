@@ -9,11 +9,11 @@ echo "Migrating Django database..."
 python manage.py migrate
 
 echo "Checking for static files..."
-if [[ ! -d /app/static_files ]]; then
+if [ -d "/app/static_files" ] && [ "$(ls -A /app/static_files)" ]; then
+	echo "Static files already exist."
+else
 	echo "Collecting static files..."
 	python manage.py collectstatic --noinput
-else
-	echo "Static files already exist."
 fi
 
 echo "Checking for superuser..."
