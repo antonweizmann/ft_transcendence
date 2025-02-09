@@ -8,4 +8,4 @@ RUN npm install -g truffle@5.11.5 ganache-cli@6.12.2
 
 EXPOSE 7545
 
-CMD ["/contract/start_testing_blockchain.sh"]
+CMD ["/bin/sh", "start_blockchain.sh"]
