@@ -22,8 +22,6 @@ MIN_PLAYER_Y = 50
 MAX_PLAYER_Y = BOARD_HEIGHT - 50
 PLAYER_SPEED = 10
 
-
-
 class PongHandler(GameHandlerBase):
 	required_players = 2
 
