@@ -55,7 +55,8 @@ class GameHandlerBase:
 		if player not in self.players:
 			return
 		self.players.remove(player)
-		self.results.players.remove(player)
+		if self.results.status == 'waiting':
+			self.results.players.remove(player)
 		if self.send_func is None:
 			return
 		self.send_func(json.dumps({
@@ -85,6 +86,12 @@ class GameHandlerBase:
 		}))
 
 	def _allowed_to_join(self, player, send_func: SendFunc):
+		if self.results.status == 'finished':
+			send_func(json.dumps({
+				'type': 'error',
+				'message': 'Game has already finished.'
+			}), True)
+			return False
 		if self.is_game_running:
 			send_func(json.dumps({
 				'type': 'error',
@@ -108,6 +115,12 @@ class GameHandlerBase:
 	def _allowed_to_start(self, player_index) -> bool:
 		if self.send_func is None or player_index == None:
 			raise ValueError('You must join a match before starting the game.')
+		if self.results.status == 'finished':
+			self.send_func(json.dumps({
+				'type': 'error',
+				'message': 'Game has already finished.'
+			}), True)
+			return False
 		if self.required_players != len(self.players):
 			self.send_func(json.dumps({
 				'type': 'error',

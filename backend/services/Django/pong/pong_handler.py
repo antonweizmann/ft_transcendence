@@ -22,8 +22,6 @@ MIN_PLAYER_Y = 50
 MAX_PLAYER_Y = BOARD_HEIGHT - 50
 PLAYER_SPEED = 10
 
-
-
 class PongHandler(GameHandlerBase):
 	required_players = 2
 
@@ -32,7 +30,7 @@ class PongHandler(GameHandlerBase):
 
 	def __init__(self, game_id: str):
 		super().__init__(game_id)
-		self.results= PongMatch.objects.create()
+		self.results = PongMatch.objects.create()
 		self.game_type = 'pong'
 		self.game_state = {
 			'ball_position': INITIAL_BALL_POSITION.copy(),
@@ -80,7 +78,6 @@ class PongHandler(GameHandlerBase):
 			self.__reset_ball()
 
 	def __bounce_from_paddle(self, paddle_position: float):
-		print('Bouncing from paddle')
 		self.game_state['ball_direction'][X] *= -1
 		self.game_state['ball_direction'][Y] = (
 			self.game_state['ball_position'][Y] - paddle_position) / 50

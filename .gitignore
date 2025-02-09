@@ -7,6 +7,11 @@ secrets/*
 b_main.js
 media/
 
+# Certificates
+*.pem
+*.crt
+*.key
+
 # Python files
 myenv/
 __pycache__/
@@ -20,3 +25,5 @@ ENV/
 env.bak/
 venv.bak/
 *.env
+
+backend/services/django/static_files/

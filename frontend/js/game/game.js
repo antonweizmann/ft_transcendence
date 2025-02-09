@@ -86,8 +86,7 @@ export function cleanupGame(){
 	eventListeners = [];
 }
 
-
-export const socket = new WebSocket('ws://localhost:8000/ws/pong/');
+export const socket = new WebSocket('wss://localhost/ws/pong/');
 
 		// Open WebSocket connection
 		socket.onopen = () => {
