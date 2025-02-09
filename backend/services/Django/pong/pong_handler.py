@@ -78,7 +78,6 @@ class PongHandler(GameHandlerBase):
 			self.__reset_ball()
 
 	def __bounce_from_paddle(self, paddle_position: float):
-		print('Bouncing from paddle')
 		self.game_state['ball_direction'][X] *= -1
 		self.game_state['ball_direction'][Y] = (
 			self.game_state['ball_position'][Y] - paddle_position) / 50
