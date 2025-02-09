@@ -70,9 +70,6 @@ volumes:
   postgres_volume:
     name: postgres_volume
     driver: local
-  nginx_volume:
-    name: nginx_volume
-    driver: local
 
 networks:
   Ft_Transcendence:
@@ -83,5 +80,4 @@ secrets:
   postgres_password:
     file: ./secrets/postgres_password.env
   django_superuser:
-
     file: ./secrets/django_superuser.env
