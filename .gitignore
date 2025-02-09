@@ -7,6 +7,11 @@ secrets/*
 b_main.js
 media/
 
+# Certificates
+*.pem
+*.crt
+*.key
+
 # Python files
 myenv/
 __pycache__/
