@@ -25,9 +25,6 @@ from player.views import (
 	reject_friend_request, send_friend_request, unfriend
 	)
 
-def redirect_to_home(request):
-	return redirect('/')
-
 urlpatterns = [
 	path('admin/', admin.site.urls),
 	path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
