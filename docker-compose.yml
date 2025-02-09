@@ -10,7 +10,6 @@ services:
       - redis
     volumes:
       - ./backend/services/Django:/app
-      - ./frontend:/app/static
     restart: always
     networks:
       - Ft_Transcendence
@@ -56,6 +55,7 @@ services:
       - ./frontend:/var/www/transcendence
       - ./backend/services/nginx/certs:/etc/nginx/certs
       - ./backend/services/Django/media:/var/www/transcendence/media
+      - ./backend/services/Django/static_files:/var/www/transcendence/static
     environment:
       - DOMAIN=transcendence.de
 

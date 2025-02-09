@@ -20,7 +20,6 @@ from django.shortcuts import redirect # type: ignore
 from django.contrib import admin # type: ignore
 from django.urls import path # type: ignore
 from django.conf import settings # type: ignore
-from pong.views import pong_game
 from player.views import (
 	PlayerDetailView, PlayerListView, PlayerRegisterView, accept_friend_request,
 	reject_friend_request, send_friend_request, unfriend
@@ -30,9 +29,6 @@ def redirect_to_home(request):
 	return redirect('/')
 
 urlpatterns = [
-	path('', pong_game, name='pong_game'),
-	path('home/', redirect_to_home, name='home'),
-	path('play/', redirect_to_home, name='play'),
 	path('admin/', admin.site.urls),
 	path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
 	path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
