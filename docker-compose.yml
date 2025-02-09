@@ -11,8 +11,6 @@ services:
     volumes:
       - ./backend/services/Django:/app
       - ./frontend:/app/static
-    ports:
-      - "8000:8000"
     restart: always
     networks:
       - Ft_Transcendence

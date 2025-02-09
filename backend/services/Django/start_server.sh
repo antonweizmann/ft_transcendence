@@ -29,5 +29,5 @@ else
 	sed -i 's|/languages.json|/static/languages.json|g' /app/static/js/b_main.js
 fi
 
-echo "Starting Django server..."
-exec python manage.py runserver 0.0.0.0:8000
+echo "Starting Django server with Daphne..."
+exec daphne -b 0.0.0.0 -p 8000 core.asgi:application
