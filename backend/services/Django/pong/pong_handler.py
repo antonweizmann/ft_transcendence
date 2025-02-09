@@ -30,7 +30,7 @@ class PongHandler(GameHandlerBase):
 
 	def __init__(self, game_id: str):
 		super().__init__(game_id)
-		self.results= PongMatch.objects.create()
+		self.results = PongMatch.objects.create()
 		self.game_type = 'pong'
 		self.game_state = {
 			'ball_position': INITIAL_BALL_POSITION.copy(),
