@@ -73,7 +73,7 @@ volumes:
 
 networks:
   Ft_Transcendence:
-    name: inception
+    name: transcendence
     driver: bridge
 
 secrets:
