@@ -73,6 +73,23 @@ services:
     networks:
       - Ft_Transcendence
 
+  ngrok:
+    image: ngrok/ngrok
+    container_name: ngrok
+    restart: always
+    command:
+    - "http"
+    - "--domain=renewing-vastly-lemur.ngrok-free.app"
+    - "https://nginx:443"
+    depends_on:
+      - Django
+    ports:
+      - "4040:4040"
+    networks:
+      - Ft_Transcendence
+    env_file:
+      - ./secrets/ngrok_auth_token.env
+
 volumes:
   postgres_volume:
     name: postgres_volume

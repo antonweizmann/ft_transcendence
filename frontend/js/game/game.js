@@ -86,7 +86,7 @@ export function cleanupGame(){
 	eventListeners = [];
 }
 
-export const socket = new WebSocket('wss://localhost/ws/pong/');
+export const socket = new WebSocket('wss://renewing-vastly-lemur.ngrok-free.app/ws/pong/');
 
 		// Open WebSocket connection
 		socket.onopen = () => {
