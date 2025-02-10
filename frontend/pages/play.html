@@ -2,7 +2,7 @@
 <div class="container-fluid mt-5 d-flex justify-content-center align-items-center flex-column">
     <canvas id="gameBoard" width="800" height="600" style="background-color: #5D3FD3;"></canvas>
 
-    <div class="row mt-3 w-100 justify-content-center">
+    <div class="g-2 playRow row mt-2 justify-content-between">
         <div class="col-sm-4">
             <div id="player1Name" class="player-name text-start text-truncate">Player 1</div>
         </div>
@@ -14,7 +14,7 @@
         </div>
     </div>
 
-    <div class="container-fluid row mt-3 justify-content-center">
+    <div class="g-2 playRow row mt-2">
         <div class="col-md">
             <button id="startGame" class="w-100 gameButton">Start</button>
         </div>
@@ -33,5 +33,10 @@
             </select>
         </div>
     </div>
-    <button class="col-md mt-2 gameButton" id="joinGame">Join</button>
+    <div class="playRow row g-2 mt-2">
+        <div class="input-group">
+            <span class="gameButton input-group-text">Join</span>
+            <input type="text" class="form-control" placeholder="lobby id" aria-label="Username">
+        </div>
+    </div>
 </div>

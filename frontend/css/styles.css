@@ -513,6 +513,7 @@ body {
     color: #FFFFFF;
     border: none;
     cursor: pointer;
+    text-align: left;
 }
 
 #gameMode {
@@ -531,6 +532,10 @@ body {
     background-color: var(--deep-blue);
     color: white;
 }
+
+/* .playRow {
+    max-width: 60rem;
+} */
 
 /* Layout adjustments for the select-wrapper */
 .select-wrapper.d-flex {
