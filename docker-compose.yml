@@ -6,8 +6,10 @@ services:
     container_name: django
     build: ./backend/services/Django
     depends_on:
-      - PostgreSQL
-      - redis
+      PostgreSQL:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     volumes:
       - ./backend/services/Django:/app
     restart: always
@@ -17,11 +19,9 @@ services:
       - postgres_password
       - django_superuser
     environment:
-      - POSTGRES_DB=ft_transcendence_db
-      - POSTGRES_USER=ft_transcendence_user
-      - POSTGRES_PORT=5432
-      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres_password
       - POSTGRES_HOST=postgres
+    env_file:
+      - .env
 
   # Database service
   PostgreSQL:
@@ -34,11 +34,13 @@ services:
       - postgres_volume:/var/lib/postgresql/data
     secrets:
       - postgres_password
-    environment:
-      - POSTGRES_DB=ft_transcendence_db
-      - POSTGRES_USER=ft_transcendence_user
-      - POSTGRES_PORT=5432
-      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres_password
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $POSTGRES_USER -d $POSTGRES_DB"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   nginx:
     image: nginx
@@ -63,6 +65,11 @@ services:
     image: redis:7.4.2
     container_name: redis
     restart: always
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
     networks:
       - Ft_Transcendence
 
