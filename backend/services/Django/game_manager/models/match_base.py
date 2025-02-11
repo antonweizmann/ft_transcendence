@@ -3,6 +3,12 @@ from django.contrib.auth import get_user_model # type: ignore
 
 User = get_user_model()
 
+STATUS_CHOICES = [
+	('waiting', 'Waiting to Start'),
+	('in_progress', 'In Progress'),
+	('finished', 'Finished')
+]
+
 class GameMatchBase(models.Model):
 	class Meta:
 		abstract = True
@@ -12,11 +18,16 @@ class GameMatchBase(models.Model):
 	players = models.ManyToManyField(User, related_name='games', blank=True)
 	scores = models.JSONField(null=True, blank=True)
 	result = models.JSONField(null=True, blank=True) # Don't set this manually
-	status = models.CharField(max_length=20, choices=[
-		('waiting', 'Waiting to Start Match'), ('in_progress', 'In Progress'),
-		('finished', 'Finished')], default='waiting')
+	status = models.CharField(max_length=20, choices=STATUS_CHOICES,
+		default='waiting')
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
+	'''
+	This field needs to be overridden in the concrete class with a concrete
+	ForeignKey to the concrete Tournament model.
+	'''
+	tournament = models.ForeignKey('TournamentBase', related_name='matches',
+		on_delete=models.CASCADE, null=True, blank=True)
 	
 	def __str__(self):
 		player_names = ', '.join(self.players.values_list('username', flat=True))
