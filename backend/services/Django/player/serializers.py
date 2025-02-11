@@ -1,4 +1,5 @@
 from rest_framework import serializers # type: ignore
+from django.core.files.storage import default_storage # type: ignore
 from player.models import Player
 
 class PlayerSerializer(serializers.ModelSerializer):
@@ -30,7 +31,11 @@ class PlayerSerializer(serializers.ModelSerializer):
 			instance.set_password(password)
 		if groups_data:
 			instance.groups.set(groups_data)
-		if profile_picture:
+		if profile_picture and profile_picture != instance.profile_picture:
+			if (instance.profile_picture and
+				instance.profile_picture.path != 'profile_pictures/default.png'):
+				if default_storage.exists(instance.profile_picture.path):
+					default_storage.delete(instance.profile_picture.path)
 			instance.profile_picture = profile_picture
 		instance.save()
 		return instance
