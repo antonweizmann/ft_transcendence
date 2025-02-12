@@ -116,30 +116,23 @@ html {
     background-color: var(--deep-blue); /* Matches the website's theme */
     color: white; /* Text color for contrast */
     font-weight: bold; /* Makes text more prominent */
+    font-size: 1.2em;
     text-shadow: 1px 1px 2px var(--vibrant-purple); /* Slight glow effect */
     display: flex;
-    max-width: 400px;
+    padding: 0.8em;
     border: 2px solid var(--vibrant-purple); /* Defines each element with a border */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Creates a shadow for depth */
     transition: transform 0.3s, box-shadow 0.3s; /* Smooth animation on hover */
-    border-radius: 8px; /* Adds rounded corners */
+    border-radius: 0.6em; /* Adds rounded corners */
     justify-content: center; /* Aligns content horizontally */
     align-items: center; /* Aligns content vertically */
 }
 
 /* Hover effect */
-.button:hover {
+.button-hover:hover {
     transform: scale(1.05); /* Slight zoom on hover */
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.7); /* Enhances shadow on hover */
     cursor: pointer; /* Changes cursor to pointer */
-}
-
-/* Media query for small screens */
-@media (max-width: 768px) {
-    .button {
-        font-size: 0.9rem; /* Adjusts font size for readability */
-        padding: 10px; /* Adds some padding for touch devices */
-    }
 }
 
 .responsive-title {
@@ -505,37 +498,6 @@ body {
     justify-content: space-between;
     align-items: center;
 }
-
-.gameButton {
-    padding: 1em;
-    font-size: 1.2em;
-    background-color: var(--deep-blue);
-    color: #FFFFFF;
-    border: none;
-    cursor: pointer;
-    text-align: left;
-}
-
-#gameMode {
-    padding: 1em;
-    font-size: 1.2em;
-    border: none;
-    background-color: var(--deep-blue);
-    color: white;
-    cursor: pointer;
-}
-
-#difficulty {
-    padding: 1em;
-    font-size: 1.2em;
-    border: none;
-    background-color: var(--deep-blue);
-    color: white;
-}
-
-/* .playRow {
-    max-width: 60rem;
-} */
 
 /* Layout adjustments for the select-wrapper */
 .select-wrapper.d-flex {

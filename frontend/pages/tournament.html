@@ -4,11 +4,13 @@
         <h2 class="responsive-title" data-translate="tournamentTitle">Tournament</h2>
         <p class="responsive-subtitle" data-translate="tournamentSubtitle">Add players and start the tournament!</p>
     </div>
-    <div class="row justify-content-center">
-        <div class="col-md-8">
+    <div class="row gx-0 my-3 justify-content-center">
+        <div class="col-3">
+            <button type="button" onclick="addPlayer();" class="button w-100" data-translate="addPlayerButton">Add Player</button>
+        </div>
+        <div class="col-6 justify-content-left">
             <!-- Form to add players -->
-            <form id="tournament-form" class="mb-3 d-flex">
-                <button type="button" onclick="addPlayer();" class="btn btn-primary" data-translate="addPlayerButton">Add Player</button>
+            <form id="tournament-form" class="d-flex h-100">
                 <input id="add-player-name" type="text" id="player-name" class="form-control" placeholder="Enter player name" data-translate="playerNamePlaceholder" onsubmit="addPlayer()" required>
             </form>
         </div>
