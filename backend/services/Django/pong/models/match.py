@@ -1,5 +1,5 @@
 from django.db import models # type: ignore
-from game_manager.models import GameMatchBase
+from game_base.models import GameMatchBase
 
 class PongMatch(GameMatchBase):
 	class Meta:

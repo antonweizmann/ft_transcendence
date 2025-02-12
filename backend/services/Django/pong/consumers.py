@@ -1,4 +1,4 @@
-from game_manager.consumers import GameBaseConsumer
+from game_base.consumers import GameBaseConsumer
 from pong.pong_handler import PongHandler
 
 class PongConsumer(GameBaseConsumer):

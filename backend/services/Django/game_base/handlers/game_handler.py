@@ -17,7 +17,7 @@ class GameHandlerBase:
 	def __new__(cls, *args, **kwargs):
 		stack = inspect.stack()
 		try:
-			caller = stack[1].function
+			caller = stack[2].function
 		except IndexError:
 			caller = ''
 		if caller != 'get_game':

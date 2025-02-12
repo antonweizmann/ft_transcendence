@@ -1,13 +1,13 @@
 from channels.generic.websocket import WebsocketConsumer # type: ignore
-from game_manager.handlers import GameHandlerBase
+from game_base.handlers import GameHandlerBase
 from .manager_base import ManagerBase
 
 class GameManager(ManagerBase):
 
 	def get_game(self, game_handler: type[GameHandlerBase], game_id: str):
-		self._get_object(game_handler, game_id)
+		return self._get_object(game_handler, game_id)
 
 	def remove_game(self, game_id: str):
-		self._remove_object(game_id)
+		return self._remove_object(game_id)
 
 game_manager = GameManager()

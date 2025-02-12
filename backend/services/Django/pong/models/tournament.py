@@ -1,6 +1,6 @@
 from django.db import models # type: ignore
 from django.contrib.auth import get_user_model # type: ignore
-from game_manager.models import TournamentBase
+from game_base.models import TournamentBase
 
 User = get_user_model()
 

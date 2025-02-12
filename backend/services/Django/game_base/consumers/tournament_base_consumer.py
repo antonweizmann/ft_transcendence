@@ -1,5 +1,5 @@
 from channels.generic.websocket import WebsocketConsumer # type: ignore
-from game_manager.managers import TournamentManager
+from game_base.managers import TournamentManager
 
 class TournamentBaseConsumer(WebsocketConsumer):
 	class Meta:
