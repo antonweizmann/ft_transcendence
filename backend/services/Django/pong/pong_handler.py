@@ -2,7 +2,7 @@ import time
 import random
 import json
 from math import sqrt
-from game_manager.game_handler import GameHandlerBase
+from game_manager.handlers import GameHandlerBase
 from .models import PongMatch
 
 X = 0

@@ -1,0 +1,2 @@
+from .game_base_consumer import GameBaseConsumer
+from .tournament_base_consumer import TournamentBaseConsumer

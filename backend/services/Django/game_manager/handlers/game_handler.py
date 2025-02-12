@@ -2,7 +2,7 @@ import json
 import threading
 import inspect
 from typing import Protocol, Optional
-from .models import GameMatchBase
+from ..models import GameMatchBase
 
 class SendFunc(Protocol):
 	def __call__(self, message, error: bool = False) -> None:

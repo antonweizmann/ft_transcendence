@@ -5,11 +5,11 @@ from channels.generic.websocket import WebsocketConsumer # type: ignore
 from channels.exceptions import StopConsumer # type: ignore
 from django.contrib.auth import get_user_model # type: ignore
 from game_manager.managers import GameManager
-from game_manager.game_handler import GameHandlerBase
+from game_manager.handlers import GameHandlerBase
 
 Player = get_user_model()
 
-class WSConsumerBase(WebsocketConsumer):
+class GameBaseConsumer(WebsocketConsumer):
 	class Meta:
 		abstract = True
 
