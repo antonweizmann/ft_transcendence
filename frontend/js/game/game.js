@@ -27,7 +27,7 @@ eventListeners.push({element: document, type: 'keyup', listener: stopMovement});
 //Main Loop
 export function gameLoop() {
 	gameMode = gameModeSelector.value;
-	gameButton = document.getElementsByClassName('gameButton')[0]
+	gameButton = document.getElementById('startButton');
 	if (gameButton.textContent === 'Start')
 	{
 		gameButton.addEventListener('click', resetGame, { once: true });
@@ -58,7 +58,7 @@ export function gameLoop() {
 export function resetGame(){
 	console.log('Game was reset');
 	isAnimating = false;
-	gameButton = document.getElementsByClassName('gameButton')[0]
+	gameButton = document.getElementById('startButton');
 	ball.reset();
 	player1.reset();
 	player2.reset();
