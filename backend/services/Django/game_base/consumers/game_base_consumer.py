@@ -22,6 +22,12 @@ class GameBaseConsumer(WebsocketConsumer):
 		self.player_index = None
 		self.in_Match = False
 
+	def connect(self):
+		super().connect()
+		self.send(json.dumps({
+			'message': 'Connected to server.'
+		}))
+
 	def send_to_group(self, message, error: bool = False) -> None:
 		try:
 			if error:
