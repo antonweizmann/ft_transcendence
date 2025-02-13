@@ -51,14 +51,18 @@ function validateLoginForm(event)
 function validateSignupForm(event)
 {
 	const username = document.getElementById('signupUsername');
+	const firstname = document.getElementById('signupFirstname');
+	const lastname = document.getElementById('signupLastname');
 	const email = document.getElementById('signupEmail');
 	const password = document.getElementById('signupPassword');
 	const password2 = document.getElementById('signupPassword2');
 	let isValid = true;
 
 	removeErrorMessage(username);
-	removeErrorMessage(password);
+	removeErrorMessage(firstname);
+	removeErrorMessage(lastname);
 	removeErrorMessage(email);
+	removeErrorMessage(password);
 	removeErrorMessage(password2);
 	if (!username.value.trim())
 	{
@@ -66,7 +70,18 @@ function validateSignupForm(event)
 		username.classList.add('is-invalid');
 		showErrorMessage(username, 'Please enter your username');
 	}
-	removeErrorMessage(password2);
+	if (!firstname.value.trim())
+	{
+		isValid = false;
+		firstname.classList.add('is-invalid');
+		showErrorMessage(firstname, 'Please enter your firstname');
+	}
+	if (!lastname.value.trim())
+	{
+		isValid = false;
+		lastname.classList.add('is-invalid');
+		showErrorMessage(lastname, 'Please enter your lastname');
+	}
 	if (!email.value.trim())
 	{
 		isValid = false;
@@ -93,6 +108,9 @@ function validateSignupForm(event)
 		showErrorMessage(password, 'Passwords do not match');
 		showErrorMessage(password2, 'Passwords do not match');
 	}
+	// return isValid;
+	if (isValid)
+		window.registerUser(username, firstname, lastname, email, password);
 	return isValid;
 }
 

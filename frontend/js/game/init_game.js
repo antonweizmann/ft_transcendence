@@ -119,6 +119,8 @@ function listenerMode() {
 	// Get the selected value
 	gameMode = gameModeSelector.value;
 	const difficulty = document.getElementById("difficulty");
+	const difficultyCol = document.getElementById("difficultyCol");
+
 	// Take action based on the selected value
 	console.log('Selected game mode:', gameMode);
 	resetGame();
@@ -126,29 +128,33 @@ function listenerMode() {
 		document.getElementById("player1Name").innerText = "Player 1";
 		document.getElementById("player2Name").innerText = "Player 2";
 		console.log('Action for Human vs Human');
-		// gameModeSelector.style.width = '60%';
-		difficulty.style.display = "none";
+		difficultyCol.style.display = "none";
 	} else if (gameMode === 'ai') {
 		document.getElementById("player2Name").innerText = "AI";
 		console.log('Action for Human vs AI');
-		if (window.innerWidth > 768)
-			// gameModeSelector.style.width = '60%';
-		difficulty.style.display = "block";
+		difficultyCol.style.display = "block";
 		difficulty.addEventListener('change', setAiReaction);
 	} else if (gameMode === 'ai2') {
 		document.getElementById("player1Name").innerText = "AI";
 		document.getElementById("player2Name").innerText = "AI";
 		console.log('Action for AI vs AI');
-		// gameModeSelector.style.width = '60%';
-		difficulty.style.display = "none";
+		difficultyCol.style.display = "none";
 		difficulty.addEventListener('change', setAiReaction);
 	}
 }
 
 export function setGameBoardSize(isInitialSetup = false) {
-	const  smallerDimension = Math.min(window.innerWidth, window.innerHeight);
+
+	const smallerDimension = Math.min(window.innerWidth, window.innerHeight);
 	WIDTHBOARD = Math.floor(smallerDimension * 1);
 	HEIGHTBOARD = Math.floor(WIDTHBOARD * (5/9)); // Maintain a 9 / 5 Ratio
+
+	// adjust size of buttons below board
+	document.querySelectorAll('.playRow').forEach(function(element) {
+		element.style.width = WIDTHBOARD + 'px';
+	});
+
+	document.querySelectorAll('.playRow')
 
 	// Recalculate other dependent variables
 	WIDTHOBJECTS = WIDTHBOARD / 45;
