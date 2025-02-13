@@ -1,8 +1,12 @@
 import json
 import threading
 import inspect
-from typing import Protocol, Optional
-from ..models import GameMatchBase
+
+from typing import Protocol, Optional, List, Dict
+from game_base.models import GameMatchBase
+from django.contrib.auth import get_user_model # type: ignore
+
+Player = get_user_model()
 
 class SendFunc(Protocol):
 	def __call__(self, message, error: bool = False) -> None:
@@ -32,38 +36,52 @@ class GameHandlerBase:
 		self.game_type : str = 'Unknown'
 		self.game_id = game_id
 		self.game_state = { 'score': {} }
-		self.players = []
+		self.players: List[Player] = []
+		self._indexes: Dict[int, Player] = {}
 
-	def join_match(self, player, send_func: SendFunc):
+	def _get_index(self, player: Player)-> int:
+		player_index = 0
+		while (self._indexes.get(player_index) is not None
+			and player is not self._indexes[player_index]):
+			player_index += 1
+		if player_index not in self._indexes:
+			self._indexes[player_index] = player
+		return player_index
+
+	def join_match(self, player: Player, send_func: SendFunc) -> int | None:
 		if not self._allowed_to_join(player, send_func):
 			return
-		self.players.append(player)
 		if self.results is None:
 			raise ValueError('Results object must be set in __init__ from the child class.')
 		self.results.players.add(player)
+		self.players.append(player)
+		player_index = self._get_index(player)
 		self.send_func = send_func
-		player_index = len(self.players) - 1
-		send_func(json.dumps({
-			'type': 'lobby_update',
-			'game_id': self.game_id,
-			'players': [{'username': player.username, 'index': index} for\
-				index, player in enumerate(self.players)]
-		}))
+		self._send_lobby_update()
 		return player_index
 
-	def leave_match(self, player):
+	def leave_match(self, player: Player):
 		if player not in self.players:
 			return
 		self.players.remove(player)
 		if self.results.status == 'waiting':
 			self.results.players.remove(player)
+			for index, p in self._indexes.items():
+				if p == player:
+					player_index = index
+					break
+			if player_index is not None:
+				del self._indexes[player_index]
 		if self.send_func is None:
 			return
+		self._send_lobby_update()
+
+	def _send_lobby_update(self):
 		self.send_func(json.dumps({
 			'type': 'lobby_update',
 			'game_id': self.game_id,
-			'players': [{'username': player.username, 'index': index} for\
-				index, player in enumerate(self.players)]
+			'players': [{'index': index, 'username': player.username} for\
+				index, player in self._indexes.items()]
 		}))
 
 	def start_game(self, player_index):
@@ -85,7 +103,7 @@ class GameHandlerBase:
 			'game_state': self.game_state
 		}))
 
-	def _allowed_to_join(self, player, send_func: SendFunc):
+	def _allowed_to_join(self, player: Player, send_func: SendFunc):
 		if self.results.status == 'finished':
 			send_func(json.dumps({
 				'type': 'error',
@@ -112,7 +130,7 @@ class GameHandlerBase:
 			return False
 		return True
 	
-	def _allowed_to_start(self, player_index) -> bool:
+	def _allowed_to_start(self, player_index: int) -> bool:
 		if self.send_func is None or player_index == None:
 			raise ValueError('You must join a match before starting the game.')
 		if self.results.status == 'finished':
