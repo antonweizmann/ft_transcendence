@@ -38,7 +38,8 @@ class PongHandler(GameHandlerBase):
 			'paddle_1_position': 250,
 			'paddle_2_position': 250,
 		})
-		self._ball_speed = BALL_SPEED
+		self.__ball_speed = BALL_SPEED
+		self.__allowed_to_move = False
 
 	def __start_countdown(self):
 		i = 0
@@ -53,6 +54,7 @@ class PongHandler(GameHandlerBase):
 		target_frame_duration = 1 / target_fps
 
 		self.__start_countdown()
+		self.__allowed_to_move = True
 		while self._is_active:
 			start_time = time.time()
 
@@ -67,7 +69,7 @@ class PongHandler(GameHandlerBase):
 	def __reset_ball(self):
 		self._state['ball_position'] = INITIAL_BALL_POSITION.copy()
 		self._state['ball_direction'] = self.__set_random_ball_direction()
-		self._ball_speed = BALL_SPEED
+		self.__ball_speed = BALL_SPEED
 
 	def __score_goal(self):
 		if self._state['ball_position'][X] <= MIN_BALL_X:
@@ -91,8 +93,8 @@ class PongHandler(GameHandlerBase):
 		self._state['ball_direction'][X] *= -1
 		self._state['ball_direction'][Y] = (
 			self._state['ball_position'][Y] - paddle_position) / 50
-		if self._ball_speed < 11:
-			self._ball_speed += 0.66
+		if self.__ball_speed < 11:
+			self.__ball_speed += 0.66
 
 	def __check_paddle_collisions(self):
 		# Paddle 1 collision
@@ -139,6 +141,8 @@ class PongHandler(GameHandlerBase):
 			raise ValueError('Invalid player index.')
 		if move not in ['up', 'down']:
 			raise ValueError('Invalid move.')
+		if not self.__allowed_to_move:
+			raise ValueError('Game has not started yet.')
 		if (move == 'up' and
 			self._state[f'paddle_{player_index + 1}_position'] >=
 			MIN_PLAYER_Y + PLAYER_SPEED):
