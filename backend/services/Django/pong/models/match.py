@@ -1,7 +1,7 @@
 from django.db import models # type: ignore
-from game_base.models import GameMatchBase
+from game_base.models import GameBaseModel
 
-class PongMatch(GameMatchBase):
+class PongMatch(GameBaseModel):
 	class Meta:
 		verbose_name = 'Pong Match'
 		verbose_name_plural = 'Pong Matches'

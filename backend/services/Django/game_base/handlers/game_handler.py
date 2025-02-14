@@ -1,6 +1,6 @@
 import threading
 
-from game_base.models import GameMatchBase
+from game_base.models import GameBaseModel
 from django.contrib.auth import get_user_model # type: ignore
 from .core_base_handler import SendFunc, CoreHandlerBase
 
@@ -15,7 +15,7 @@ class GameHandlerBase(CoreHandlerBase):
 
 	def __init__(self, game_id: str):
 		super().__init__(game_id)
-		self._model: type[GameMatchBase] | None	= None
+		self._model: type[GameBaseModel] | None	= None
 		self._id								= game_id
 		self._state								= {'score': {}}
 

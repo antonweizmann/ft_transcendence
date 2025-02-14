@@ -9,7 +9,7 @@ STATUS_CHOICES = [
 	('finished', 'Finished')
 ]
 
-class GameMatchBase(models.Model):
+class GameBaseModel(models.Model):
 	class Meta:
 		abstract = True
 
@@ -41,7 +41,7 @@ class GameMatchBase(models.Model):
 
 	def save(self, *args, **kwargs):
 		if not self.pk:
-			super(GameMatchBase, self).save(*args, **kwargs)
+			super(GameBaseModel, self).save(*args, **kwargs)
 			return
 		if self.players.count() == 0 and self.status != 'waiting':
 			self.delete()
@@ -53,4 +53,4 @@ class GameMatchBase(models.Model):
 					for player in self.players.all()
 				}
 			}
-		super(GameMatchBase, self).save(*args, **kwargs)
+		super(GameBaseModel, self).save(*args, **kwargs)

@@ -136,7 +136,7 @@ class CoreHandlerBase:
 			}), True)
 			return False
 		return True
-	
+
 	def _allowed_to_start(self, player_index: int) -> bool:
 		if (self._send_func is None or player_index == None
 			or player_index not in self._indexes):

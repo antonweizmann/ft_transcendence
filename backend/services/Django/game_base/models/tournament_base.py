@@ -4,7 +4,7 @@ from .match_base import STATUS_CHOICES
 
 User = get_user_model()
 
-class TournamentBase(models.Model):
+class TournamentBaseModel(models.Model):
 	class Meta:
 		abstract = True
 

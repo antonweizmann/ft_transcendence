@@ -1,2 +1,2 @@
-from .match_base import GameMatchBase
-from .tournament_base import TournamentBase
+from .match_base import GameBaseModel
+from .tournament_base import TournamentBaseModel
