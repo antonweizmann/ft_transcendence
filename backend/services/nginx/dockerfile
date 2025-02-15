@@ -1,11 +1,22 @@
-FROM nginx:alpine
+FROM alpine:latest AS certs
+
+WORKDIR /etc/nginx/
+
+RUN apk add --no-cache openssl
+
+COPY ./generate_cert.sh ./certs/* ./
+
+ENV DOMAIN=transcendence.de
+RUN chmod +x generate_cert.sh && ./generate_cert.sh
+
+FROM nginx:alpine AS nginx
 
 WORKDIR /etc/nginx
 
 COPY ./default.conf ./nginx_script.sh ./
+COPY --from=certs /etc/nginx/certs/ /etc/nginx/
 
-RUN apk add --no-cache openssl && \
-	chmod +x /etc/nginx/nginx_script.sh
+RUN chmod +x /etc/nginx/nginx_script.sh
 
 EXPOSE 443
 
