@@ -8,10 +8,10 @@ class TournamentHandlerBase(CoreHandlerBase):
 	class Meta:
 		abstract = True
 
-	_handler_type: str	= 'Tournament'
-	_subtype: str		= 'Unknown'
-	_MIN_PLAYERS		= 3
-	_MAX_PLAYERS		= 8
+	_type: str		= 'Tournament'
+	_subtype: str	= 'Unknown'
+	_MIN_PLAYERS	= 3
+	_MAX_PLAYERS	= 8
 
 	def __init__(self, tournament_id: str):
 		super().__init__(tournament_id)
@@ -48,7 +48,7 @@ class TournamentHandlerBase(CoreHandlerBase):
 		return (all(self._state['is_ready_to_start'].values())
 			and len(self.players) == self._required_players)
 
-	def set_as_ready(self, player_index: int):
+	def mark_ready_and_start(self, player_index: int):
 		if player_index not in self._indexes:
 			raise ValueError(f'Player #{player_index} not found.')
 		player_str = self._indexes[player_index].__str__()

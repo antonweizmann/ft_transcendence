@@ -15,7 +15,7 @@ class CoreHandlerBase:
 	class Meta:
 		abstract = True
 
-	_handler_type: str	= 'Abstract'
+	_type: str			= 'Abstract'
 	_subtype: str		= 'Unknown'
 	_required_players	= 1
 
@@ -26,9 +26,9 @@ class CoreHandlerBase:
 		except IndexError:
 			caller = ''
 		if caller != '_get_object':
-			raise TypeError(f"Instances of any {cls._handler_type}Handler can " +
+			raise TypeError(f"Instances of any {cls._type}Handler can " +
 				f"only be created through " +
-				f"{cls._handler_type}Manager.get_{cls._handler_type.lower()}().")
+				f"{cls._type}Manager.get_{cls._type.lower()}().")
 		return super(CoreHandlerBase, cls).__new__(cls)
 
 	def __init__(self, id: str):
@@ -87,7 +87,7 @@ class CoreHandlerBase:
 	def _send_lobby_update(self):
 		self._send_func(json.dumps({
 			'type': 'lobby_update',
-			f'{self._handler_type.lower()}_id': self._id,
+			f'{self._type.lower()}_id': self._id,
 			'players': [{'index': index, 'username': player.username} for\
 				index, player in self._indexes.items()]
 		}))
@@ -103,24 +103,24 @@ class CoreHandlerBase:
 
 	def _send_state(self):
 		if self._send_func is None:
-			raise ValueError(f'You must join a {self._handler_type} before sending state.')
+			raise ValueError(f'You must join a {self._type} before sending state.')
 		self._send_func(json.dumps({
-			'type': f'{self._subtype.lower()}_{self._handler_type.lower()}_update',
-			f'{self._handler_type.lower()}_id': self._id,
-			f'{self._handler_type.lower()}_state': self._state
+			'type': f'{self._subtype.lower()}_{self._type.lower()}_update',
+			f'{self._type.lower()}_id': self._id,
+			f'{self._type.lower()}_state': self._state
 		}))
 
 	def _allowed_to_join(self, player: Player, send_func: SendFunc): # type: ignore
 		if self._model.status == 'finished':
 			send_func(json.dumps({
 				'type': 'error',
-				'message': f'{self._handler_type} has already finished.'
+				'message': f'{self._type} has already finished.'
 			}), True)
 			return False
 		if self._is_active:
 			send_func(json.dumps({
 				'type': 'error',
-				'message': f'{self._handler_type} has already started.'
+				'message': f'{self._type} has already started.'
 			}), True)
 			return False
 		if player in self.players:
@@ -132,7 +132,7 @@ class CoreHandlerBase:
 		if len(self.players) >= self._required_players:
 			send_func(json.dumps({
 				'type': 'error',
-				'message': f'{self._handler_type} lobby is full.'
+				'message': f'{self._type} lobby is full.'
 			}), True)
 			return False
 		return True
@@ -140,11 +140,11 @@ class CoreHandlerBase:
 	def _allowed_to_start(self, player_index: int) -> bool:
 		if (self._send_func is None or player_index == None
 			or player_index not in self._indexes):
-			raise ValueError(f'You must join a {self._handler_type} before starting.')
+			raise ValueError(f'You must join a {self._type} before starting.')
 		if self._model.status == 'finished':
 			self._send_func(json.dumps({
 				'type': 'error',
-				'message': f'{self._handler_type} has already finished.'
+				'message': f'{self._type} has already finished.'
 			}), True)
 			return False
 		if self._required_players != len(self.players):
@@ -156,7 +156,7 @@ class CoreHandlerBase:
 		if self._is_active:
 			self._send_func(json.dumps({
 				'type': 'error',
-				'message': f'{self._handler_type} has already started.'
+				'message': f'{self._type} has already started.'
 			}), True)
 			return False
 		return True

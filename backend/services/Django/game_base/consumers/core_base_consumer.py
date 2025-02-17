@@ -6,12 +6,35 @@ from channels.exceptions import StopConsumer # type: ignore
 from django.contrib.auth import get_user_model # type: ignore
 from game_base.managers.manager_base import ManagerBase
 from game_base.handlers.core_base_handler import CoreHandlerBase
+from typing import Any, Tuple
 
 Player = get_user_model()
 
 class CoreBaseConsumer(WebsocketConsumer):
 	class Meta:
 		abstract = True
+
+	class __HandlerFunc():
+		def __init__(self, outer):
+			self.outer = outer
+
+		def join(self, player, object_id):
+			if self.outer._handler._type == 'Tournament':
+				return self.outer._handler.join_tournament(player, object_id)
+			else:
+				return self.outer._handler.join_match(player, object_id)
+
+		def leave(self, player):
+			if self.outer._handler._type == 'Tournament':
+				return self.outer._handler.leave_tournament(player)
+			else:
+				return self.outer._handler.leave_match(player)
+
+		def start(self, player_index):
+			if self.outer._handler._type == 'Tournament':
+				return self.outer._handler.mark_ready_and_start(player_index)
+			else:
+				return self.outer._handler.start_game(player_index)
 
 	_type		= 'core'
 	_subtype	= 'abstract'
@@ -24,6 +47,7 @@ class CoreBaseConsumer(WebsocketConsumer):
 		self.player: Player							= None # type: ignore
 		self.player_index: int						= None
 		self._already_in: bool						= False
+		self.__handler_func							= self.__HandlerFunc(self)
 
 	def connect(self):
 		super().connect()
@@ -62,13 +86,27 @@ class CoreBaseConsumer(WebsocketConsumer):
 		self._id = object_id
 		self._handler = self._manager._get_object(handler, object_id)
 
-	def receive(self, text_data):
+	def _join_lobby(self, player, object_id, handler: type[CoreHandlerBase]):
+		self._set_handler(object_id, handler)
+		if self._id is None:
+			return
+		self.player = player
+		self.player_index = self.__handler_func.join(player, self._id)
+		if self.player_index is None:
+			self.send(json.dumps({
+				'message': f'Failed to join {self._subtype} {self._type} lobby.'
+			}))
+			async_to_sync(self.channel_layer.group_discard)(self._id, self.channel_name)
+			return
+		self._already_in = True
+
+	def receive(self, text_data) -> Tuple[Any, Any] | None:
 		text_data_json = json.loads(text_data)
 		action = text_data_json.get('action')
-		player_pk = text_data_json.get('player_pk')
-		object_id = text_data_json.get(f'{self._type}_id')
 
 		if action == 'join_lobby':
+			player_pk = text_data_json.get('player_pk')
+			object_id = text_data_json.get(f'{self._type}_id')
 			try:
 				player_pk = int(player_pk)
 				self.player = Player.objects.get(pk=player_pk)
@@ -81,21 +119,31 @@ class CoreBaseConsumer(WebsocketConsumer):
 				self.send(json.dumps({'message': 'Invalid player ID.'}))
 				return
 			self.join_lobby(self.player, object_id)
+			return
 
-		else:
-			message = text_data_json.get('message')
-			self.send(json.dumps({
-				'message': message
-			}))
+		elif action == f'start_{self._type}':
+			if not self._handler:
+				self.send(json.dumps({
+					'message': f'You are not in a {self._subtype} {self._type}.'
+				}))
+				return
+			try:
+				self.__handler_func.start(self.player_index)
+			except ValueError as e:
+				self.send(json.dumps({
+					'message': str(e)
+				}))
+			return
+		return [text_data_json, action]
 
 	def disconnect(self, close_code):
 		if self._handler:
 			async_to_sync(self.channel_layer.group_discard)(self._id, self.channel_name)
-			self._handler.leave_match(self.player)
+			self.__handler_func.leave(self.player)
 			if len(self._handler.players) == 0 and self._id:
-				self._manager.remove_game(self._id)
+				self._manager._remove_object(self._id)
 
 	def join_lobby(self, player, _id):
 		raise NotImplementedError('You must implement this method in the child'
-							+ ' class to specify the game handler.')
+							+ f' class to specify the {self._type} handler.')
 		return self._join_lobby(player, _id, GameHandlerBase)

@@ -10,8 +10,8 @@ class GameHandlerBase(CoreHandlerBase):
 	class Meta:
 		abstract = True
 
-	_handler_type: str	= 'Game'
-	_subtype: str		= 'Unknown'
+	_type: str		= 'Game'
+	_subtype: str	= 'Unknown'
 
 	def __init__(self, game_id: str):
 		super().__init__(game_id)
