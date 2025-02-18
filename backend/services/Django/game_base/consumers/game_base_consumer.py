@@ -1,14 +1,8 @@
 import json
 
-from asgiref.sync import async_to_sync # type: ignore
-from channels.generic.websocket import WebsocketConsumer # type: ignore
-from channels.exceptions import StopConsumer # type: ignore
-from django.contrib.auth import get_user_model # type: ignore
 from game_base.managers import GameManager
 from game_base.handlers import GameHandlerBase
 from .core_base_consumer import CoreBaseConsumer
-
-Player = get_user_model()
 
 class GameBaseConsumer(CoreBaseConsumer):
 	class Meta:
