@@ -42,7 +42,7 @@ class CoreBaseConsumer(WebsocketConsumer):
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
 		self._handler: type[CoreHandlerBase] | None	= None
-		self._manager: type[ManagerBase] | None 	= None
+		self._manager: type[ManagerBase] | None		= None
 		self._id: str								= None
 		self.player: Player							= None # type: ignore
 		self.player_index: int						= None
@@ -91,7 +91,7 @@ class CoreBaseConsumer(WebsocketConsumer):
 		if self._id is None:
 			return
 		self.player = player
-		self.player_index = self.__handler_func.join(player, self._id)
+		self.player_index = self.__handler_func.join(player, self._send_to_group)
 		if self.player_index is None:
 			self.send(json.dumps({
 				'message': f'Failed to join {self._subtype} {self._type} lobby.'
