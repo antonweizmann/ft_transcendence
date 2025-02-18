@@ -86,13 +86,13 @@ class CoreBaseConsumer(WebsocketConsumer):
 		self._id = object_id
 		self._handler = self._manager._get_object(handler, object_id)
 
-	def _join_lobby(self, player, object_id, handler: type[CoreHandlerBase]):
+	def _join_lobby(self, object_id, handler: type[CoreHandlerBase]):
 		self._set_handler(object_id, handler)
 		if self._id is None:
 			return
-		self.player = player
-		self.player_index = self.__handler_func.join(player, self._send_to_group)
+		self.player_index = self.__handler_func.join(self.player, self._send_to_group)
 		if self.player_index is None:
+			self.player = None
 			self.send(json.dumps({
 				'message': f'Failed to join {self._subtype} {self._type} lobby.'
 			}))
@@ -118,7 +118,7 @@ class CoreBaseConsumer(WebsocketConsumer):
 			except ValueError as e:
 				self.send(json.dumps({'message': 'Invalid player ID.'}))
 				return None, None
-			self.join_lobby(self.player, object_id)
+			self.join_lobby(object_id)
 			return None, None
 
 		elif action == f'start_{self._type.lower()}':
@@ -143,7 +143,7 @@ class CoreBaseConsumer(WebsocketConsumer):
 			if len(self._handler.players) == 0 and self._id:
 				self._manager._remove_object(self._id)
 
-	def join_lobby(self, player, _id):
+	def join_lobby(self, object_id):
 		raise NotImplementedError('You must implement this method in the child'
 							+ f' class to specify the {self._type} handler.')
-		return self._join_lobby(player, _id, GameHandlerBase)
+		return self._join_lobby(object_id, GameHandlerBase)
