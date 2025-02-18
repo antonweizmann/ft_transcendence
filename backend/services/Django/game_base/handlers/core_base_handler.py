@@ -89,7 +89,7 @@ class CoreHandlerBase:
 			'type': 'lobby_update',
 			f'{self._type.lower()}_id': self._id,
 			'players': [{'index': index, 'username': player.username} for\
-				index, player in self._indexes.items()]
+				index, player in self._indexes.items() if player in self.players]
 		}))
 
 	def _start(self, player_index: int, run_func: Optional[Callable]):
