@@ -5,6 +5,12 @@ secrets/*
 *.backup
 .vscode/
 b_main.js
+media/
+
+# Certificates
+*.pem
+*.crt
+*.key
 
 # Python files
 myenv/
@@ -19,3 +25,5 @@ ENV/
 env.bak/
 venv.bak/
 *.env
+
+backend/services/django/static_files/

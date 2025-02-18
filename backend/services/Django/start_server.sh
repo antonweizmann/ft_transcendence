@@ -31,6 +31,14 @@ source /run/secrets/django_superuser
 echo "Migrating Django database..."
 python manage.py migrate
 
+echo "Checking for static files..."
+if [ -d "/app/static_files" ] && [ "$(ls -A /app/static_files)" ]; then
+	echo "Static files already exist."
+else
+	echo "Collecting static files..."
+	python manage.py collectstatic --noinput
+fi
+
 echo "Checking for superuser..."
 python manage.py shell -c "
 from django.contrib.auth import get_user_model;
@@ -42,5 +50,5 @@ else:
 	print('Superuser already exists.')
 "
 
-echo "Starting Django server..."
-exec python manage.py runserver 0.0.0.0:8000
+echo "Starting Django server with Daphne..."
+exec daphne -b 0.0.0.0 -p 8000 core.asgi:application
