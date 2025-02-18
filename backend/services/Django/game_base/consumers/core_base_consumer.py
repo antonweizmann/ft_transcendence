@@ -36,8 +36,8 @@ class CoreBaseConsumer(WebsocketConsumer):
 			else:
 				return self.outer._handler.start_game(player_index)
 
-	_type		= 'core'
-	_subtype	= 'abstract'
+	_type		= 'Core'
+	_subtype	= 'Abstract'
 
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
@@ -106,7 +106,7 @@ class CoreBaseConsumer(WebsocketConsumer):
 
 		if action == 'join_lobby':
 			player_pk = text_data_json.get('player_pk')
-			object_id = text_data_json.get(f'{self._type}_id')
+			object_id = text_data_json.get(f'{self._type.lower()}_id')
 			try:
 				player_pk = int(player_pk)
 				self.player = Player.objects.get(pk=player_pk)
@@ -114,26 +114,26 @@ class CoreBaseConsumer(WebsocketConsumer):
 					raise Player.DoesNotExist
 			except Player.DoesNotExist:
 				self.send(json.dumps({'message': 'Player not found.'}))
-				return
+				return None, None
 			except ValueError as e:
 				self.send(json.dumps({'message': 'Invalid player ID.'}))
-				return
+				return None, None
 			self.join_lobby(self.player, object_id)
-			return
+			return None, None
 
-		elif action == f'start_{self._type}':
+		elif action == f'start_{self._type.lower()}':
 			if not self._handler:
 				self.send(json.dumps({
 					'message': f'You are not in a {self._subtype} {self._type}.'
 				}))
-				return
+				return None, None
 			try:
 				self.__handler_func.start(self.player_index)
 			except ValueError as e:
 				self.send(json.dumps({
 					'message': str(e)
 				}))
-			return
+			return None, None
 		return [text_data_json, action]
 
 	def disconnect(self, close_code):
