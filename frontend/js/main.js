@@ -114,6 +114,19 @@ async function getPage(pageName)
 				}
 			}, 50);
 		}
+		// else if (pageName === 'tournament')
+		// {
+		// 	window.gameState = {
+		// 	initialized: false,
+		// 	cleanup: null
+		// 	};
+		// 	loadScripts(['tournament.js']);
+		// 	setTimeout(() => {
+		// 		if (window.ensureInit) {
+		// 			window.ensureInit();
+		// 		}
+		// 	}, 50);
+		// }
 		// const scripts = document.getElementById('main-content').getElementsByTagName('script');
 		// loadScripts(scripts);
 		changeLanguage();
