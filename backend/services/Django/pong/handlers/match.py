@@ -3,7 +3,7 @@ import random
 import json
 from math import sqrt
 from game_base.handlers import GameHandlerBase
-from .models import PongMatch
+from pong.models import PongMatch
 
 X = 0
 Y = 1

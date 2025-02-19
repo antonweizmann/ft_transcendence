@@ -1,5 +1,5 @@
 from game_base.consumers import GameBaseConsumer
-from pong.pong_handler import PongHandler
+from pong.handlers import PongHandler
 
 class PongConsumer(GameBaseConsumer):
 	_subtype = 'Pong'
