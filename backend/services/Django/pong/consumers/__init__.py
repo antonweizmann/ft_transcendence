@@ -1,0 +1,2 @@
+from pong_consumers import PongConsumer
+from pong_tournament_consumer import PongTournamentConsumer
