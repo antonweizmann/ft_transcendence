@@ -1,7 +1,7 @@
 import json
 import inspect
 
-from typing import Protocol, Optional, List, Dict, Callable, Any
+from typing import Protocol, Optional, Set, Dict, Callable, Any
 from django.contrib.auth import get_user_model # type: ignore
 from django.db import models # type: ignore
 
@@ -38,7 +38,7 @@ class CoreHandlerBase:
 		self._indexes: Dict[int, Player]		= {} # type: ignore
 		self._is_active: bool					= False
 		self._send_func: Optional[SendFunc]		= None
-		self.players: List[Player]				= [] # type: ignore
+		self.players: Set[Player]				= [] # type: ignore
 
 	def _get_index(self, player: Player)-> int: # type: ignore
 		player_index = 0

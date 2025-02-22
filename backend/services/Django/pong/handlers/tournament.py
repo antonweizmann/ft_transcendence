@@ -15,8 +15,7 @@ class PongTournamentHandler(TournamentHandlerBase):
 		super().__init__(tournament_id)
 		self._model = PongTournament.objects.create()
 
-	def _set_matches(self):
-		players_without_match = self.players.copy()
+	def _set_matches(self, players_without_match: list[Player]): # type: ignore
 		random.shuffle(players_without_match)
 		if self._required_players % 2 != 0:
 			extra_player = random.choice(players_without_match)
@@ -35,13 +34,50 @@ class PongTournamentHandler(TournamentHandlerBase):
 	def _start_tournament(self, player_index: int):
 		if not self._allowed_to_start(player_index):
 			return
-		self._set_matches()
+		self._set_matches(list(self.players))
 		return super()._start_tournament(player_index)
 
+	def __qualify_players(self) -> set[Player]: # type: ignore
+		players_without_match = set()
+		max_score = max(self._state['leaderboard'].values())
+		for match in self._state['finished_matches']:
+			if any(self._state['leaderboard'][player] != max_score for player in match.keys()):
+				continue
+			winner = max(match, key=match.get)
+			players_without_match.add(winner)
+			self._state['leaderboard'][winner] += 1
+		return players_without_match
+
+	def _set_next_matches(self, match: list[Player, Player]): # type: ignore
+		if len(self._state['pending_matches']) != 0:
+			raise ValueError('There are still pending matches')
+		players_without_match = self.__qualify_players()
+		if match[1] is None:
+			extra_player = match[0]
+			self._state['leaderboard'][extra_player] += 1
+			players_without_match.add(match[0])
+		self._set_matches(list(players_without_match))
+		if len(self._state['pending_matches']) == 1 and self._state['pending_matches'][0][1] is None:
+			self._is_active = False
+
+	def _update_game_state(self, match: list[Player, Player]): # type: ignore
+		match_results = self._model.marches[-1].scores
+		self._state['current_match'] = None
+		self._state['finished_matches'].append(match_results)
+
 	def _start_matches(self):
+		self._state['leaderboard'] = {player: 0 for player in self.players}
 		while self._is_active:
-			for match in self._state['pending_matches']:
+			while self._state['pending_matches']:
+				match = self._state['pending_matches'].pop(0)
+				if match[1] is None:
+					break
 				self._start_match(match)
+				while True:
+					if self._model.matches[-1].status == 'finished':
+						self._update_game_state(match)
+						break
+			self._set_next_matches(match)
 
 	def _generate_match_id(self):
 		letters = string.ascii_letters + string.digits
@@ -49,19 +85,15 @@ class PongTournamentHandler(TournamentHandlerBase):
 		game_manager = GameManager()
 		while game_manager.get_match(match_id).players != []:
 			match_id = ''.join(random.choice(letters) for i in range(10))
+		self._model.matches.append(game_manager.get_match(match_id)._model)
+		self._model.save()
 		return match_id
 
-	def _start_match(self, match: list[Player, Player | None]): # type: ignore
+	def _start_match(self, match: list[Player, Player]): # type: ignore
 		match_id = self._generate_match_id()
 		player_1, player_2 = match
 		self._state['current_match'] = match_id
-		if player_2 is None:
-			self._send_func(json.dumps({
-				'message': f'Waiting for an opponent for {player_1}...',
-				'match_id': match_id
-			}))
-		else:
-			self._send_func(json.dumps({
-				'message': f'Match between {player_1} and {player_2} starting...',
-				'match_id': match_id
-			}))
+		self._send_func(json.dumps({
+			'message': f'Match between {player_1} and {player_2} starting...',
+			'match_id': match_id
+		}))
