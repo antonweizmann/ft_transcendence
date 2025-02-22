@@ -78,6 +78,7 @@ class PongTournamentHandler(TournamentHandlerBase):
 						self._update_game_state(match)
 						break
 			self._set_next_matches(match)
+			self._send_state()
 
 	def _generate_match_id(self):
 		letters = string.ascii_letters + string.digits
