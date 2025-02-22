@@ -8,9 +8,10 @@ services:
     depends_on:
       - Django
     volumes:
-      - ./blockchain:/contracts
+      - ./blockchain:/solidity
+      - ./share:/solidity/contract_address
     ports:
-      - "7545:7545"
+      - "8545:8545"
     restart: always
     networks:
       - Ft_Transcendence
@@ -25,6 +26,7 @@ services:
       - redis
     volumes:
       - ./backend/services/Django:/app
+      - ./share:/app/contract_address
     restart: always
     networks:
       - Ft_Transcendence

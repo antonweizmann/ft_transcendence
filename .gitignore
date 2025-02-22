@@ -26,4 +26,4 @@ env.bak/
 venv.bak/
 *.env
 
-backend/services/django/static_files/
+backend/services/Django/static_files/
