@@ -29,9 +29,13 @@ class TournamentHandlerBase(CoreHandlerBase):
 
 	def set_tournament_size(self, size: int):
 		if size < self._MIN_PLAYERS or size > self._MAX_PLAYERS:
-			raise ValueError(f'Tournament size must be between ' +
+			raise ValueError(f'Must be between ' +
 					f'{self._MIN_PLAYERS} and {self._MAX_PLAYERS}.')
 		self._required_players = size
+
+	def set_description(self, description: str):
+		self._model.description = description
+		self._model.save()
 
 	def join_tournament(self, player: Player, send_func: SendFunc) -> int | None: # type: ignore
 		player_index = super()._join(player, send_func)

@@ -22,6 +22,26 @@ class TournamentBaseConsumer(CoreBaseConsumer):
 		if action == None:
 			return
 
+		if action == 'change_size':
+			size = text_data_json.get('size')
+			try:
+				size = int(size)
+				self._handler.set_tournament_size(size)
+				self.send(json.dumps({
+					'message': f'Tournament size changed to {size}.'
+				}))
+			except ValueError as e:
+				self.send(json.dumps({
+					'error': f'Tournament size error: {e}'
+				}))
+
+		elif action == 'change_description':
+			description = text_data_json.get('description')
+			self._handler.set_description(description)
+			self.send(json.dumps({
+				'message': f'Tournament description changed to {description}.'
+			}))
+
 		else:
 			message = text_data_json.get('message')
 			self.send(json.dumps({
