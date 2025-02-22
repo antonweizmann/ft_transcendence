@@ -10,6 +10,7 @@ echo "TESTING CONTRACTS..."
 if truffle test --network development;
 then
     echo "TEST PASSED!"
+    cp /solidity/build/contracts/*.json /web3_share/
     echo "CONTRACTS READY TO BE USED!"
 else
     echo "TEST FAILED!"

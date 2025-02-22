@@ -9,7 +9,7 @@ services:
       - Django
     volumes:
       - ./blockchain:/solidity
-      - ./share:/solidity/contract_address
+      - ./web3_share:/web3_share
     ports:
       - "8545:8545"
     restart: always
@@ -26,7 +26,7 @@ services:
       - redis
     volumes:
       - ./backend/services/Django:/app
-      - ./share:/app/contract_address
+      - ./web3_share:/web3_share
     restart: always
     networks:
       - Ft_Transcendence
