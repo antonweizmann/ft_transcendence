@@ -66,6 +66,8 @@ class PongTournamentHandler(TournamentHandlerBase):
 		self._state['finished_matches'].append(match_results)
 
 	def _start_matches(self):
+		self._model.status = 'in_progress'
+		self._model.save()
 		self._state['leaderboard'] = {player: 0 for player in self.players}
 		while self._is_active:
 			while self._state['pending_matches']:
@@ -79,6 +81,8 @@ class PongTournamentHandler(TournamentHandlerBase):
 						break
 			self._set_next_matches(match)
 			self._send_state()
+		self._model.status = 'finished'
+		self._model.save()
 
 	def _generate_match_id(self):
 		letters = string.ascii_letters + string.digits
