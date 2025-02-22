@@ -28,12 +28,24 @@ class TournamentHandlerBase(CoreHandlerBase):
 		}
 
 	def set_tournament_size(self, size: int):
+		if self._model.status != 'waiting':
+			raise ValueError('Cannot change size after tournament has started.')
 		if size < self._MIN_PLAYERS or size > self._MAX_PLAYERS:
 			raise ValueError(f'Must be between ' +
 					f'{self._MIN_PLAYERS} and {self._MAX_PLAYERS}.')
 		self._required_players = size
+		for index in self._indexes:
+			if index >= size:
+				self.leave_tournament(self._indexes[index])
+				self._send_func({
+					'kicked': f'Player #{index} removed from tournament.',
+					'index': f'{index}'
+				})
+
 
 	def set_description(self, description: str):
+		if self._model.status != 'waiting':
+			raise ValueError('Cannot change description after tournament has started.')
 		self._model.description = description
 		self._model.save()
 
