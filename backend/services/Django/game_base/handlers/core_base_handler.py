@@ -71,6 +71,7 @@ class CoreHandlerBase:
 		if self._model.status == 'waiting':
 			if player in self._model.players.all():
 				self._model.players.remove(player)
+			player_index = None
 			for index, p in self._indexes.items():
 				if p == player:
 					player_index = index
