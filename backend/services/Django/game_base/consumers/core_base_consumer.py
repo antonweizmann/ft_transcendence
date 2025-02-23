@@ -64,8 +64,9 @@ class CoreBaseConsumer(WebsocketConsumer):
 				'type': 'group.message',
 				'message': message
 			})
-			if message.get('kicked') is not None:
-				if self.player_index == message['index']:
+			message_dict = json.loads(message)
+			if message_dict.get('kicked') is not None:
+				if self.player_index == message_dict['index']:
 					self.disconnect(1000)
 		except Exception as e:
 			print("Error sending message to group:", e)
