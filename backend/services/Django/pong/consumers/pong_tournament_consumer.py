@@ -5,4 +5,4 @@ class PongTournamentConsumer(TournamentBaseConsumer):
 	_subtype = 'Pong'
 
 	def join_lobby(self, object_id):
-		return super().join_lobby(object_id, PongTournamentHandler)
+		return super()._join_lobby(object_id, PongTournamentHandler)
