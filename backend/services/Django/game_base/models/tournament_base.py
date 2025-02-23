@@ -8,7 +8,7 @@ class TournamentBaseModel(models.Model):
 	class Meta:
 		abstract = True
 
-	name = models.CharField(max_length=100, unique=True)
+	name = models.CharField(max_length=100)
 	description = models.TextField(blank=True)
 	'''
 	It is necessary to add a unique related_name in each concrete class, either
