@@ -14,11 +14,11 @@ contract TestMatchScore {
         assert(Match2.getPlayer1Score() == 0);
         assert(Match2.getPlayer2Score() == 0);
 
-        Match1.increment_player1();
-        Match1.increment_player2();
+        Match1.incrementPlayer1();
+        Match1.incrementPlayer2();
 
-        Match2.increment_player1();
-        Match2.increment_player2();
+        Match2.incrementPlayer1();
+        Match2.incrementPlayer2();
 
         assert(Match1.getPlayer1Score() == 1);
         assert(Match1.getPlayer2Score() == 1);
@@ -28,5 +28,11 @@ contract TestMatchScore {
 
         assert(Match1.getMatchId() == 1);
         assert(Match2.getMatchId() == 2);
+
+        Match1.setPlayer1Score(10);
+        Match1.setPlayer2Score(20);
+
+        assert(Match1.getPlayer1Score() == 10);
+        assert(Match1.getPlayer2Score() == 20);
     }
 }
