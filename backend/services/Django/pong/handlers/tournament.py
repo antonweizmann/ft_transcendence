@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model # type: ignore
 from game_base.handlers import TournamentHandlerBase
 from pong.models import PongTournament
 from game_base.managers import GameManager
+from game_base.managers import game_manager
 import random
 import string
 import json
@@ -87,7 +88,7 @@ class PongTournamentHandler(TournamentHandlerBase):
 	def _generate_match_id(self):
 		letters = string.ascii_letters + string.digits
 		match_id = ''.join(random.choice(letters) for i in range(10))
-		game_manager = GameManager()
+		while game_manager.get_game(PongHandler, match_id).players != []:
 		while game_manager.get_match(match_id).players != []:
 			match_id = ''.join(random.choice(letters) for i in range(10))
 		self._model.matches.append(game_manager.get_match(match_id)._model)

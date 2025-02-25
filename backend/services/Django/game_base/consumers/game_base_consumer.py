@@ -1,6 +1,6 @@
 import json
 
-from game_base.managers import GameManager
+from game_base.managers import game_manager
 from game_base.handlers import GameHandlerBase
 from .core_base_consumer import CoreBaseConsumer
 
@@ -14,7 +14,7 @@ class GameBaseConsumer(CoreBaseConsumer):
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
 		self._handler: type[GameHandlerBase] | None	= None
-		self._manager								= GameManager()
+		self._manager								= game_manager
 
 	def receive(self, text_data):
 		text_data_json, action = super().receive(text_data)

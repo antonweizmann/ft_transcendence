@@ -1,6 +1,6 @@
 import json
 
-from game_base.managers import TournamentManager
+from game_base.managers import tournament_manager
 from game_base.handlers import TournamentHandlerBase
 from .core_base_consumer import CoreBaseConsumer
 
@@ -14,7 +14,7 @@ class TournamentBaseConsumer(CoreBaseConsumer):
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
 		self._handler: type[TournamentHandlerBase] | None	= None
-		self._manager										= TournamentManager()
+		self._manager										= tournament_manager
 
 	def receive(self, text_data):
 		text_data_json, action = super().receive(text_data)
