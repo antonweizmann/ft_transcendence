@@ -77,6 +77,7 @@ class CoreBaseConsumer(WebsocketConsumer):
 		self.send(text_data=json.dumps(message))
 
 	def _set_handler(self, object_id, handler: type[CoreHandlerBase]):
+		object_id += f'_{handler._type.lower()}_{self._subtype.lower()}'
 		if self._already_in:
 			self.send(json.dumps({
 				'message': f'You are already in a {self._subtype} {self._type}.'
