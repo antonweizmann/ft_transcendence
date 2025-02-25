@@ -51,7 +51,7 @@ class TournamentHandlerBase(CoreHandlerBase):
 		player_str = self._indexes[player_index].__str__()
 		self._state['is_ready_to_start'][player_str] = True
 		if self.__ready_to_start():
-			self._start_tournament()
+			self._start_tournament(player_index)
 
 	def set_tournament_size(self, size: int):
 		if self._model.status != 'waiting':

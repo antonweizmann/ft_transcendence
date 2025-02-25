@@ -1,7 +1,8 @@
 from django.contrib.auth import get_user_model # type: ignore
 from game_base.handlers import TournamentHandlerBase
 from pong.models import PongTournament
-from game_base.managers import GameManager
+from pong.handlers import PongHandler
+from time import sleep
 from game_base.managers import game_manager
 import random
 import string
@@ -76,10 +77,12 @@ class PongTournamentHandler(TournamentHandlerBase):
 				if match[1] is None:
 					break
 				self._start_match(match)
+				match_id = self._state['current_match']
 				while True:
-					if self._model.matches[-1].status == 'finished':
+					if game_manager.get_game(PongHandler, match_id)._model.status == 'finished':
 						self._update_game_state(match)
 						break
+					sleep(1)
 			self._set_next_matches(match)
 			self._send_state()
 		self._model.status = 'finished'
@@ -89,9 +92,8 @@ class PongTournamentHandler(TournamentHandlerBase):
 		letters = string.ascii_letters + string.digits
 		match_id = ''.join(random.choice(letters) for i in range(10))
 		while game_manager.get_game(PongHandler, match_id).players != []:
-		while game_manager.get_match(match_id).players != []:
 			match_id = ''.join(random.choice(letters) for i in range(10))
-		self._model.matches.append(game_manager.get_match(match_id)._model)
+		self._model.matches.add(game_manager.get_game(PongHandler, match_id)._model)
 		self._model.save()
 		return match_id
 
