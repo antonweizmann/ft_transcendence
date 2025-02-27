@@ -1,3 +1,5 @@
+import threading
+
 from game_base.models import TournamentBaseModel
 from django.contrib.auth import get_user_model # type: ignore
 from .core_base_handler import SendFunc, CoreHandlerBase
@@ -35,11 +37,13 @@ class TournamentHandlerBase(CoreHandlerBase):
 
 	def leave_tournament(self, player: Player): # type: ignore
 		super()._leave(player)
-		if player.__str__() in self._state['is_ready_to_start']:
-			del self._state['is_ready_to_start'][player.__str__()]
+		with self._lock:
+			if player.__str__() in self._state['is_ready_to_start']:
+				del self._state['is_ready_to_start'][player.__str__()]
 
 	def _start_tournament(self, player_index: int):
-		super()._start(player_index, self._start_matches)
+		tournament_thread = threading.Thread(target=self._start_matches)
+		super()._start(player_index, tournament_thread.start)
 
 	def __ready_to_start(self)-> bool:
 		return (all(self._state['is_ready_to_start'].values())
@@ -50,12 +54,17 @@ class TournamentHandlerBase(CoreHandlerBase):
 			return
 		player_str = self._indexes[player_index].__str__()
 		self._state['is_ready_to_start'][player_str] = True
+		self._send_func({
+			'ready': f'Player #{player_index} is ready to start.',
+			'players_ready': f'{self._state['is_ready_to_start']}'
+		})
 		if self.__ready_to_start():
 			self._start_tournament(player_index)
 
 	def set_tournament_size(self, size: int):
-		if self._model.status != 'waiting':
-			raise ValueError('Cannot change size after tournament has started.')
+		with self._lock:
+			if self._model.status != 'waiting':
+				raise ValueError('Cannot change size after tournament has started.')
 		if size < self._MIN_PLAYERS or size > self._MAX_PLAYERS:
 			raise ValueError(f'Must be between ' +
 					f'{self._MIN_PLAYERS} and {self._MAX_PLAYERS}.')
@@ -69,10 +78,14 @@ class TournamentHandlerBase(CoreHandlerBase):
 				})
 
 	def set_description(self, description: str):
-		if self._model.status != 'waiting':
-			raise ValueError('Cannot change description after tournament has started.')
+		with self._lock:
+			if self._model.status != 'waiting':
+				raise ValueError('Cannot change description after tournament has started.')
 		self._model.description = description
 		self._model.save()
 
 	def _set_matches(self):
+		raise NotImplementedError
+
+	def _start_matches(self):
 		raise NotImplementedError

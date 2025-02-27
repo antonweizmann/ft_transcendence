@@ -26,9 +26,9 @@ class GameHandlerBase(CoreHandlerBase):
 		super()._leave(player)
 
 	def start_game(self, player_index: int):
-		game_thread = threading.Thread(target=self._run_game)
+		self._thread = threading.Thread(target=self._run_game)
 		self._state['score'] = {player.__str__(): 0 for player in self.players}
-		super()._start(player_index, game_thread.start)
+		super()._start(player_index, self._thread.start)
 
 	def _send_game_state(self):
 		super()._send_state()
