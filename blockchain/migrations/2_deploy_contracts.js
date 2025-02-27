@@ -11,13 +11,13 @@ module.exports = function(deployer) {
      console.log("SAVING ADDRESS");
       fs.writeFileSync("/web3_share/address.txt", instance.address, (err) => {
       if (err) {
-        console.error("ERROR WRITTING ADDRESS:", err);
+        console.error("ERROR WRITTING ADDRESS: ", err);
       } else {
         console.log("ADDRESS SAVED");
       }
     });
   })
-  .catch((error) => {
-    console.error("ERROR DEPLOYING CONTRACT:", error);
+  .catch((err) => {
+    console.error("ERROR DEPLOYING CONTRACT: ", err);
   });
 };
