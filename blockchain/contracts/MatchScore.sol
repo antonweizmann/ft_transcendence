@@ -2,19 +2,20 @@
 pragma solidity ^0.8.0;
 
 contract MatchScore {
-    uint public immutable matchid;
-    uint public player1Score = 0;
-    uint public player2Score = 0;
+	struct Match {
+		uint player1Score;
+		uint player2Score;
+	}
 
-    constructor(uint _matchid) { matchid = _matchid; }
+	Match[] public matches;
 
-    function setPlayer1Score(uint _score) public { player1Score = _score; }
-    function setPlayer2Score(uint _score) public { player2Score = _score; }
+	function setScore(uint _player1Score, uint _player2Score) external {
+		matches.push(Match(_player1Score, _player2Score));
+	}
 
-    function incrementPlayer1() public { player1Score++; }
-    function incrementPlayer2() public { player2Score++; }
-
-    function getMatchId() public view returns (uint) { return matchid; }
-    function getPlayer1Score() public view returns (uint) { return player1Score; }
-    function getPlayer2Score() public view returns (uint) { return player2Score; }
+	function getGameScores(uint _index) public view returns (uint, uint) {
+		require(_index < matches.length, "Game index out of bounds");
+		Match memory score = matches[_index];
+		return (score.player1Score, score.player2Score);
+	}
 }

@@ -1,38 +1,26 @@
 // SPDX-License-Identifier: GPL-3.0
-
 pragma solidity ^0.8.0;
 import "../contracts/MatchScore.sol";
 
 contract TestMatchScore {
-    function test() public {
-        MatchScore Match1 = new MatchScore(1);
-        MatchScore Match2 = new MatchScore(2);
+	function test() public {
+		MatchScore score = new MatchScore();
 
-        assert(Match1.getPlayer1Score() == 0);
-        assert(Match1.getPlayer2Score() == 0);
+		score.setScore(3, 2);
+		score.setScore(4, 1);
+		score.setScore(2, 5);
 
-        assert(Match2.getPlayer1Score() == 0);
-        assert(Match2.getPlayer2Score() == 0);
+		(uint m1p1, uint m1p2) = score.getGameScores(0);
+		(uint m2p1, uint m2p2) = score.getGameScores(1);
+		(uint m3p1, uint m3p2) = score.getGameScores(2);
+		
+		assert(m1p1 == 3);
+		assert(m1p2 == 2);
 
-        Match1.incrementPlayer1();
-        Match1.incrementPlayer2();
+		assert(m2p1 == 4);
+		assert(m2p2 == 1);
 
-        Match2.incrementPlayer1();
-        Match2.incrementPlayer2();
-
-        assert(Match1.getPlayer1Score() == 1);
-        assert(Match1.getPlayer2Score() == 1);
-
-        assert(Match2.getPlayer1Score() == 1);
-        assert(Match2.getPlayer2Score() == 1);
-
-        assert(Match1.getMatchId() == 1);
-        assert(Match2.getMatchId() == 2);
-
-        Match1.setPlayer1Score(10);
-        Match1.setPlayer2Score(20);
-
-        assert(Match1.getPlayer1Score() == 10);
-        assert(Match1.getPlayer2Score() == 20);
-    }
+		assert(m3p1 == 2);
+		assert(m3p2 == 5);
+	}
 }
