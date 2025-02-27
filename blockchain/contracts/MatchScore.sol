@@ -5,12 +5,14 @@ contract MatchScore {
 	struct Match {
 		uint player1Score;
 		uint player2Score;
+		// bool isSet;
 	}
 
 	Match[] public matches;
 
 	function setScore(uint _player1Score, uint _player2Score) external {
-		matches.push(Match(_player1Score, _player2Score));
+		// require(!matches[matchCount].isSet, "Match score already set");
+		matches.push(Match(_player1Score, _player2Score)); // true
 	}
 
 	function getGameScores(uint _index) public view returns (uint, uint) {

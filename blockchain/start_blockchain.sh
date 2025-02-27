@@ -1,7 +1,8 @@
 #!/bin/sh
 
 echo "LAUNCHING TESTING BLOCKCHAIN..."
-ganache-cli -p 8545 --account_keys_path /web3_share/keys.json &
+ganache-cli -h 0.0.0.0 -p 8545 --account_keys_path /web3_share/keys.json &
+job=$!
 
 echo "MIGRATING CONTRACTS TO TESTING BLOCKCHAIN..."
 truffle migrate --network development
@@ -16,4 +17,4 @@ else
     echo "TEST FAILED!"
 fi
 
-while true; do sleep 100; done
+wait $job

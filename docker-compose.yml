@@ -10,8 +10,6 @@ services:
     volumes:
       - ./blockchain:/solidity
       - ./web3_share:/web3_share
-    ports:
-      - "8545:8545"
     restart: always
     networks:
       - Ft_Transcendence
