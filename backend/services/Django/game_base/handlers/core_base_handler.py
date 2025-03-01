@@ -115,8 +115,8 @@ class CoreHandlerBase:
 			self._is_active = True
 			self._model.status = 'in_progress'
 			self._model.save()
-			if run_func:
-				run_func()
+		if run_func:
+			run_func()
 
 	def _send_state(self):
 		with self._lock:
