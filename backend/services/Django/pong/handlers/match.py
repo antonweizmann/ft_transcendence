@@ -56,16 +56,20 @@ class PongHandler(GameHandlerBase):
 		self.__start_countdown()
 		with self._lock:
 			self.__allowed_to_move = True
-			while self._is_active:
-				start_time = time.time()
+		while True:
+			with self._lock:
+				if not self._is_active:
+					break
+			start_time = time.time()
 
-				self._update_game_state()
+			self._update_game_state()
+			with self._lock:
 				if self._is_active:
 					self._send_game_state()
 
-				elapsed_time = time.time() - start_time
-				sleep_time = max(0, target_frame_duration - elapsed_time)
-				time.sleep(sleep_time)
+			elapsed_time = time.time() - start_time
+			sleep_time = max(0, target_frame_duration - elapsed_time)
+			time.sleep(sleep_time)
 
 	def __reset_ball(self):
 		with self._lock:
