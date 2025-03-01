@@ -22,6 +22,8 @@ MIN_PLAYER_Y = 50
 MAX_PLAYER_Y = BOARD_HEIGHT - 50
 PLAYER_SPEED = 10
 
+WINNING_SCORE = 3
+
 class PongHandler(GameHandlerBase):
 	_subtype			= 'Pong'
 	_required_players	= 2
@@ -130,8 +132,8 @@ class PongHandler(GameHandlerBase):
 
 	def __check_win_conditions(self):
 		with self._lock:
-			if (self._state['score'][self.players[1].__str__()] >= 10
-					or self._state['score'][self.players[0].__str__()] >= 10):
+			if (self._state['score'][self.players[1].__str__()] >= WINNING_SCORE
+					or self._state['score'][self.players[0].__str__()] >= WINNING_SCORE):
 				self._send_func(json.dumps({
 					'type': 'game_over',
 					'game_id': self._id,
