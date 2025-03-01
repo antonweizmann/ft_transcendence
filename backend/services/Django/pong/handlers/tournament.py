@@ -93,11 +93,13 @@ class PongTournamentHandler(TournamentHandlerBase):
 				self._start_match(match)
 				with self._lock:
 					match_id = self._state['current_match']
+				match_id += '_game_pong'
+				game = game_manager.get_game(PongHandler, match_id)
 				while True:
-					if game_manager.get_game(PongHandler, match_id)._model.status == 'finished':
+					if game.get_status() == 'finished':
 						self._update_game_state(match)
 						break
-					sleep(1)
+					sleep(3)
 			self._set_next_matches(match)
 			self._send_state()
 		with self._lock:

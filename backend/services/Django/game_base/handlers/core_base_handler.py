@@ -180,3 +180,9 @@ class CoreHandlerBase:
 				}), True)
 				return False
 		return True
+
+	def get_status(self):
+		with self._lock:
+			self._model.refresh_from_db()
+			status = self._model.status
+		return status
