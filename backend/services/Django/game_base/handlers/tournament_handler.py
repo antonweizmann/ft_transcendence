@@ -55,7 +55,7 @@ class TournamentHandlerBase(CoreHandlerBase):
 		player_str = self._indexes[player_index].__str__()
 		self._state['is_ready_to_start'][player_str] = True
 		self._send_func({
-			'ready': f'Player #{player_index} is ready to start.',
+			'ready': f'Player #{player_index} {player_str} is ready to start.',
 			'players_ready': f'{self._state['is_ready_to_start']}'
 		})
 		if self.__ready_to_start():
