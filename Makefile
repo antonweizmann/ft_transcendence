@@ -1,22 +1,21 @@
-DOCKER_COMPOSE=docker compose -f docker-compose.yml --no-cache
+DOCKER_COMPOSE=docker compose -f docker-compose.yml
 
 ifeq ($(DETACH), 1)
 DOCKER_COMPOSE += -d
 endif
 
-start: | backend/services/nginx/certs/dummy_file
+start: | backend/services/nginx/certs/
 	@echo "Starting the project..."
 	@$(DOCKER_COMPOSE) up
 .PHONY: start
 
-build: | backend/services/nginx/certs/dummy_file
+build: | backend/services/nginx/certs/
 	@echo "Building the project..."
 	@$(DOCKER_COMPOSE) up --build
 .PHONY: build
 
-backend/services/nginx/certs/dummy_file:
+backend/services/nginx/certs/:
 	@mkdir -p backend/services/nginx/certs/
-	@touch backend/services/nginx/certs/dummy_file
 
 ps:
 	@$(DOCKER_COMPOSE) ps
