@@ -118,6 +118,9 @@ class CoreHandlerBase:
 		if run_func:
 			run_func()
 
+	def _serialize_state(self) -> Dict[str, Any]:
+		return self._state
+
 	def _send_state(self):
 		with self._lock:
 			if self._send_func is None:
@@ -125,7 +128,7 @@ class CoreHandlerBase:
 			self._send_func(json.dumps({
 				'type': f'{self._subtype.lower()}_{self._type.lower()}_update',
 				f'{self._type.lower()}_id': self._id,
-				f'{self._type.lower()}_state': self._state
+				f'{self._type.lower()}_state': self._serialize_state()
 			}))
 
 	def _allowed_to_join(self, player: Player, send_func: SendFunc): # type: ignore

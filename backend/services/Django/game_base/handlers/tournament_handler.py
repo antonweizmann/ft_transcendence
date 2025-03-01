@@ -29,6 +29,14 @@ class TournamentHandlerBase(CoreHandlerBase):
 			'is_ready_to_start': {}
 		}
 
+	def _serialize_state(self):
+		serialized_state = self._state.copy()
+		serialized_state['leaderboard'] = {str(player): score for player, score in self._state['leaderboard'].items()}
+		serialized_state['pending_matches'] = [[str(player) if player else None for player in match] for match in self._state['pending_matches']]
+		serialized_state['finished_matches'] = [[str(player) if player else None for player in match] for match in self._state['finished_matches']]
+		serialized_state['current_match'] = [str(player) if player else None for player in self._state['current_match']] if self._state['current_match'] else None
+		return serialized_state
+
 	def join_tournament(self, player: Player, send_func: SendFunc) -> int | None: # type: ignore
 		player_index = super()._join(player, send_func)
 		if player_index is not None:
