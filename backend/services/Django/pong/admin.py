@@ -12,6 +12,17 @@ class PongMatchAdmin(admin.ModelAdmin):
 			)}),
 		)
 
+class PongGameInline(admin.TabularInline):
+	model = PongGameModel
+	extra = 0
+	fieldsets = (
+		(None, {'fields': (
+			'players', 'required_players', 'scores', 'result',
+			'status', 'created_at', 'updated_at'
+			)}),
+		)
+	readonly_fields = ('status', 'scores', 'result', 'required_players', 'created_at', 'updated_at')
+
 class PongTournamentAdmin(admin.ModelAdmin):
 	model = PongTournamentModel
 	readonly_fields = ('created_at', 'updated_at')
@@ -20,6 +31,7 @@ class PongTournamentAdmin(admin.ModelAdmin):
 			'name', 'description', 'players', 'status', 'created_at', 'updated_at'
 			)}),
 		)
+	inlines = [PongGameInline]
 
 admin.site.register(PongGameModel, PongMatchAdmin)
 admin.site.register(PongTournamentModel, PongTournamentAdmin)
