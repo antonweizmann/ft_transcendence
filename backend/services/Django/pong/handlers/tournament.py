@@ -48,6 +48,7 @@ class PongTournamentHandler(TournamentHandlerBase):
 		with self._lock:
 			max_score = max(self._state['leaderboard'].values())
 			for match in self._state['finished_matches']:
+				match = match['player_scores']
 				if any(self._state['leaderboard'][player] != max_score for player in match.keys()):
 					continue
 				winner = max(match, key=match.get)
@@ -62,7 +63,7 @@ class PongTournamentHandler(TournamentHandlerBase):
 			players_without_match = self.__qualify_players()
 			if match[1] is None:
 				extra_player = match[0]
-				self._state['leaderboard'][extra_player] += 1
+				self._state['leaderboard'][extra_player.username] += 1
 				players_without_match.add(match[0])
 			self._set_matches(list(players_without_match))
 			if len(self._state['pending_matches']) == 1 and self._state['pending_matches'][0][1] is None:
@@ -78,7 +79,7 @@ class PongTournamentHandler(TournamentHandlerBase):
 		with self._lock:
 			self._model.status = 'in_progress'
 			self._model.save()
-			self._state['leaderboard'] = {player: 0 for player in self.players}
+			self._state['leaderboard'] = {player.username: 0 for player in self.players}
 		while True:
 			with self._lock:
 				if not self._is_active:
