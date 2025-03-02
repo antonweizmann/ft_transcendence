@@ -102,6 +102,9 @@ class PongTournamentHandler(TournamentHandlerBase):
 				game = game_manager.get_game(PongGameHandler, match_id)
 				while True:
 					if game.get_status() == 'finished':
+						with self._lock:
+							self._model.matches.add(game._model)
+							self._model.save()
 						self._update_game_state(match_id)
 						break
 					sleep(3)
@@ -116,9 +119,8 @@ class PongTournamentHandler(TournamentHandlerBase):
 		match_id = ''.join(random.choice(letters) for i in range(10))
 		while game_manager.get_game(PongGameHandler, match_id).players != []:
 			match_id = ''.join(random.choice(letters) for i in range(10))
-		with self._lock:
-			self._model.matches.add(game_manager.get_game(PongGameHandler, match_id)._model)
-			self._model.save()
+			game_manager.remove_game(match_id)
+		game_manager.remove_game(match_id)
 		return match_id
 
 	def _start_match(self, match: list[str, str]):
