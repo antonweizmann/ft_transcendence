@@ -2,11 +2,11 @@ import threading
 
 from game_base.models import GameBaseModel
 from django.contrib.auth import get_user_model # type: ignore
-from .core_base_handler import SendFunc, CoreHandlerBase
+from .core_base_handler import SendFunc, CoreBaseHandler
 
 Player = get_user_model()
 
-class GameHandlerBase(CoreHandlerBase):
+class GameHandlerBase(CoreBaseHandler):
 	class Meta:
 		abstract = True
 

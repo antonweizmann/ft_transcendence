@@ -1,2 +1,2 @@
-from .pong_match_consumer import PongConsumer
+from .pong_game_consumer import PongGameConsumer
 from .pong_tournament_consumer import PongTournamentConsumer

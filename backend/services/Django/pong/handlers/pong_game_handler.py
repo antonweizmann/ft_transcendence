@@ -3,7 +3,7 @@ import random
 import json
 from math import sqrt
 from game_base.handlers import GameHandlerBase
-from pong.models import PongMatch
+from pong.models import PongGameModel
 
 X = 0
 Y = 1
@@ -24,7 +24,7 @@ PLAYER_SPEED = 10
 
 WINNING_SCORE = 3
 
-class PongHandler(GameHandlerBase):
+class PongGameHandler(GameHandlerBase):
 	_subtype			= 'Pong'
 	_required_players	= 2
 
@@ -33,7 +33,7 @@ class PongHandler(GameHandlerBase):
 
 	def __init__(self, game_id: str):
 		super().__init__(game_id)
-		self._model = PongMatch.objects.create()
+		self._model = PongGameModel.objects.create()
 		self._state.update({
 			'ball_position': INITIAL_BALL_POSITION.copy(),
 			'ball_direction': self.__set_random_ball_direction(),

@@ -1,9 +1,9 @@
 from django.contrib import admin # type: ignore
-from .models import PongMatch, PongTournament
+from .models import PongGameModel, PongTournamentModel
 
 # Register your models here.
 class PongMatchAdmin(admin.ModelAdmin):
-	model = PongMatch
+	model = PongGameModel
 	readonly_fields = ('result', 'game_type', 'required_players', 'created_at', 'updated_at')
 	fieldsets = (
 		(None, {'fields': (
@@ -13,7 +13,7 @@ class PongMatchAdmin(admin.ModelAdmin):
 		)
 
 class PongTournamentAdmin(admin.ModelAdmin):
-	model = PongTournament
+	model = PongTournamentModel
 	readonly_fields = ('created_at', 'updated_at')
 	fieldsets = (
 		(None, {'fields': (
@@ -21,5 +21,5 @@ class PongTournamentAdmin(admin.ModelAdmin):
 			)}),
 		)
 
-admin.site.register(PongMatch, PongMatchAdmin)
-admin.site.register(PongTournament, PongTournamentAdmin)
+admin.site.register(PongGameModel, PongMatchAdmin)
+admin.site.register(PongTournamentModel, PongTournamentAdmin)

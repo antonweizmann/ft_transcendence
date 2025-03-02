@@ -12,7 +12,7 @@ class SendFunc(Protocol):
 	def __call__(self, message, error: bool = False) -> None:
 		pass
 
-class CoreHandlerBase:
+class CoreBaseHandler:
 	class Meta:
 		abstract = True
 
@@ -30,7 +30,7 @@ class CoreHandlerBase:
 			raise TypeError(f"Instances of any {cls._type}Handler can " +
 				f"only be created through " +
 				f"{cls._type}Manager.get_{cls._type.lower()}().")
-		return super(CoreHandlerBase, cls).__new__(cls)
+		return super(CoreBaseHandler, cls).__new__(cls)
 
 	def __del__(self):
 		if self._thread is not None:

@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model # type: ignore
 from game_base.handlers import TournamentHandlerBase
-from pong.models import PongTournament
-from pong.handlers import PongHandler
+from pong.models import PongTournamentModel
+from pong.handlers import PongGameHandler
 from time import sleep
 from game_base.managers import game_manager
 import random
@@ -15,7 +15,7 @@ class PongTournamentHandler(TournamentHandlerBase):
 
 	def __init__(self, tournament_id: str):
 		super().__init__(tournament_id)
-		self._model = PongTournament.objects.create()
+		self._model = PongTournamentModel.objects.create()
 
 	def _set_matches(self, players_without_match: list[str]):
 		random.shuffle(players_without_match)
@@ -73,7 +73,7 @@ class PongTournamentHandler(TournamentHandlerBase):
 				self._is_active = False
 
 	def _update_game_state(self, match_id: str):
-		match_results = game_manager.get_game(PongHandler, match_id).get_results()
+		match_results = game_manager.get_game(PongGameHandler, match_id).get_results()
 		with self._lock:
 			self._state['current_match'] = None
 			self._state['finished_matches'].append(match_results['player_scores'])
@@ -99,7 +99,7 @@ class PongTournamentHandler(TournamentHandlerBase):
 				with self._lock:
 					match_id = list(self._state['current_match'].keys())[0]
 				match_id += '_game_pong'
-				game = game_manager.get_game(PongHandler, match_id)
+				game = game_manager.get_game(PongGameHandler, match_id)
 				while True:
 					if game.get_status() == 'finished':
 						self._update_game_state(match_id)
@@ -114,10 +114,10 @@ class PongTournamentHandler(TournamentHandlerBase):
 	def _generate_match_id(self):
 		letters = string.ascii_letters + string.digits
 		match_id = ''.join(random.choice(letters) for i in range(10))
-		while game_manager.get_game(PongHandler, match_id).players != []:
+		while game_manager.get_game(PongGameHandler, match_id).players != []:
 			match_id = ''.join(random.choice(letters) for i in range(10))
 		with self._lock:
-			self._model.matches.add(game_manager.get_game(PongHandler, match_id)._model)
+			self._model.matches.add(game_manager.get_game(PongGameHandler, match_id)._model)
 			self._model.save()
 		return match_id
 

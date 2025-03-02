@@ -1,2 +1,2 @@
-from .match import PongMatch
-from .tournament import PongTournament
+from .pong_game_model import PongGameModel
+from .pong_tournament_model import PongTournamentModel
