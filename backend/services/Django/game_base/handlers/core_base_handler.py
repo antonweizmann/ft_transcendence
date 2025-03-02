@@ -33,14 +33,13 @@ class CoreHandlerBase:
 		return super(CoreHandlerBase, cls).__new__(cls)
 
 	def __del__(self):
-		with self._lock:
-			if self._model.status == 'in_progress':
-				self._model.status = 'finished'
-				self._model.save()
-			if self._thread is not None:
-				self._thread.join()
-			if self._model.status == 'waiting':
-				self._model.delete()
+		if self._thread is not None:
+			self._thread.join()
+		if self._model.status == 'in_progress':
+			self._model.status = 'finished'
+			self._model.save()
+		if self._model.status == 'waiting':
+			self._model.delete()
 
 	def __init__(self, id: str):
 		self._id: str 							= id
@@ -119,17 +118,19 @@ class CoreHandlerBase:
 			run_func()
 
 	def _serialize_state(self) -> Dict[str, Any]:
-		return self._state
+		with self._lock:
+			serialized_state = self._state.copy()
+		return serialized_state
 
 	def _send_state(self):
 		with self._lock:
 			if self._send_func is None:
 				raise ValueError(f'You must join a {self._type} before sending state.')
-			self._send_func(json.dumps({
-				'type': f'{self._subtype.lower()}_{self._type.lower()}_update',
-				f'{self._type.lower()}_id': self._id,
-				f'{self._type.lower()}_state': self._serialize_state()
-			}))
+		self._send_func(json.dumps({
+			'type': f'{self._subtype.lower()}_{self._type.lower()}_update',
+			f'{self._type.lower()}_id': self._id,
+			f'{self._type.lower()}_state': self._serialize_state()
+		}))
 
 	def _allowed_to_join(self, player: Player, send_func: SendFunc): # type: ignore
 		with self._lock:
