@@ -163,13 +163,13 @@ class CoreHandlerBase:
 		if (self._send_func is None or player_index == None
 			or player_index not in self._indexes):
 			raise ValueError(f'You must join a {self._type} before starting.')
+		if self.get_status() == 'finished':
+			self._send_func(json.dumps({
+				'type': 'error',
+				'message': f'{self._type} has already finished.'
+			}), True)
+			return False
 		with self._lock:
-			if self._model.status == 'finished':
-				self._send_func(json.dumps({
-					'type': 'error',
-					'message': f'{self._type} has already finished.'
-				}), True)
-				return False
 			if self._required_players != len(self.players):
 				self._send_func(json.dumps({
 					'type': 'error',
