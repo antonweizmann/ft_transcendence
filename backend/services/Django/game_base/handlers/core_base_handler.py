@@ -189,3 +189,9 @@ class CoreHandlerBase:
 			self._model.refresh_from_db()
 			status = self._model.status
 		return status
+
+	def get_results(self):
+		with self._lock:
+			self._model.refresh_from_db()
+			results = self._model.result
+		return results

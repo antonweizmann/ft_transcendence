@@ -143,7 +143,6 @@ class PongHandler(GameHandlerBase):
 				self._model.status = 'finished'
 				self._model.save()
 
-
 	def _update_game_state(self):
 		self.__move_ball()
 		self.__check_for_collisions()

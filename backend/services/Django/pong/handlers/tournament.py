@@ -69,8 +69,8 @@ class PongTournamentHandler(TournamentHandlerBase):
 				self._is_active = False
 
 	def _update_game_state(self, match: list[Player, Player]): # type: ignore
+		match_results = game_manager.get_game(PongHandler, self._state['current_match'] + '_game_pong').get_results()
 		with self._lock:
-			match_results = self._model.matches[-1].scores
 			self._state['current_match'] = None
 			self._state['finished_matches'].append(match_results)
 
