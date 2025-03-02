@@ -80,11 +80,6 @@ class CoreBaseConsumer(WebsocketConsumer):
 
 	def _set_handler(self, object_id, handler: type[CoreHandlerBase]):
 		object_id += f'_{handler._type.lower()}_{self._subtype.lower()}'
-		if self._already_in:
-			self.send(json.dumps({
-				'message': f'You are already in a {self._subtype} {self._type}.'
-			}))
-			return
 		try:
 			async_to_sync(self.channel_layer.group_add)(object_id, self.channel_name)
 		except TypeError as e:
@@ -112,6 +107,11 @@ class CoreBaseConsumer(WebsocketConsumer):
 		action = text_data_json.get('action')
 
 		if action == 'join_lobby':
+			if self._already_in:
+				self.send(json.dumps({
+					'message': f'You are already in a {self._subtype} {self._type}.'
+				}))
+				return None, None
 			player_pk = text_data_json.get('player_pk')
 			object_id = text_data_json.get(f'{self._type.lower()}_id')
 			try:
