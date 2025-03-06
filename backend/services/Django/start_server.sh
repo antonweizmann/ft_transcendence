@@ -25,8 +25,10 @@ fi
 
 echo 'alias dj="python manage.py"' >> ~/.bashrc
 echo "Sourcing credentials..."
-export POSTGRES_PASSWORD=$(cat $POSTGRES_PASSWORD_FILE)
 source /run/secrets/django_superuser
+export POSTGRES_PASSWORD=$(cat $POSTGRES_PASSWORD_FILE)
+export DJANGO_SUPERUSER_PASSWORD
+export DJANGO_SUPERUSER_EMAIL
 
 echo "Migrating Django database..."
 python manage.py migrate
@@ -40,8 +42,9 @@ else
 fi
 
 echo "Checking for superuser..."
-python manage.py createsuperuser --noinput --username ${DJANGO_SUPERUSER_USERNAME} \
-	2>/dev/null \
+python manage.py createsuperuser --noinput \
+	--username ${DJANGO_SUPERUSER_USERNAME} \
+	2> /dev/null \
 	|| echo "Superuser already exists."
 
 echo "Starting Django server with Daphne..."

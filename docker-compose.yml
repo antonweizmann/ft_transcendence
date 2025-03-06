@@ -26,8 +26,6 @@ services:
   # Database service
   PostgreSQL:
     image: postgres:17.2
-    # build:
-    #   context: ./backend/services/postgres
     container_name: postgres
     restart: always
     networks:
@@ -53,7 +51,7 @@ services:
     depends_on:
       - Django
     ports:
-      - "443:443" #random ports
+      - "443:443"
     restart: always
     networks:
       - Ft_Transcendence
