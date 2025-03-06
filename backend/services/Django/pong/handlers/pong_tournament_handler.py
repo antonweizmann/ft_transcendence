@@ -16,6 +16,8 @@ class PongTournamentHandler(TournamentHandlerBase):
 	def __init__(self, tournament_id: str):
 		super().__init__(tournament_id)
 		self._model = PongTournamentModel.objects.create()
+		self.set_name("Tournament " + self._id.removesuffix('_tournament_pong'))
+		self.set_description("Pong Tournament " + self._id.removesuffix('_tournament_pong') + ", let's play!")
 
 	def _set_matches(self, players_without_match: list[str]):
 		random.shuffle(players_without_match)

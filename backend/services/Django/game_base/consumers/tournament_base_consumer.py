@@ -42,6 +42,13 @@ class TournamentBaseConsumer(CoreBaseConsumer):
 				'message': f'Tournament description changed to {description}.'
 			}))
 
+		elif action == 'change_name':
+			name = text_data_json.get('name')
+			self._handler.set_name(name)
+			self.send(json.dumps({
+				'message': f'Tournament name changed to {name}.'
+			}))
+
 		else:
 			message = text_data_json.get('message')
 			self.send(json.dumps({

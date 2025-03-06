@@ -69,8 +69,10 @@ class TournamentHandlerBase(CoreBaseHandler):
 		with self._lock:
 			if self._model.status != 'waiting':
 				raise ValueError('Cannot change size after tournament has started.')
-		if size < self._MIN_PLAYERS or size > self._MAX_PLAYERS:
-			raise ValueError(f'Must be between ' +
+		if (size < self._MIN_PLAYERS
+				or size > self._MAX_PLAYERS
+				or not isinstance(size, int)):
+			raise ValueError('Size must be an integer between ' +
 					f'{self._MIN_PLAYERS} and {self._MAX_PLAYERS}.')
 		self._required_players = size
 		for index in self._indexes:
@@ -81,11 +83,24 @@ class TournamentHandlerBase(CoreBaseHandler):
 					'index': f'{index}'
 				})
 
-	def set_description(self, description: str):
+	def __can_change_model_values(self, new_value: str):
 		with self._lock:
 			if self._model.status != 'waiting':
-				raise ValueError('Cannot change description after tournament has started.')
+				raise ValueError('Cannot change values after tournament has started.')
+		if not isinstance(new_value, str) and len(new_value) > 0:
+			raise ValueError('Value must be a non-empty string')
+		if self._model is None:
+			raise ValueError('_model object must be set in __init__ from the ' +
+					'child class before calling this method.')
+
+	def set_description(self, description: str):
+		self.__can_change_model_values(description)
 		self._model.description = description
+		self._model.save()
+
+	def set_name(self, name: str):
+		self.__can_change_model_values(name)
+		self._model.name = name
 		self._model.save()
 
 	def _set_matches(self):
