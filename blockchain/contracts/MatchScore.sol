@@ -15,7 +15,7 @@ contract MatchScore {
 		matches.push(Match(_player1Score, _player2Score)); // true
 	}
 
-	function getGameScores(uint _index) public view returns (uint, uint) {
+	function getScore(uint _index) public view returns (uint, uint) {
 		require(_index < matches.length, "Game index out of bounds");
 		Match memory score = matches[_index];
 		return (score.player1Score, score.player2Score);
