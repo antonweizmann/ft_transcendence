@@ -58,6 +58,8 @@ class PongTournamentHandler(TournamentHandlerBase):
 				winner = max(match, key=match.get)
 				players_without_match.add(winner)
 				self._state['leaderboard'][winner] += 1
+				self._model.leaderboard = self._state['leaderboard']
+				self._model.save()
 		return players_without_match
 
 	def _set_next_matches(self, match: list[str, str]):
@@ -69,6 +71,8 @@ class PongTournamentHandler(TournamentHandlerBase):
 			extra_player = match[0]
 			with self._lock:
 				self._state['leaderboard'][extra_player] += 1
+				self._model.leaderboard = self._state['leaderboard']
+				self._model.save()
 			players_without_match.add(match[0])
 		self._set_matches(list(players_without_match))
 		with self._lock:

@@ -1,3 +1,5 @@
+import gc
+
 class ManagerBase:
 	__instance = None
 
@@ -20,3 +22,4 @@ class ManagerBase:
 	def _remove_object(self, object_id: str):
 		if object_id in self.__managed_objects:
 			del self.__managed_objects[object_id]
+			gc.collect()

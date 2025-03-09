@@ -1,6 +1,8 @@
 from django.db import models # type: ignore
 from django.contrib.auth import get_user_model # type: ignore
 
+import gc
+
 User = get_user_model()
 
 STATUS_CHOICES = [
@@ -45,6 +47,7 @@ class GameBaseModel(models.Model):
 			return
 		if self.players.count() == 0 and self.status != 'waiting':
 			self.delete()
+			gc.collect()
 			return
 		if self.status == 'finished' and self.result is None and self.scores:
 			self.result = {
