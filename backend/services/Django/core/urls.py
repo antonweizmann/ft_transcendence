@@ -14,21 +14,21 @@ Including another URLconf
 	1. Import the include() function: from django.urls import include, path
 	2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView # type: ignore
+from rest_framework_simplejwt.views import TokenRefreshView # type: ignore
 from django.conf.urls.static import static # type: ignore
 from django.contrib import admin # type: ignore
 from django.urls import path # type: ignore
 from django.conf import settings # type: ignore
 from player.views import (
 	PlayerDetailView, PlayerListView, PlayerRegisterView, accept_friend_request,
-	reject_friend_request, send_friend_request, unfriend
+	reject_friend_request, send_friend_request, unfriend, PlayerTokenObtainPairView
 	)
 from game_base.views import OpenTournamentListView
 from pong.models import PongTournamentModel
 
 urlpatterns = [
 	path('admin/', admin.site.urls),
-	path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+	path('api/token/', PlayerTokenObtainPairView.as_view(), name='token_obtain_pair'),
 	path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 	path('api/player/list/', PlayerListView.as_view(), name='player_list'),
 	path('api/player/register/', PlayerRegisterView.as_view(), name='player_register'),
