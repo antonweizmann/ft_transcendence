@@ -49,17 +49,14 @@ account_address = list(keys['addresses'].keys())[0]
 private_key = keys['private_keys'][account_address]
 account = web3.eth.account.from_key(private_key)
 
-contract.functions.setScore(1, 2).transact({'from': account.address})
-contract.functions.setScore(10, 20).transact({'from': account.address})
-contract.functions.setScore(4, 3).transact({'from': account.address})
-contract.functions.setScore(100, 200).transact({'from': account.address})
+# contract.functions.setScore(1, 2).transact({'from': account.address})
+# contract.functions.setScore(10, 20).transact({'from': account.address})
+# contract.functions.setScore(4, 3).transact({'from': account.address})
+# contract.functions.setScore(100, 200).transact({'from': account.address})
 
-p1, p2 = contract.functions.getScore(0).call()
-p3, p4 = contract.functions.getScore(1).call()
-p5, p6 = contract.functions.getScore(2).call()
-p7, p8 = contract.functions.getScore(3).call()
-
-print(f"p1: {p1}, p2: {p2}")
-print(f"p3: {p3}, p4: {p4}")
-print(f"p5: {p5}, p6: {p6}")
-print(f"p7: {p7}, p8: {p8}")
+if __name__ == '__main__':
+	try: 
+		p1, p2 = contract.functions.getScore(0).call()
+		print(f"p1: {p1}, p2: {p2}")
+	except Exception as e:
+		print("Error: ", e)
