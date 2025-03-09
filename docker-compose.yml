@@ -18,6 +18,7 @@ services:
     secrets:
       - postgres_password
       - django_superuser
+      - django_secret_key
     environment:
       - POSTGRES_HOST=postgres
     env_file:
@@ -85,3 +86,5 @@ secrets:
     file: ./secrets/postgres_password.env
   django_superuser:
     file: ./secrets/django_superuser.env
+  django_secret_key:
+    file: ./secrets/django_secret_key
