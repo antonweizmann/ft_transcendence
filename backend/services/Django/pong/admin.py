@@ -5,6 +5,7 @@ from .models import PongGameModel, PongTournamentModel
 class PongMatchAdmin(admin.ModelAdmin):
 	model = PongGameModel
 	readonly_fields = ('result', 'game_type', 'required_players', 'created_at', 'updated_at')
+	search_fields = ('status', 'players__username')
 	fieldsets = (
 		(None, {'fields': (
 			'game_type', 'required_players', 'players', 'scores', 'result',
@@ -26,9 +27,10 @@ class PongGameInline(admin.TabularInline):
 class PongTournamentAdmin(admin.ModelAdmin):
 	model = PongTournamentModel
 	readonly_fields = ('created_at', 'updated_at')
+	search_fields = ('name', 'lobby_id', 'status', 'players__username')
 	fieldsets = (
 		(None, {'fields': (
-			'name', 'description', 'players', 'status', 'created_at', 'updated_at'
+			'name', 'lobby_id', 'description', 'size', 'players', 'status', 'leaderboard', 'created_at', 'updated_at'
 			)}),
 		)
 	inlines = [PongGameInline]
