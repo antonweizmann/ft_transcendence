@@ -16,7 +16,6 @@ Including another URLconf
 """
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView # type: ignore
 from django.conf.urls.static import static # type: ignore
-from django.shortcuts import redirect # type: ignore
 from django.contrib import admin # type: ignore
 from django.urls import path # type: ignore
 from django.conf import settings # type: ignore
@@ -24,6 +23,8 @@ from player.views import (
 	PlayerDetailView, PlayerListView, PlayerRegisterView, accept_friend_request,
 	reject_friend_request, send_friend_request, unfriend
 	)
+from game_base.views import OpenTournamentListView
+from pong.models import PongTournamentModel
 
 urlpatterns = [
 	path('admin/', admin.site.urls),
@@ -36,5 +37,6 @@ urlpatterns = [
 	path('api/player/reject_request/<int:pk>/', reject_friend_request, name='reject_friend_request'),
 	path('api/player/send_request/<int:pk>/', send_friend_request, name='send_friend_request'),
 	path('api/player/unfriend/<int:pk>/', unfriend, name='unfriend'),
+	path('api/tournament/list/', OpenTournamentListView.as_view(tournament_model=PongTournamentModel), name='tournament_list'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
