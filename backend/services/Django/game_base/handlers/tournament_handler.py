@@ -75,6 +75,8 @@ class TournamentHandlerBase(CoreBaseHandler):
 			raise ValueError('Size must be an integer between ' +
 					f'{self._MIN_PLAYERS} and {self._MAX_PLAYERS}.')
 		self._required_players = size
+		self._model.size = size
+		self._model.save()
 		for index in self._indexes:
 			if index >= size:
 				self.leave_tournament(self._indexes[index])

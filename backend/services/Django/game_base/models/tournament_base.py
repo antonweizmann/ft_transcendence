@@ -9,6 +9,8 @@ class TournamentBaseModel(models.Model):
 		abstract = True
 
 	name = models.CharField(max_length=100)
+	lobby_id = models.CharField(max_length=100, default='missing')
+	size = models.PositiveIntegerField(default = 3)
 	description = models.TextField(blank=True)
 	'''
 	It is necessary to add a unique related_name in each concrete class, either

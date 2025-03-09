@@ -18,6 +18,8 @@ class PongTournamentHandler(TournamentHandlerBase):
 		self._model = PongTournamentModel.objects.create()
 		self.set_name("Tournament " + self._id.removesuffix('_tournament_pong'))
 		self.set_description("Pong Tournament " + self._id.removesuffix('_tournament_pong') + ", let's play!")
+		self._model.lobby_id = self._id.removesuffix('_tournament_pong')
+		self._model.save()
 
 	def _set_matches(self, players_without_match: list[str]):
 		random.shuffle(players_without_match)
