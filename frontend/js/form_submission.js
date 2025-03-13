@@ -9,13 +9,10 @@ async function registerUser(username, first_name, last_name, email, password)
 	form_data.append('email', email);
 	form_data.append('password', password);
 
-	console.log("Form data:", form_data);
 	try {
 		const response = await fetch('https://localhost/api/player/register/', {
 			method: 'POST',
-			headers: { 'Host' : 'localhost' },
 			body: form_data,
-			credentials: 'same-origin'
 		});
 		if (response.ok)
 			console.log(`user ${username} registered successfully!`);
