@@ -28,4 +28,10 @@ class PongMatch(GameMatchBase):
 		if self.status == 'finished' and self.result is not None and self.__in_blockchain is False:
 			self.__in_blockchain = True
 			players = self.players.all()
-			contract.functions.setScore(self.scores.get(players[0].__str__()), self.scores.get(players[1].__str__())).transact({'from': account.address})
+			contract.functions.setMatchScore(
+				self.id,
+				players[0].id,
+				players[1].id,
+				self.scores.get(players[0].__str__()),
+				self.scores.get(players[1].__str__())
+			).transact({'from': account.address})

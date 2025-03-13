@@ -49,14 +49,11 @@ account_address = list(keys['addresses'].keys())[0]
 private_key = keys['private_keys'][account_address]
 account = web3.eth.account.from_key(private_key)
 
-# contract.functions.setScore(1, 2).transact({'from': account.address})
-# contract.functions.setScore(10, 20).transact({'from': account.address})
-# contract.functions.setScore(4, 3).transact({'from': account.address})
-# contract.functions.setScore(100, 200).transact({'from': account.address})
-
 if __name__ == '__main__':
-	try: 
-		p1, p2 = contract.functions.getScore(0).call()
-		print(f"p1: {p1}, p2: {p2}")
+	try:
+		p1id, p2id, p1score, p2score = contract.functions.getMatchScore(1).call()
+		if (p1id == 0 and p2id == 0 and p1score == 0 and p2score == 0):
+			print("Failed!")
+		print(f"p1id: {p1id}, p2id: {p2id}, p1score: {p1score}, p2score: {p2score}")
 	except Exception as e:
 		print("Error: ", e)

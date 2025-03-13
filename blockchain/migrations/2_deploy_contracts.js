@@ -5,19 +5,19 @@ const fs = require('fs');
 // const web3 = new Web3(new Web3.providers.HttpProvider('http://127.0.0.1:8545'));
 
 module.exports = function(deployer) {
-  console.log("START");
-  deployer.deploy(MatchScore, 0)
-  .then((instance) => {
-     console.log("SAVING ADDRESS");
-      fs.writeFileSync("/web3_share/address.txt", instance.address, (err) => {
-      if (err) {
-        console.error("ERROR WRITTING ADDRESS: ", err);
-      } else {
-        console.log("ADDRESS SAVED");
-      }
-    });
-  })
-  .catch((err) => {
-    console.error("ERROR DEPLOYING CONTRACT: ", err);
-  });
+	console.log("START");
+	deployer.deploy(MatchScore, 0)
+	.then((instance) => {
+		console.log("SAVING ADDRESS");
+		fs.writeFileSync("/web3_share/address.txt", instance.address, (err) => {
+		if (err) {
+		console.error("ERROR WRITTING ADDRESS: ", err);
+		} else {
+		console.log("ADDRESS SAVED");
+		}
+	});
+	})
+	.catch((err) => {
+	console.error("ERROR DEPLOYING CONTRACT: ", err);
+	});
 };
