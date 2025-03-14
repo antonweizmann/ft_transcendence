@@ -16,6 +16,14 @@ contract MatchScore {
 		matches.push(Match(_index, _p1id, _p2id, _p1score, _p2score));
 	}
 
+	function getTotalMatches() external view returns (uint) {
+		return matches.length;
+	}
+
+	function getMatchIndex(uint _matchesIndex) external view returns (uint) {
+		return matches[_matchesIndex].index;
+	}
+
 	function getMatchScore(uint _index) external view returns (uint, uint, uint, uint) {
 		for (uint i = 0; i < matches.length; i++) {
 			if (matches[i].index == _index) {

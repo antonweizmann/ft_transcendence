@@ -28,5 +28,11 @@ contract TestMatchScore {
 		assert(m3p2id == 60);
 		assert(m3p1score == 2);
 		assert(m3p2score == 5);
+
+		assert(score.getTotalMatches() == 3);
+
+		assert(score.getMatchIndex(0) == 1);
+		assert(score.getMatchIndex(1) == 2);
+		assert(score.getMatchIndex(2) == 3);
 	}
 }

@@ -10,11 +10,11 @@ truffle migrate --network development
 # echo "TESTING CONTRACTS..."
 # if truffle test --network development;
 # then
-#     echo "TEST PASSED!"
-#     cp /solidity/build/contracts/*.json /web3_share/
-#     echo "CONTRACTS READY TO BE USED!"
+# 	echo "TEST PASSED!"
+# 	cp /solidity/build/contracts/*.json /web3_share/
+# 	echo "CONTRACTS READY TO BE USED!"
 # else
-#     echo "TEST FAILED!"
+# 	echo "TEST FAILED!"
 # fi
 
 wait $job

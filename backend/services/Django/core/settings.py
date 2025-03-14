@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 	'pong',
 	'channels',
 	'game_manager',
+	'blockchain',
 ]
 
 ASGI_APPLICATION = "core.asgi.application"
