@@ -15,6 +15,28 @@ document.addEventListener('DOMContentLoaded', function() {
 	setupLoginOrProfile();
 });
 
+document.addEventListener('DOMContentLoaded', async () => {
+	const token = localStorage.getItem('token');
+	if (!token)
+		return;
+	const tokenPayload = JSON.parse(atob(token.split('.')[1])); // Decode JWT payload
+	console.log('Token payload:', tokenPayload);
+	const isTokenExpired = tokenPayload.exp * 1000 < Date.now();
+
+	if (isTokenExpired) {
+		console.warn('Access token expired, refreshing...');
+		const tokenRefreshed = await window.refreshAccessToken();
+		if (!tokenRefreshed) {
+			console.error('Failed to refresh token, logging out...');
+			localStorage.removeItem('token');
+			localStorage.removeItem('refresh');
+			localStorage.removeItem('username');
+			localStorage.removeItem('user_id');
+			localStorage.removeItem('isLoggedIn');
+		}
+	}
+});
+
 function setupLoginOrProfile() {
 	//replace by validation of choice
 	const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
@@ -84,11 +106,11 @@ async function getPage(pageName)
 {
 	// Closing the mobile hamburger menu when loading new page
 	var collapseElement = document.getElementById('navbarNav');
-    if (collapseElement.classList.contains('show')) {
+	if (collapseElement.classList.contains('show')) {
 		console.log("TEST");
-        var collapse = new bootstrap.Collapse(collapseElement);
-        collapse.hide();
-    }
+		var collapse = new bootstrap.Collapse(collapseElement);
+		collapse.hide();
+	}
 
 	try
 	{
@@ -227,16 +249,16 @@ function signUpInstead() {
 }
 
 function setImagePreview(inputElement) {
-    const previewImage = document.getElementById('previewImage');
+	const previewImage = document.getElementById('previewImage');
 
-    file = inputElement.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            previewImage.src = e.target.result; // Update the src attribute
-        };
-        reader.readAsDataURL(file); // Read the file as a Data URL
-    } else {
-        previewImage.src = '../assets/default_profile.png'; // Reset to placeholder if no file is selected
+	file = inputElement.files[0];
+	if (file) {
+		const reader = new FileReader();
+		reader.onload = function (e) {
+			previewImage.src = e.target.result; // Update the src attribute
+		};
+		reader.readAsDataURL(file); // Read the file as a Data URL
+	} else {
+		previewImage.src = '../assets/default_profile.png'; // Reset to placeholder if no file is selected
 	}
 }
