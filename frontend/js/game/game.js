@@ -138,7 +138,8 @@ function joinGameListener() {
 }
 
 function joinGame() {
-	const player_pk = document.getElementById('playerPk').value;
+	// const player_pk = document.getElementById('playerPk').value;
+	const player_pk = localStorage.getItem('user_id');
 	const lobby = document.getElementById('lobbyId').value;
 
 	const message = {
