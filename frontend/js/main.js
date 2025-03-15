@@ -25,6 +25,11 @@ function setupLoginOrProfile() {
 	if (isLoggedIn) {
 		loginButton.style.display = 'none';
 		profileButton.style.display = 'block';
+		// To display the username in the profile button uncomment the following
+		// and remove the data-translate attribute from the button in the HTML
+		// if (localStorage.getItem('username')) {
+		// 	profileButton.textContent = localStorage.getItem('username');
+		// }
 	} else {
 		loginButton.style.display = 'block';
 		profileButton.style.display = 'none';

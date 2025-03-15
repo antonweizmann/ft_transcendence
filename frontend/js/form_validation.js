@@ -26,15 +26,16 @@ function setupDropdownValidation(formName, validationFunction)
 	}
 }
 
-function validateLoginForm(event)
+async function validateLoginForm(event)
 {
-	const email = document.getElementById('loginEmail');
+	const email = document.getElementById('loginEmail'); // THIS SHOULD BE USERNAME NOT EMAIL
 	const password = document.getElementById('loginPassword');
 	let	isValid = true
 
 	removeErrorMessage(password);
 	removeErrorMessage(email);
 
+	// ! We are using username not email
 	if (!email.value.trim())
 	{
 		isValid = false;
@@ -46,6 +47,13 @@ function validateLoginForm(event)
 		isValid = false;
 		password.classList.add('is-invalid');
 		showErrorMessage(password, 'Please enter your password');
+	}
+	if (isValid)
+	{
+		const loginSuccess = await window.loginUser(email.value, password.value);
+		if (!loginSuccess)
+			console.log('Error logging in user');
+		isValid = loginSuccess;
 	}
 	return isValid;
 }
