@@ -16,10 +16,13 @@ async function registerUser(username, first_name, last_name, email, password)
 		});
 		if (response.ok)
 			console.log(`user ${username} registered successfully!`);
-		else
+		else {
 			console.error("Error:", await response.json());
+			return false
+		}
 	} catch (error) {
 		console.error(error);
 	}
+	return true;
 }
 window.registerUser = registerUser;

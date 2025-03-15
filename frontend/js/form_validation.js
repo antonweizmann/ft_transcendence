@@ -50,8 +50,10 @@ function validateLoginForm(event)
 	return isValid;
 }
 
-function validateSignupForm(event)
+async function validateSignupForm(event)
 {
+	event.preventDefault();
+
 	const username = document.getElementById('signupUsername');
 	const firstname = document.getElementById('signupFirstname');
 	const lastname = document.getElementById('signupLastname');
@@ -112,10 +114,15 @@ function validateSignupForm(event)
 	}
 	if (isValid)
 	{
-		window.registerUser(username, firstname, lastname, email, password);
-		localStorage.setItem('isLoggedIn', true);
-		loadPage('home');
-		setupLoginOrProfile();
+		const registrationSuccess = await window.registerUser(username, firstname, lastname, email, password);
+		if (registrationSuccess)
+		{
+			loadPage('home');
+			setupLoginOrProfile();
+		}
+		else
+			console.log('Error registering user');
+		isValid = registrationSuccess;
 	}
 	return isValid;
 }
