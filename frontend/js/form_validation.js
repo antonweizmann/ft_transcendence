@@ -55,36 +55,37 @@ async function validateSignupForm(event)
 	event.preventDefault();
 
 	const username = document.getElementById('signupUsername');
-	const firstname = document.getElementById('signupFirstname');
-	const lastname = document.getElementById('signupLastname');
+	const first_name = document.getElementById('signupFirstName');
+	const last_name = document.getElementById('signupLastName');
 	const email = document.getElementById('signupEmail');
 	const password = document.getElementById('signupPassword');
 	const password2 = document.getElementById('signupPassword2');
 	let isValid = true;
 
 	removeErrorMessage(username);
-	removeErrorMessage(firstname);
-	removeErrorMessage(lastname);
+	removeErrorMessage(first_name);
+	removeErrorMessage(last_name);
 	removeErrorMessage(email);
 	removeErrorMessage(password);
 	removeErrorMessage(password2);
+	console.log('Form submitted:', username, first_name, last_name, email, password);
 	if (!username.value.trim())
 	{
 		isValid = false;
 		username.classList.add('is-invalid');
 		showErrorMessage(username, 'Please enter your username');
 	}
-	if (!firstname.value.trim())
+	if (!first_name.value.trim())
 	{
 		isValid = false;
-		firstname.classList.add('is-invalid');
-		showErrorMessage(firstname, 'Please enter your firstname');
+		first_name.classList.add('is-invalid');
+		showErrorMessage(first_name, 'Please enter your first_name');
 	}
-	if (!lastname.value.trim())
+	if (!last_name.value.trim())
 	{
 		isValid = false;
-		lastname.classList.add('is-invalid');
-		showErrorMessage(lastname, 'Please enter your lastname');
+		last_name.classList.add('is-invalid');
+		showErrorMessage(last_name, 'Please enter your last_name');
 	}
 	if (!email.value.trim())
 	{
@@ -114,7 +115,7 @@ async function validateSignupForm(event)
 	}
 	if (isValid)
 	{
-		const registrationSuccess = await window.registerUser(username, firstname, lastname, email, password);
+		const registrationSuccess = await window.registerUser(username, first_name, last_name, email, password);
 		if (registrationSuccess)
 		{
 			loadPage('home');
