@@ -11,14 +11,16 @@ function setupDropdownValidation(formName, validationFunction)
 
 		form.addEventListener('submit', function(event)
 		{
-			if (!validationFunction(event))
-			{
-				event.preventDefault();
-				event.stopPropagation();
+			const dropdownInstance = bootstrap.Dropdown.getOrCreateInstance(dropdownToggle);
 
-				const dropdownInstance = bootstrap.Dropdown.getOrCreateInstance(dropdownToggle);
-				if (dropdownInstance)
-					dropdownInstance.show();
+			event.preventDefault();
+			if (!validationFunction(event))
+				event.stopPropagation();
+			else
+			{
+				dropdownInstance.hide();
+				localStorage.setItem('isLoggedIn', true);
+				setupLoginOrProfile();
 			}
 		});
 	}
@@ -108,9 +110,13 @@ function validateSignupForm(event)
 		showErrorMessage(password, 'Passwords do not match');
 		showErrorMessage(password2, 'Passwords do not match');
 	}
-	// return isValid;
 	if (isValid)
+	{
 		window.registerUser(username, firstname, lastname, email, password);
+		localStorage.setItem('isLoggedIn', true);
+		loadPage('home');
+		setupLoginOrProfile();
+	}
 	return isValid;
 }
 

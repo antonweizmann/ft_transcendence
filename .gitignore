@@ -6,6 +6,7 @@ secrets/*
 .vscode/
 b_main.js
 media/
+dummy_file
 
 # Certificates
 *.pem

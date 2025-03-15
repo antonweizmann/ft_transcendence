@@ -4,7 +4,7 @@ WORKDIR /etc/nginx/
 
 RUN apk add --no-cache openssl
 
-COPY ./generate_cert.sh ./certs/* ./
+COPY ./generate_cert.sh ./certs/ ./
 
 ENV DOMAIN=transcendence.de
 RUN chmod +x generate_cert.sh && ./generate_cert.sh

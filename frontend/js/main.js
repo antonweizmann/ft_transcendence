@@ -104,16 +104,29 @@ async function getPage(pageName)
 		if (pageName === 'play')
 		{
 			window.gameState = {
-			initialized: false,
-			cleanup: null
-		};
-			loadScripts([ 'game/game.js','game/ai.js', 'game/init_game.js', 'game/movement_game.js', 'game/listeners_game.js', 'game/element.js', 'game/draw_game.js']);
+				initialized: false,
+				cleanup: null
+			};
+			loadScripts(['game/game.js','game/ai.js', 'game/init_game.js', 'game/movement_game.js', 'game/listeners_game.js', 'game/element.js', 'game/draw_game.js']);
 			setTimeout(() => {
 				if (window.ensureInit) {
 					window.ensureInit();
 				}
 			}, 50);
 		}
+		// else if (pageName === 'tournament')
+		// {
+		// 	window.gameState = {
+		// 	initialized: false,
+		// 	cleanup: null
+		// 	};
+		// 	loadScripts(['tournament.js']);
+		// 	setTimeout(() => {
+		// 		if (window.ensureInit) {
+		// 			window.ensureInit();
+		// 		}
+		// 	}, 50);
+		// }
 		// const scripts = document.getElementById('main-content').getElementsByTagName('script');
 		// loadScripts(scripts);
 		changeLanguage();
