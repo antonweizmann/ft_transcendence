@@ -20,7 +20,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 	if (!token)
 		return;
 	const tokenPayload = JSON.parse(atob(token.split('.')[1])); // Decode JWT payload
-	console.log('Token payload:', tokenPayload);
 	const isTokenExpired = tokenPayload.exp * 1000 < Date.now();
 
 	if (isTokenExpired) {

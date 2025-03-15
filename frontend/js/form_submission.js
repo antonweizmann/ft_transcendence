@@ -31,9 +31,6 @@ async function loginUser(username, password)
 	form_data.append('username', username);
 	form_data.append('password', password);
 
-	console.log('Logging in user:', username,
-		'password:', password
-	);
 	try {
 		const response = await fetch('https://localhost/api/token/', {
 			method: 'POST',
