@@ -56,3 +56,13 @@ async function loginUser(username, password)
 	return true;
 }
 window.loginUser = loginUser;
+
+function logoutUser()
+{
+	localStorage.removeItem('isLoggedIn');
+	localStorage.removeItem('token');
+	localStorage.removeItem('refresh');
+	localStorage.removeItem('username');
+	localStorage.removeItem('user_id');
+}
+window.logoutUser = logoutUser;

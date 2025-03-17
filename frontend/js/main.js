@@ -27,11 +27,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 		const tokenRefreshed = await window.refreshAccessToken();
 		if (!tokenRefreshed) {
 			console.error('Failed to refresh token, logging out...');
-			localStorage.removeItem('token');
-			localStorage.removeItem('refresh');
-			localStorage.removeItem('username');
-			localStorage.removeItem('user_id');
-			localStorage.removeItem('isLoggedIn');
+			window.logoutUser();
 		}
 	}
 });
@@ -174,6 +170,11 @@ window.onload = function () {
 	// If path is empty or 'index.html', default to 'home'
 	if (!path || path === 'index.html') {
 		loadPageReplace(startPage);
+		return;
+	}
+	if (path === 'profile' && !localStorage.getItem('user_id')) {
+		window.logoutUser();
+		loadPage(startPage);
 		return;
 	}
 
