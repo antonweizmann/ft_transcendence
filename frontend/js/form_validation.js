@@ -76,7 +76,6 @@ async function validateSignupForm(event)
 	removeErrorMessage(email);
 	removeErrorMessage(password);
 	removeErrorMessage(password2);
-	console.log('Form submitted:', username, first_name, last_name, email, password);
 	if (!username.value.trim())
 	{
 		isValid = false;
