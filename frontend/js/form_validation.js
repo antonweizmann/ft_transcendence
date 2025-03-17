@@ -17,11 +17,7 @@ function setupDropdownValidation(formName, validationFunction)
 			if (!validationFunction(event))
 				event.stopPropagation();
 			else
-			{
 				dropdownInstance.hide();
-				localStorage.setItem('isLoggedIn', true);
-				setupLoginOrProfile();
-			}
 		});
 	}
 }

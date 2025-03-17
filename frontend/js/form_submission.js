@@ -44,12 +44,14 @@ async function loginUser(username, password)
 			localStorage.setItem('refresh', data.refresh);
 			localStorage.setItem('username', username);
 			localStorage.setItem('user_id', data.user_id);
+			localStorage.setItem('isLoggedIn', true);
 			console.log(`user ${username} logged in successfully!`);
 		}
 		else {
 			console.error("Error:", await response.json());
 			return false
 		}
+		setupLoginOrProfile();
 	} catch (error) {
 		console.error(error);
 	}
@@ -64,5 +66,7 @@ function logoutUser()
 	localStorage.removeItem('refresh');
 	localStorage.removeItem('username');
 	localStorage.removeItem('user_id');
+	setupLoginOrProfile();
+	console.log('User logged out successfully!');
 }
 window.logoutUser = logoutUser;
