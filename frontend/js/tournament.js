@@ -1,15 +1,22 @@
 window.addPlayer = addPlayer;
 
-function addPlayer() {
-	const list = document.getElementById('player-list');
-	const input = document.getElementById('add-player-name');
+function addTournament() {
+	const list = document.getElementById('tournamentList');
+	// const input = document.getElementById('add-player-name');
 
 	var item = document.createElement('div');
 	item.className = 'list-group-item';
-	item.textContent = input.value;
-	input.value = '';
+	item.textContent = Tournament;
+	// input.value = '';
 
 	if (item.textContent != '')
 		list.appendChild(item);
 	return false;
+}
+
+function setPlayerCount() {
+	const playerCount = document.getElementById('playerCount');
+	const playerCountDisplaer = document.getElementById('playerCountDisplay');
+
+	playerCountDisplaer.innerText = playerCount.value;
 }
