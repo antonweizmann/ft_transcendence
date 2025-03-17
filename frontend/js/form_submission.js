@@ -1,11 +1,11 @@
 async function registerUser(username, first_name, last_name, email, password)
 {
 	const form_data = new FormData();
-	form_data.append('username', username);
-	form_data.append('first_name', first_name);
-	form_data.append('last_name', last_name);
-	form_data.append('email', email);
-	form_data.append('password', password);
+	form_data.append('username', username.value);
+	form_data.append('first_name', first_name.value);
+	form_data.append('last_name', last_name.value);
+	form_data.append('email', email.value);
+	form_data.append('password', password.value);
 
 	try {
 		const response = await fetch('https://localhost/api/player/register/', {
@@ -13,7 +13,10 @@ async function registerUser(username, first_name, last_name, email, password)
 			body: form_data,
 		});
 		if (response.ok)
+		{
 			console.log(`user ${username} registered successfully!`);
+			loginUser(username.value, password.value);
+		}
 		else {
 			console.error("Error:", await response.json());
 			return false
