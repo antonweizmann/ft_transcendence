@@ -174,7 +174,7 @@ window.onload = function () {
 	}
 	if (path === 'profile' && !localStorage.getItem('user_id')) {
 		window.logoutUser();
-		loadPage(startPage);
+		loadPageReplace(startPage);
 		return;
 	}
 
