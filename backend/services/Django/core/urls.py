@@ -28,7 +28,7 @@ from player.views import (
 
 urlpatterns = [
 	path('admin/', admin.site.urls),
-	path('blockchain/', get_blockchain_scores, name='blockchain_scores'),
+	path('api/blockchain/', get_blockchain_scores, name='blockchain_scores'),
 	path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
 	path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 	path('api/player/list/', PlayerListView.as_view(), name='player_list'),

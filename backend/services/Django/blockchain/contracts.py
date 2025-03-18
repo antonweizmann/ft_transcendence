@@ -51,9 +51,9 @@ account = web3.eth.account.from_key(private_key)
 
 if __name__ == '__main__':
 	try:
-		p1id, p2id, p1score, p2score = contract.functions.getMatchScore(1).call()
-		if (p1id == 0 and p2id == 0 and p1score == 0 and p2score == 0):
+		player_one_id, player_two_id, player_one_score, player_two_score = contract.functions.getMatchScore(17).call()
+		if (player_one_id == 0 and player_two_id == 0 and player_one_score == 0 and player_two_score == 0):
 			print("Failed!")
-		print(f"p1id: {p1id}, p2id: {p2id}, p1score: {p1score}, p2score: {p2score}")
+		print(f"player_one_id: {player_one_id}, player_two_id: {player_two_id}, player_one_score: {player_one_score}, player_two_score: {player_two_score}")
 	except Exception as e:
 		print("Error: ", e)

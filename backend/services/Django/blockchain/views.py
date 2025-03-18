@@ -14,13 +14,13 @@ def get_blockchain_scores(request):
 
 		for i in range(total_matches):
 			match_id = contract.functions.getMatchIndex(i).call()
-			p1id, p2id, p1score, p2score = contract.functions.getMatchScore(match_id).call()
+			player_one_id, player_two_id, player_one_score, player_two_score = contract.functions.getMatchScore(match_id).call()
 			match_data = {
 				'match_id': match_id,
-				'p1id': p1id,
-				'p2id': p2id,
-				'p1score': p1score,
-				'p2score': p2score
+				'player_one_id': player_one_id,
+				'player_two_id': player_two_id,
+				'player_one_score': player_one_score,
+				'player_two_score': player_two_score
 			}
 			matches.append(match_data)
 
