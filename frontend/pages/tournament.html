@@ -13,13 +13,13 @@
                     <label for="createLobbyMode" class="form-label">Mode</label>
                 </div>
                 <div class="col-sm">
-                    <select id="createLobbyMode" class="form-select">
+                    <select id="createLobbyMode" class="form-select" onchange="modeChangeInput();">
                         <option value="local">Local</option>
                         <option value="remote">Remote</option>
                     </select>
                 </div>
             </div>
-            <div class="mb-1 row justify-content-between">
+            <div class="mb-1 row">
                 <div class="col-sm">
                     <label for="createLobbyId" class="form-label" data-translate="createLobbyId">Lobby id</label>
                 </div>
@@ -36,14 +36,25 @@
                 </div>
             </div>
             <div class="mb-1 row justify-content-between">
-                <div class="col-sm">
+                <div class="col-sm-6">
                     <label for="playerCount" class="form-label">Players</label>
                 </div>
-                <div class="col-sm-5">
+                <div class="col-9 col-sm-5">
                     <input type="range" onchange="setPlayerCount();" class="form-range" min="3" max="8" id="playerCount">
                 </div>
-                <div class="col-sm-1 text-center">
+                <div class="col-3 text-center">
                     <label for="playerCount" class="form-label pe-4" id="playerCountDisplay">6</label>
+                </div>
+            </div>
+            <div class="mb-1 row justify-content-between">
+                <div class="col-sm">
+                    <label for="winningPoints" class="form-label">Points for win</label>
+                </div>
+                <div class="col-9 col-sm-5">
+                    <input type="range" onchange="setWinningPoints();" class="form-range" min="1" max="10" id="winningPoints">
+                </div>
+                <div class="col-3 text-center">
+                    <label for="winningPoints" class="form-label pe-4" id="winningPointsDisplay">6</label>
                 </div>
             </div>
             <div class="row g-2 align-items-center">
