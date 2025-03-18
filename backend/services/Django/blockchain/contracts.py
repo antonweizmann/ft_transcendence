@@ -16,7 +16,7 @@ def read_contract_address():
 			contract_address = file.read().strip()
 			return contract_address
 	except FileNotFoundError:
-		print("Contract address file not found. Make sure the file 'contract_address.txt' exists.")
+		print("Contract address file not found. Make sure the file 'address.txt' exists.")
 		return None
 
 def read_contract_abi():
