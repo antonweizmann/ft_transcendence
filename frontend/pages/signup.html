@@ -10,6 +10,16 @@
             <label for="signupUsername" class="form-label">Username</label>
             <input type="text" class="form-control" placeholder="Choose a username" id="signupUsername">
         </div>
+        <div class="mb-3">
+            <label for="signupFirstname" class="form-label">Firstname</label>
+            <input type="text" class="form-control" placeholder="list your firstname" id="signupFirstname">
+        </div>
+
+        <div class="mb-3">
+            <label for="signupLastName" class="form-label">Lastname</label>
+            <input type="text" class="form-control" placeholder="list your jastname" id="signupLastname">
+        </div>
+
 
         <!-- Email Address -->
         <div class="mb-3">
@@ -62,10 +72,10 @@
             <div class="row align-items-center">
                 <div class="col-8">
                     <label for="formFile" class="form-label">Pick profile picture</label>
-                    <input class="form-control" type="file" id="formFile">
+                    <input class="form-control" type="file" id="formFile" onchange="setImagePreview(this)">
                 </div>
                 <div class="col-3">
-                    <img src="..." class="profile-pic" alt="...">
+                    <img id="previewImage" src="../assets/default_profile.png" class="object-fit-cover profile-pic" alt="...">
                 </div>
             </div>
         </div>

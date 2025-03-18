@@ -24,7 +24,7 @@ services:
     build: ./backend/services/Django
     depends_on:
       PostgreSQL:
-        condition: service_started
+        condition: service_healthy
       redis:
         condition: service_started
       Blockchain:
@@ -39,28 +39,32 @@ services:
       - postgres_password
       - django_superuser
     environment:
-      - POSTGRES_DB=ft_transcendence_db
-      - POSTGRES_USER=ft_transcendence_user
-      - POSTGRES_PORT=5432
-      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres_password
       - POSTGRES_HOST=postgres
+    env_file:
+      - .env
 
   # Database service
   PostgreSQL:
     image: postgres:17.2
+    # build:
+    #   context: ./backend/services/postgres
     container_name: postgres
     restart: always
     networks:
       - Ft_Transcendence
+    command: ["postgres", "-c", "hba_file=/etc/postgresql/pg_hba.conf"]
     volumes:
       - postgres_volume:/var/lib/postgresql/data
+      - ./backend/services/postgres/pg_hba.conf:/etc/postgresql/pg_hba.conf
     secrets:
       - postgres_password
-    environment:
-      - POSTGRES_DB=ft_transcendence_db
-      - POSTGRES_USER=ft_transcendence_user
-      - POSTGRES_PORT=5432
-      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres_password
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $POSTGRES_USER -d $POSTGRES_DB"]
+      interval: 5s
+      timeout: 2s
+      retries: 5
 
   nginx:
     image: nginx
@@ -95,7 +99,7 @@ volumes:
 
 networks:
   Ft_Transcendence:
-    name: inception
+    name: transcendence
     driver: bridge
 
 secrets:

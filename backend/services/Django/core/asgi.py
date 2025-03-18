@@ -16,14 +16,13 @@ django_asgi_app = get_asgi_application()
 
 from channels.routing import ProtocolTypeRouter, URLRouter # type: ignore
 from channels.auth import AuthMiddlewareStack # type: ignore
-from django.urls import path # type: ignore
-from pong.consumers import PongConsumer
+from pong.routing import pong_ws_urlpatterns
 
 application = ProtocolTypeRouter({
 	'http': django_asgi_app,
 	'websocket': AuthMiddlewareStack(
-		URLRouter([
-			path('ws/pong/', PongConsumer.as_asgi()),
-		])
+		URLRouter(
+			pong_ws_urlpatterns
+		)
 	)
 })

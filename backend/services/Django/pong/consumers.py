@@ -1,6 +1,8 @@
-from game_manager.consumers import WSConsumerBase
-from pong.pong_handler import PongHandler
+from game_base.consumers import GameBaseConsumer
+from pong.handlers import PongHandler
 
-class PongConsumer(WSConsumerBase):
-	def join_lobby(self, player, game_id):
-		return super()._join_lobby(player, game_id, PongHandler)
+class PongConsumer(GameBaseConsumer):
+	_subtype = 'Pong'
+
+	def join_lobby(self, game_id):
+		return super()._join_lobby(game_id, PongHandler)

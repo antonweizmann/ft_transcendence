@@ -29,8 +29,6 @@ function setupLoginOrProfile() {
 		loginButton.style.display = 'block';
 		profileButton.style.display = 'none';
 	}
-	console.log('Login Button:', loginButton);
-	console.log('Profile Button:', profileButton);
 }
 
 function loadScripts(scripts) {
@@ -71,16 +69,35 @@ async function loadPage(pageName)
 	getPage(pageName);
 }
 
+async function loadPageReplace(pageName)
+{
+	window.history.replaceState({page: pageName}, '', `/${pageName}`);
+	getPage(pageName);
+}
+
 async function getPage(pageName)
 {
+	// Closing the mobile hamburger menu when loading new page
+	var collapseElement = document.getElementById('navbarNav');
+    if (collapseElement.classList.contains('show')) {
+		console.log("TEST");
+        var collapse = new bootstrap.Collapse(collapseElement);
+        collapse.hide();
+    }
+
 	try
 	{
 		if (window.gameState.cleanup)
 			window.gameState.cleanup();
 		removeAddedScripts();
 		const response = await fetch(`/pages/${pageName}.html`)
+		if (response.status === 404)
+		{
+			loadPageReplace(startPage);
+			return;
+		}
 		if (!response.ok)
-			throw new Error(`HTTP error! Status: ${response.status}`)
+			throw new Error(`HTTP error! Status: ${response.status}`);
 		const content = await response.text();
 		document.getElementById('main-content').innerHTML = content;
 		updateActive(pageName);
@@ -108,18 +125,21 @@ async function getPage(pageName)
 	}
 }
 
-	window.onload = function () {
-		let path = window.location.pathname;
-		// Remove leading and trailing slashes, and get the first segment of the path
-		path = path.replace(/^\/|\/$/g, '').split('/')[1];
+window.onload = function () {
+	let path = window.location.pathname;
+	console.log(path);
+	// Remove leading and trailing slashes, and get the first segment of the path
+	path = path.replace(/^\/|\/$/g, '');
+	console.log(path);
 
-		// If path is empty or 'index.html', default to 'home'
-		if (!path || path === 'index.html') {
-			path = startPage;
-		}
+	// If path is empty or 'index.html', default to 'home'
+	if (!path || path === 'index.html') {
+		loadPageReplace(startPage);
+		return;
+	}
 
-		console.log(`Loading path: ${path}`);
-		loadPage(path);
+	console.log(`Loading path: ${path}`);
+	getPage(path);
 };
 
 function changeLanguage(event) {
@@ -186,4 +206,19 @@ function signUpInstead() {
 
 	dropdown.hide();
 	loadPage('signup');
+}
+
+function setImagePreview(inputElement) {
+    const previewImage = document.getElementById('previewImage');
+
+    file = inputElement.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            previewImage.src = e.target.result; // Update the src attribute
+        };
+        reader.readAsDataURL(file); // Read the file as a Data URL
+    } else {
+        previewImage.src = '../assets/default_profile.png'; // Reset to placeholder if no file is selected
+	}
 }
