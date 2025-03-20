@@ -1,10 +1,11 @@
 from django.contrib import admin # type: ignore
-from .models import PongMatch, PongTournament
+from .models import PongGameModel, PongTournamentModel
 
 # Register your models here.
 class PongMatchAdmin(admin.ModelAdmin):
-	model = PongMatch
+	model = PongGameModel
 	readonly_fields = ('result', 'game_type', 'required_players', 'created_at', 'updated_at')
+	search_fields = ('status', 'players__username')
 	fieldsets = (
 		(None, {'fields': (
 			'game_type', 'required_players', 'players', 'scores', 'result',
@@ -12,14 +13,27 @@ class PongMatchAdmin(admin.ModelAdmin):
 			)}),
 		)
 
-class PongTournamentAdmin(admin.ModelAdmin):
-	model = PongTournament
-	readonly_fields = ('created_at', 'updated_at')
+class PongGameInline(admin.TabularInline):
+	model = PongGameModel
+	extra = 0
 	fieldsets = (
 		(None, {'fields': (
-			'name', 'description', 'players', 'status', 'created_at', 'updated_at'
+			'players', 'required_players', 'scores', 'result',
+			'status', 'created_at', 'updated_at'
 			)}),
 		)
+	readonly_fields = ('status', 'scores', 'result', 'required_players', 'created_at', 'updated_at')
 
-admin.site.register(PongMatch, PongMatchAdmin)
-admin.site.register(PongTournament, PongTournamentAdmin)
+class PongTournamentAdmin(admin.ModelAdmin):
+	model = PongTournamentModel
+	readonly_fields = ('created_at', 'updated_at')
+	search_fields = ('name', 'lobby_id', 'status', 'players__username')
+	fieldsets = (
+		(None, {'fields': (
+			'name', 'lobby_id', 'description', 'size', 'players', 'status', 'leaderboard', 'created_at', 'updated_at'
+			)}),
+		)
+	inlines = [PongGameInline]
+
+admin.site.register(PongGameModel, PongMatchAdmin)
+admin.site.register(PongTournamentModel, PongTournamentAdmin)

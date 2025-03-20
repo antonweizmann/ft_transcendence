@@ -5,7 +5,7 @@ from channels.generic.websocket import WebsocketConsumer # type: ignore
 from channels.exceptions import StopConsumer # type: ignore
 from django.contrib.auth import get_user_model # type: ignore
 from game_base.managers.manager_base import ManagerBase
-from game_base.handlers.core_base_handler import CoreHandlerBase
+from game_base.handlers.core_base_handler import CoreBaseHandler
 from typing import Any, Tuple
 
 Player = get_user_model()
@@ -41,7 +41,7 @@ class CoreBaseConsumer(WebsocketConsumer):
 
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
-		self._handler: type[CoreHandlerBase] | None	= None
+		self._handler: type[CoreBaseHandler] | None	= None
 		self._manager: type[ManagerBase] | None		= None
 		self._id: str								= None
 		self.player: Player							= None # type: ignore
@@ -64,6 +64,12 @@ class CoreBaseConsumer(WebsocketConsumer):
 				'type': 'group.message',
 				'message': message
 			})
+			if isinstance(message, dict):
+				message = json.dumps(message)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+			message_dict = json.loads(message)
+			if message_dict.get('kicked') is not None:
+				if self.player_index == message_dict['index']:
+					self.disconnect(1000)
 		except Exception as e:
 			print("Error sending message to group:", e)
 			raise StopConsumer()
@@ -72,12 +78,8 @@ class CoreBaseConsumer(WebsocketConsumer):
 		message = event['message']
 		self.send(text_data=json.dumps(message))
 
-	def _set_handler(self, object_id, handler: type[CoreHandlerBase]):
-		if self._already_in:
-			self.send(json.dumps({
-				'message': f'You are already in a {self._subtype} {self._type}.'
-			}))
-			return
+	def _set_handler(self, object_id, handler: type[CoreBaseHandler]):
+		object_id += f'_{handler._type.lower()}_{self._subtype.lower()}'
 		try:
 			async_to_sync(self.channel_layer.group_add)(object_id, self.channel_name)
 		except TypeError as e:
@@ -86,7 +88,7 @@ class CoreBaseConsumer(WebsocketConsumer):
 		self._id = object_id
 		self._handler = self._manager._get_object(handler, object_id)
 
-	def _join_lobby(self, object_id, handler: type[CoreHandlerBase]):
+	def _join_lobby(self, object_id, handler: type[CoreBaseHandler]):
 		self._set_handler(object_id, handler)
 		if self._id is None:
 			return
@@ -105,6 +107,11 @@ class CoreBaseConsumer(WebsocketConsumer):
 		action = text_data_json.get('action')
 
 		if action == 'join_lobby':
+			if self._already_in:
+				self.send(json.dumps({
+					'message': f'You are already in a {self._subtype} {self._type}.'
+				}))
+				return None, None
 			player_pk = text_data_json.get('player_pk')
 			object_id = text_data_json.get(f'{self._type.lower()}_id')
 			try:

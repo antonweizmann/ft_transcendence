@@ -2,7 +2,7 @@ from django.db import models # type: ignore
 from blockchain.contracts import contract, account
 from game_base.models import GameBaseModel
 
-class PongMatch(GameBaseModel):
+class PongGameModel(GameBaseModel):
 	class Meta:
 		verbose_name = 'Pong Match'
 		verbose_name_plural = 'Pong Matches'
@@ -13,7 +13,7 @@ class PongMatch(GameBaseModel):
 
 	game_type = models.CharField(max_length=20, default='Pong')
 	required_players = models.IntegerField(default=2)
-	tournament = models.ForeignKey('PongTournament', related_name='matches',
+	tournament = models.ForeignKey('PongTournamentModel', related_name='matches',
 		on_delete=models.CASCADE, null=True, blank=True)
 
 	def __str__(self):

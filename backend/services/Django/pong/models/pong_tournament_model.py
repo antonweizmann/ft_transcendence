@@ -4,7 +4,7 @@ from game_base.models import TournamentBaseModel
 
 User = get_user_model()
 
-class PongTournament(TournamentBaseModel):
+class PongTournamentModel(TournamentBaseModel):
 	class Meta:
 		verbose_name = 'Pong Tournament'
 		verbose_name_plural = 'Pong Tournaments'

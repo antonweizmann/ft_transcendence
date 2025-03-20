@@ -1,2 +1,2 @@
-from .game_manager import GameManager
-from .tournament_manager import TournamentManager
+from .game_manager import game_manager
+from .tournament_manager import tournament_manager

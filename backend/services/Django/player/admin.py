@@ -13,8 +13,8 @@ class PlayerAdmin(UserAdmin):
 	)
 	readonly_fields = ('profile_picture_display',)
 	list_display = (
-		'profile_picture_preview', 'username', 'email', 'first_name',
-		'last_name', 'is_staff'
+		'id', 'profile_picture_preview', 'username', 'first_name',
+		'last_name', 'email', 'is_staff'
 		)
 
 	def __get_new_dimensions_image(self, img, max_size: tuple) -> tuple:
