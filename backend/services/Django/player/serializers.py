@@ -10,7 +10,7 @@ class PlayerSerializer(serializers.ModelSerializer):
 		profile_picture = validated_data.pop('profile_picture', None)
 		if password is None:
 			raise serializers.ValidationError({"password": "Password is required."})
-		instance = self.Meta.model(**validated_data)
+		instance = super().create(validated_data)
 		if groups_data:
 			instance.groups.set(groups_data)
 		instance.set_password(password)

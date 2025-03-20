@@ -21,12 +21,26 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-iw$k=h7#(xj2n2_p3s(nt-&^q9t8a!9%1b6*2_v+7t0q%tz-rf'
+try:
+	with open("/run/secrets/django_secret_key") as f:
+		SECRET_KEY = f.read().strip()
+except FileNotFoundError:
+	print("No secret key found, using insecure default")
+	SECRET_KEY = os.getenv('DJANGO_SECRET', 'django-insecure-iw$k=h7#(xj2n2_p3s(nt-&^q9t8a!9%1b6*2_v+7t0q%tz-rf')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = [ '*' ]
+DEBUG = False
+
+SECURE_HSTS_SECONDS = 31536000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+SECURE_SSL_REDIRECT = True
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+ALLOWED_HOSTS = [ 'nginx', 'localhost']
 
 
 # Application definition
@@ -44,7 +58,7 @@ INSTALLED_APPS = [
 	'player',
 	'pong',
 	'channels',
-	'game_manager',
+	'game_base',
 ]
 
 ASGI_APPLICATION = "core.asgi.application"
