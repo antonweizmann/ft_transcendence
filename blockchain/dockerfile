@@ -1,0 +1,9 @@
+FROM node:20-alpine
+
+WORKDIR /solidity
+
+RUN npm install -g truffle@5.11.5 ganache-cli@6.12.2
+
+COPY . /solidity/
+
+CMD ["/bin/sh", "start_blockchain.sh"]

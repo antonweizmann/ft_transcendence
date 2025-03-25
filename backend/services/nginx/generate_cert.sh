@@ -1,5 +1,7 @@
 #!/bin/sh
 
+mkdir -p /etc/nginx/certs
+
 if [[ ! -f /etc/nginx/transcendence.crt || ! -f /etc/nginx/transcendence.key ]]; then
 	echo "No SSL certificate found. Generating one..."
 
@@ -9,7 +11,6 @@ if [[ ! -f /etc/nginx/transcendence.crt || ! -f /etc/nginx/transcendence.key ]];
 
 	echo "SSL certificate generated."
 else
-	mkdir -p /etc/nginx/certs
 	mv -f /etc/nginx/*.crt /etc/nginx/certs/
 	mv -f /etc/nginx/*.key /etc/nginx/certs/
 	echo "SSL certificate found."

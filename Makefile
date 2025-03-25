@@ -59,6 +59,7 @@ clean: stop
 	@docker system prune --volumes -f
 	@rm -rf ./backend/services/django/media/*/*_*.*
 	@rm -rf ./backend/services/nginx/certs/*
+	@rm -rf ./web3_share/*
 .PHONY: clean
 
 fclean: clean
