@@ -1,6 +1,5 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from web3 import Web3
 from .serializers import MatchScoreSerializer
 from .contracts import contract
 
