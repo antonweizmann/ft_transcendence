@@ -3,6 +3,7 @@ from django.core.files.storage import default_storage # type: ignore
 from player.models import Player
 
 class PlayerSerializer(serializers.ModelSerializer):
+	friend_requests_received = serializers.SerializerMethodField()
 
 	def create(self, validated_data):
 		groups_data = validated_data.pop('groups', None)
@@ -40,6 +41,12 @@ class PlayerSerializer(serializers.ModelSerializer):
 		instance.save()
 		return instance
 
+	def get_friend_requests_received(self, instance):
+		return [
+			{"id": player.id, "username": player.username}
+			for player in instance.friend_requests_received.all()
+		]
+
 	class Meta:
 		model = Player
 		fields = [
@@ -52,24 +59,26 @@ class PlayerSerializer(serializers.ModelSerializer):
 			'groups',
 			'friends',
 			'friend_requests',
+			'friend_requests_received',
 			'last_login',
 			'date_joined',
 			'profile_picture'
 			]
 
 		extra_kwargs = {
-			'username':			{'required': True},
-			'first_name':		{'required': True},
-			'last_name':		{'required': True},
-			'password':			{'required': True, 'write_only': True},
-			'email':			{'required': False},
-			'id':				{'required': False, 'read_only': True},
-			'groups':			{'required': False},
-			'friends':			{'required': False, 'read_only': True},
-			'friend_requests':	{'required': False, 'read_only': True},
-			'last_login':		{'required': False, 'read_only': True},
-			'date_joined':		{'required': False, 'read_only': True},
-			'profile_picture':	{'required': False}
+			'username':					{'required': True},
+			'first_name':				{'required': True},
+			'last_name':				{'required': True},
+			'password':					{'required': True, 'write_only': True},
+			'email':					{'required': False},
+			'id':						{'required': False, 'read_only': True},
+			'groups':					{'required': False},
+			'friends':					{'required': False, 'read_only': True},
+			'friend_requests':			{'required': False, 'read_only': True},
+			'friend_requests_received': {'required': False, 'read_only': True},
+			'last_login':				{'required': False, 'read_only': True},
+			'date_joined':				{'required': False, 'read_only': True},
+			'profile_picture':			{'required': False}
 		}
 
 class PublicPlayerSerializer(serializers.ModelSerializer):
