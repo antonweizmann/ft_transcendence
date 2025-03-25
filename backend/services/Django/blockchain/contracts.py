@@ -25,7 +25,7 @@ def read_contract_abi():
             contract_abi = json.load(abi_file)
             return contract_abi['abi']
     except FileNotFoundError:
-        print(f"Contract ABI file not found. Make sure the file '{file_path}' exists.")
+        print(f"Contract ABI file not found. Make sure the file 'MatchScore.json' exists.")
         return None
 
 def read_keys():
