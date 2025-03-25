@@ -12,7 +12,7 @@ services:
     networks:
       - Ft_Transcendence
     healthcheck:
-      test: ["CMD-SHELL", "if [ -f /web3_share/address.txt ]; then exit 0; else exit 1; fi"]
+      test: ["CMD-SHELL", "if [ -f /web3_share/MatchScore.json ]; then exit 0; else exit 1; fi"]
       interval: 5s
       timeout: 2s
       retries: 5
