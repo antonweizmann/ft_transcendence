@@ -6,4 +6,7 @@ RUN npm install -g truffle@5.11.5 ganache-cli@6.12.2
 
 COPY . /solidity/
 
+RUN if ! getent group node > /dev/null; then addgroup node; fi
+RUN adduser -h /home/node -g node -s /bin/sh node || true
+
 CMD ["/bin/sh", "start_blockchain.sh"]

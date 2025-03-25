@@ -4,18 +4,21 @@ ifeq ($(DETACH), 1)
 DOCKER_COMPOSE += -d
 endif
 
-start: all_secrets .env | backend/services/nginx/certs/
+start: all_secrets .env | backend/services/nginx/certs/ web3_share
 	@echo "Starting the project..."
 	@$(DOCKER_COMPOSE) up
 .PHONY: start
 
-build: all_secrets .env | backend/services/nginx/certs/
+build: all_secrets .env | backend/services/nginx/certs/ web3_share
 	@echo "Building the project..."
 	@$(DOCKER_COMPOSE) up --build
 .PHONY: build
 
 backend/services/nginx/certs/:
 	@mkdir -p backend/services/nginx/certs/
+
+web3_share:
+	@mkdir web3_share
 
 secrets:
 	@mkdir -p secrets

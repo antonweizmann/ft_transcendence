@@ -1,5 +1,6 @@
 #!/bin/sh
 
+su node -c '
 echo "LAUNCHING TESTING BLOCKCHAIN..."
 ganache-cli -h 0.0.0.0 -p 8545 --account_keys_path /web3_share/keys.json &
 job=$!
@@ -18,4 +19,4 @@ echo "Contracts saved to /web3_share/"
 # 	echo "TEST FAILED!"
 # fi
 
-wait $job
+wait $job'
