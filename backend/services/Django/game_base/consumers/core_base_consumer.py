@@ -122,7 +122,7 @@ class CoreBaseConsumer(WebsocketConsumer):
 			except Player.DoesNotExist:
 				self.send(json.dumps({'message': 'Player not found.'}))
 				return None, None
-			except ValueError as e:
+			except Exception as e:
 				self.send(json.dumps({'message': 'Invalid player ID.'}))
 				return None, None
 			self.join_lobby(object_id)
