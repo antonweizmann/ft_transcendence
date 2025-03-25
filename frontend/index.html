@@ -28,7 +28,7 @@
                         <a class="nav-link" onclick="loadPage('play')" data-translate="play">Play</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" onclick="loadPage('tournaments')" data-translate="tournaments">Tournaments</a>
+                        <a class="nav-link" onclick="loadPage('tournament')" data-translate="tournament">Tournament</a>
                     </li>
 
 				</ul>
@@ -49,13 +49,13 @@
                     </li>
                     <li class="nav-item dropdown">
                         <button class="btn btn-outline-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="loginDropdownButton" data-translate="login">Login</button>
-                        <form class="dropdown-menu dropdown-menu-end p-4 login-drop" onsubmit="return validateLoginForm()">
+                        <form class="dropdown-menu dropdown-menu-end p-4 login-drop">
                             <div class="mb-3">
                                 <h2 data-translate="loginHeader">Login</h2>
                             </div>
                             <div class="mb-3">
                                 <label for="loginEmail" class="form-label" data-translate="emailLabel">Email address</label>
-                                <input type="email" class="form-control" placeholder="email@example.com" id="loginEmail">
+                                <input type="username" class="form-control" placeholder="email@example.com" id="loginEmail">
                             </div>
                             <div class="mb-3">
                                 <label for="loginPassword" class="form-label" data-translate="passwordLabel">Password</label>
@@ -140,5 +140,7 @@
  <script src="/js/main.js"></script>
  <script src="/js/form_validation.js"></script>
  <script src="/js/form_submission.js"></script>
+ <script src="/js/tournament.js"></script>
+ <script src="/js/authentication.js"></script>
 </body>
 </html>

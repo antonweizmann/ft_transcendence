@@ -15,6 +15,23 @@ document.addEventListener('DOMContentLoaded', function() {
 	setupLoginOrProfile();
 });
 
+document.addEventListener('DOMContentLoaded', async () => {
+	const token = localStorage.getItem('token');
+	if (!token)
+		return;
+	const tokenPayload = JSON.parse(atob(token.split('.')[1])); // Decode JWT payload
+	const isTokenExpired = tokenPayload.exp * 1000 < Date.now();
+
+	if (isTokenExpired) {
+		console.warn('Access token expired, refreshing...');
+		const tokenRefreshed = await window.refreshAccessToken();
+		if (!tokenRefreshed) {
+			console.error('Failed to refresh token, logging out...');
+			window.logoutUser();
+		}
+	}
+});
+
 function setupLoginOrProfile() {
 	//replace by validation of choice
 	const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
@@ -25,6 +42,11 @@ function setupLoginOrProfile() {
 	if (isLoggedIn) {
 		loginButton.style.display = 'none';
 		profileButton.style.display = 'block';
+		// To display the username in the profile button uncomment the following
+		// and remove the data-translate attribute from the button in the HTML
+		// if (localStorage.getItem('username')) {
+		// 	profileButton.textContent = localStorage.getItem('username');
+		// }
 	} else {
 		loginButton.style.display = 'block';
 		profileButton.style.display = 'none';
@@ -79,11 +101,11 @@ async function getPage(pageName)
 {
 	// Closing the mobile hamburger menu when loading new page
 	var collapseElement = document.getElementById('navbarNav');
-    if (collapseElement.classList.contains('show')) {
+	if (collapseElement.classList.contains('show')) {
 		console.log("TEST");
-        var collapse = new bootstrap.Collapse(collapseElement);
-        collapse.hide();
-    }
+		var collapse = new bootstrap.Collapse(collapseElement);
+		collapse.hide();
+	}
 
 	try
 	{
@@ -104,16 +126,29 @@ async function getPage(pageName)
 		if (pageName === 'play')
 		{
 			window.gameState = {
-			initialized: false,
-			cleanup: null
-		};
-			loadScripts([ 'game/game.js','game/ai.js', 'game/init_game.js', 'game/movement_game.js', 'game/listeners_game.js', 'game/element.js', 'game/draw_game.js']);
+				initialized: false,
+				cleanup: null
+			};
+			loadScripts(['game/game.js','game/ai.js', 'game/init_game.js', 'game/movement_game.js', 'game/listeners_game.js', 'game/element.js', 'game/draw_game.js']);
 			setTimeout(() => {
 				if (window.ensureInit) {
 					window.ensureInit();
 				}
 			}, 50);
 		}
+		// else if (pageName === 'tournament')
+		// {
+		// 	window.gameState = {
+		// 	initialized: false,
+		// 	cleanup: null
+		// 	};
+		// 	loadScripts(['tournament.js']);
+		// 	setTimeout(() => {
+		// 		if (window.ensureInit) {
+		// 			window.ensureInit();
+		// 		}
+		// 	}, 50);
+		// }
 		// const scripts = document.getElementById('main-content').getElementsByTagName('script');
 		// loadScripts(scripts);
 		changeLanguage();
@@ -134,6 +169,11 @@ window.onload = function () {
 
 	// If path is empty or 'index.html', default to 'home'
 	if (!path || path === 'index.html') {
+		loadPageReplace(startPage);
+		return;
+	}
+	if (path === 'profile' && !localStorage.getItem('user_id')) {
+		window.logoutUser();
 		loadPageReplace(startPage);
 		return;
 	}
@@ -209,16 +249,16 @@ function signUpInstead() {
 }
 
 function setImagePreview(inputElement) {
-    const previewImage = document.getElementById('previewImage');
+	const previewImage = document.getElementById('previewImage');
 
-    file = inputElement.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            previewImage.src = e.target.result; // Update the src attribute
-        };
-        reader.readAsDataURL(file); // Read the file as a Data URL
-    } else {
-        previewImage.src = '../assets/default_profile.png'; // Reset to placeholder if no file is selected
+	file = inputElement.files[0];
+	if (file) {
+		const reader = new FileReader();
+		reader.onload = function (e) {
+			previewImage.src = e.target.result; // Update the src attribute
+		};
+		reader.readAsDataURL(file); // Read the file as a Data URL
+	} else {
+		previewImage.src = '../assets/default_profile.png'; // Reset to placeholder if no file is selected
 	}
 }

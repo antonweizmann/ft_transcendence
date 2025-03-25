@@ -2,7 +2,7 @@
 
 mkdir -p /etc/nginx/certs
 
-if [[ ! -f /etc/nginx/transcendence.crt || ! -f /etc/nginx/transcendence.key ]]; then
+if [ ! -f /etc/nginx/transcendence.crt ] || [ ! -f /etc/nginx/transcendence.key ]; then
 	echo "No SSL certificate found. Generating one..."
 
 	echo "Using Domain: $DOMAIN"

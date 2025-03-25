@@ -109,7 +109,7 @@ function initGame() {
 	}
 	console.log('Starting game loop with dimensions:', WIDTHBOARD, HEIGHTBOARD);
 	setGameBoardSize();
-	document.getElementsByClassName('gameButton')[0].addEventListener('click', gameLoop, { once: true });
+	document.getElementById('startGame').addEventListener('click', gameLoop, { once: true });
 	gameModeSelector = document.getElementById('gameMode');
 
 	gameModeSelector.addEventListener('change', listenerMode);

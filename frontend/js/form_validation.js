@@ -11,28 +11,27 @@ function setupDropdownValidation(formName, validationFunction)
 
 		form.addEventListener('submit', function(event)
 		{
-			if (!validationFunction(event))
-			{
-				event.preventDefault();
-				event.stopPropagation();
+			const dropdownInstance = bootstrap.Dropdown.getOrCreateInstance(dropdownToggle);
 
-				const dropdownInstance = bootstrap.Dropdown.getOrCreateInstance(dropdownToggle);
-				if (dropdownInstance)
-					dropdownInstance.show();
-			}
+			event.preventDefault();
+			if (!validationFunction(event))
+				event.stopPropagation();
+			else
+				dropdownInstance.hide();
 		});
 	}
 }
 
-function validateLoginForm(event)
+async function validateLoginForm(event)
 {
-	const email = document.getElementById('loginEmail');
+	const email = document.getElementById('loginEmail'); // THIS SHOULD BE USERNAME NOT EMAIL
 	const password = document.getElementById('loginPassword');
 	let	isValid = true
 
 	removeErrorMessage(password);
 	removeErrorMessage(email);
 
+	// ! We are using username not email
 	if (!email.value.trim())
 	{
 		isValid = false;
@@ -45,22 +44,31 @@ function validateLoginForm(event)
 		password.classList.add('is-invalid');
 		showErrorMessage(password, 'Please enter your password');
 	}
+	if (isValid)
+	{
+		const loginSuccess = await window.loginUser(email.value, password.value);
+		if (!loginSuccess)
+			console.log('Error logging in user');
+		isValid = loginSuccess;
+	}
 	return isValid;
 }
 
-function validateSignupForm(event)
+async function validateSignupForm(event)
 {
+	event.preventDefault();
+
 	const username = document.getElementById('signupUsername');
-	const firstname = document.getElementById('signupFirstname');
-	const lastname = document.getElementById('signupLastname');
+	const first_name = document.getElementById('signupFirstName');
+	const last_name = document.getElementById('signupLastName');
 	const email = document.getElementById('signupEmail');
 	const password = document.getElementById('signupPassword');
 	const password2 = document.getElementById('signupPassword2');
 	let isValid = true;
 
 	removeErrorMessage(username);
-	removeErrorMessage(firstname);
-	removeErrorMessage(lastname);
+	removeErrorMessage(first_name);
+	removeErrorMessage(last_name);
 	removeErrorMessage(email);
 	removeErrorMessage(password);
 	removeErrorMessage(password2);
@@ -70,17 +78,17 @@ function validateSignupForm(event)
 		username.classList.add('is-invalid');
 		showErrorMessage(username, 'Please enter your username');
 	}
-	if (!firstname.value.trim())
+	if (!first_name.value.trim())
 	{
 		isValid = false;
-		firstname.classList.add('is-invalid');
-		showErrorMessage(firstname, 'Please enter your firstname');
+		first_name.classList.add('is-invalid');
+		showErrorMessage(first_name, 'Please enter your first_name');
 	}
-	if (!lastname.value.trim())
+	if (!last_name.value.trim())
 	{
 		isValid = false;
-		lastname.classList.add('is-invalid');
-		showErrorMessage(lastname, 'Please enter your lastname');
+		last_name.classList.add('is-invalid');
+		showErrorMessage(last_name, 'Please enter your last_name');
 	}
 	if (!email.value.trim())
 	{
@@ -108,9 +116,18 @@ function validateSignupForm(event)
 		showErrorMessage(password, 'Passwords do not match');
 		showErrorMessage(password2, 'Passwords do not match');
 	}
-	// return isValid;
 	if (isValid)
-		window.registerUser(username, firstname, lastname, email, password);
+	{
+		const registrationSuccess = await window.registerUser(username, first_name, last_name, email, password);
+		if (registrationSuccess)
+		{
+			loadPage('home');
+			setupLoginOrProfile();
+		}
+		else
+			console.log('Error registering user');
+		isValid = registrationSuccess;
+	}
 	return isValid;
 }
 
