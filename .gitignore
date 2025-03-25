@@ -28,3 +28,5 @@ venv.bak/
 *.env
 
 backend/services/Django/static_files/
+blockchain/build
+web3_share

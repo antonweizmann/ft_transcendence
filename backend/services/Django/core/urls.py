@@ -19,6 +19,7 @@ from django.conf.urls.static import static # type: ignore
 from django.contrib import admin # type: ignore
 from django.urls import path # type: ignore
 from django.conf import settings # type: ignore
+from blockchain.views import get_blockchain_scores
 from player.views import (
 	PlayerDetailView, PlayerListView, PlayerRegisterView, accept_friend_request,
 	reject_friend_request, send_friend_request, unfriend, PlayerTokenObtainPairView
@@ -28,6 +29,7 @@ from pong.models import PongTournamentModel
 
 urlpatterns = [
 	path('admin/', admin.site.urls),
+	path('api/blockchain/', get_blockchain_scores, name='blockchain_scores'),
 	path('api/token/', PlayerTokenObtainPairView.as_view(), name='token_obtain_pair'),
 	path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 	path('api/player/list/', PlayerListView.as_view(), name='player_list'),
