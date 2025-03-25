@@ -23,6 +23,8 @@ eventListeners.push({element: document, type: 'keydown', listener: addMovement})
 document.addEventListener('keyup', stopMovement);
 eventListeners.push({element: document, type: 'keyup', listener: stopMovement});
 
+const player_name = localStorage.getItem('username') || 'Player 1';
+document.getElementById('player1Name').textContent = player_name;
 
 //Main Loop
 export function gameLoop() {
