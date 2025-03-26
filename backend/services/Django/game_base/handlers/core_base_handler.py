@@ -1,4 +1,3 @@
-import json
 import inspect
 import threading
 
@@ -100,12 +99,12 @@ class CoreBaseHandler:
 
 	def _send_lobby_update(self):
 		with self._lock:
-			self._send_func(json.dumps({
+			self._send_func({
 				'type': 'lobby_update',
 				f'{self._type.lower()}_id': self._id,
 				'players': [{'index': index, 'username': player.username} for\
 					index, player in self._indexes.items() if player in self.players]
-			}))
+			})
 
 	def _start(self, player_index: int, run_func: Optional[Callable]):
 		if not self._allowed_to_start(player_index):
@@ -126,37 +125,37 @@ class CoreBaseHandler:
 		with self._lock:
 			if self._send_func is None:
 				raise ValueError(f'You must join a {self._type} before sending state.')
-		self._send_func(json.dumps({
+		self._send_func({
 			'type': f'{self._subtype.lower()}_{self._type.lower()}_update',
 			f'{self._type.lower()}_id': self._id,
 			f'{self._type.lower()}_state': self._serialize_state()
-		}))
+		})
 
 	def _allowed_to_join(self, player: Player, send_func: SendFunc): # type: ignore
 		with self._lock:
 			if self._model.status == 'finished':
-				send_func(json.dumps({
+				send_func({
 					'type': 'error',
 					'message': f'{self._type} has already finished.'
-				}), True)
+				}, True)
 				return False
 			if self._is_active:
-				send_func(json.dumps({
+				send_func({
 					'type': 'error',
 					'message': f'{self._type} has already started.'
-				}), True)
+				}, True)
 				return False
 			if player in self.players:
-				send_func(json.dumps({
+				send_func({
 					'type': 'error',
 					'message': 'Player already joined.'
-				}), True)
+				}, True)
 				return False
 			if len(self.players) >= self._required_players:
-				send_func(json.dumps({
+				send_func({
 					'type': 'error',
 					'message': f'{self._type} lobby is full.'
-				}), True)
+				}, True)
 				return False
 			return True
 
@@ -165,23 +164,23 @@ class CoreBaseHandler:
 			or player_index not in self._indexes):
 			raise ValueError(f'You must join a {self._type} before starting.')
 		if self.get_status() == 'finished':
-			self._send_func(json.dumps({
+			self._send_func({
 				'type': 'error',
 				'message': f'{self._type} has already finished.'
-			}), True)
+			}, True)
 			return False
 		with self._lock:
 			if self._required_players != len(self.players):
-				self._send_func(json.dumps({
+				self._send_func({
 					'type': 'error',
 					'message': 'Waiting for other players to join.'
-				}))
+				})
 				return False
 			if self._is_active:
-				self._send_func(json.dumps({
+				self._send_func({
 					'type': 'error',
 					'message': f'{self._type} has already started.'
-				}), True)
+				}, True)
 				return False
 		return True
 
