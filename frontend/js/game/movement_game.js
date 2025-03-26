@@ -1,34 +1,19 @@
 import { ball, player1, player2, BOARD_WIDTH} from "./init_game.js";
 import { isAi } from "./ai.js";
-import { socket } from "./game.js";
 
 export const keysPressed = {};
 let scorePlayer1 = 0;
 let scorePlayer2 = 0;
 let stopDoubleCollision;
+
 export function handleMovement() {
-	// console.log('Player speed', player1.speed);
 	if(keysPressed['w']) {
 		console.log('Player 1 Up');
 		player1.y -=player1.speed;
-		const message = {
-			action: 'move',
-			move: 'up'
-		};
-		const messageJSON = JSON.stringify(message);
-		console.log('Sending message', messageJSON);
-		socket.send(messageJSON);
 	}
 	else if(keysPressed['s']) {
 		console.log('Player 1 Down');
 		player1.y +=player1.speed;
-		const message = {
-			action: 'move',
-			move: 'down'
-		};
-		const messageJSON = JSON.stringify(message);
-		console.log('Sending message', messageJSON);
-		socket.send(messageJSON);
 	}
 	if(keysPressed['ArrowUp']){
 		console.log('Player 2 Up');
@@ -38,9 +23,6 @@ export function handleMovement() {
 		console.log('Player 2 Down');
 		player2.y += player2.speed;
 	}
-	// console.log('Ball speed', ball.speed);
-
-	//diagonal speed normalized
 	const magnitude = Math.sqrt(ball.dirX * ball.dirX + ball.dirY * ball.dirY);
 	const normalizedX = ball.dirX / magnitude;
 	const normalizedY = ball.dirY / magnitude;
@@ -112,7 +94,7 @@ function increaseScore(player) {
 
 export function addMovement(event)
 {
-	if ((gameMode =='ai' || gameMode == 'ai2' ) && !isAi && (event.key === "ArrowUp" || event.key === "ArrowDown"))
+	if ((gameMode == 'ai' || gameMode == 'ai2' ) && !isAi && (event.key === "ArrowUp" || event.key === "ArrowDown"))
 		return ;
 	else
 		keysPressed[event.key] = true;

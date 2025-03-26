@@ -1,7 +1,8 @@
 import { Element } from "./element.js";
 import { updateElements } from "./draw_game.js";
-import {setAiReaction} from "./ai.js"
-import {gameLoop, cleanupGame, resetGame} from "./game.js"
+import { setAiReaction } from "./ai.js"
+import { gameLoop, cleanupGame, resetGame } from "./game.js"
+import { startGame, joinGame, initSocket, resetSocket } from "./online_game.js"
 
 const PINK = '#8A4FFF';
 const PURPLE = '#9932CC';
@@ -11,6 +12,16 @@ export let BOARD_WIDTH = 800;
 export let OBJ_WIDTH = BOARD_WIDTH / 40;
 export let OBJ_HEIGHT = BOARD_HEIGHT / 5;
 export let player1, player2, ball;
+
+let animationId;
+
+export function setAnimationId(id) {
+	animationId = id;
+}
+
+export function getAnimationId() {
+	return animationId;
+}
 
 export function ensureInit() {
 	if (window.gameState.initialized === true) return;
@@ -36,7 +47,6 @@ function listenerGame() {
 function initGame() {
 	console.log('=== Initializing Game ===');
 	const gameBoard = document.getElementById('gameBoard');
-	console.log('Canvas element found:', !!gameBoard);
 
 	if (!gameBoard) {
 		console.error('Canvas element not found');
@@ -107,36 +117,78 @@ function initGame() {
 	console.log('Starting game loop with dimensions:', BOARD_WIDTH, BOARD_HEIGHT);
 	setGameBoardSize();
 	document.getElementById('startGame').addEventListener('click', gameLoop, { once: true });
+	document.getElementById('lobbyInput').style.display = "none";
 	gameModeSelector = document.getElementById('gameMode');
 	gameModeSelector.addEventListener('change', changeGameMode);
 }
 
 function changeGameMode() {
-	// Get the selected value
-	gameMode = gameModeSelector.value;
 	const difficulty = document.getElementById("difficulty");
 	const difficultyCol = document.getElementById("difficultyCol");
-	const player2Name = document.getElementById("player2Name");
-	const player1Name = document.getElementById("player1Name");
-	let player_name;
-	// Take action based on the selected value
+
+	gameMode = gameModeSelector.value;
 	console.log('Selected game mode:', gameMode);
 	resetGame();
 	if (gameMode !== 'ai')
 		difficultyCol.style.display = "none";
 	else
 		difficultyCol.style.display = "block";
-	if (gameMode !== 'human') {
-		player2Name.innerText = "AI";
+	if (gameMode !== 'human')
 		difficulty.addEventListener('change', setAiReaction);
+	if (gameMode === 'online')
+		initSocket();
+	else {
+		resetSocket();
+	}
+	setNames();
+	setButtonListeners();
+}
+
+function setButtonListeners() {
+	const	startButton = document.getElementById("startGame");
+	const	joinButton = document.getElementById("joinGame");
+	const	lobbyInput = document.getElementById("lobbyInput");
+
+	if (gameMode === 'online')
+	{
+		lobbyInput.style.display = "flex";
+		joinButton.addEventListener('click', joinGame, { once: true });
+		startButton.removeEventListener('click', gameLoop);
+		startButton.addEventListener('click', startGame);
 	}
 	else
-		player2Name.innerText = "Player 2";
+	{
+		lobbyInput.style.display = "none";
+		startButton.removeEventListener('click', startGame);
+		startButton.addEventListener('click', gameLoop, { once: true });
+	}
+}
+
+function setNames() {
+	const	player1Name = document.getElementById("player1Name");
+	const	player2Name = document.getElementById("player2Name");
+	let		player_name = "Player 1";
+	let		opponent_name = "Player 2";
+
 	if (gameMode !== 'ai2')
 		player_name = localStorage.getItem('username') || 'Player 1';
-	else
+	if (gameMode === 'human')
+		opponent_name = "Player 2";
+	else if (gameMode === 'ai')
+		opponent_name = "AI";
+	else if (gameMode === 'ai2')
+	{
 		player_name = "AI";
-	player1Name.innerText = player_name;
+		opponent_name = "AI";
+	}
+	else if (gameMode === 'online')
+	{
+		if (!localStorage.getItem('username'))
+			player_name = "Please Login"
+		opponent_name = "Waiting for Opponent";
+	}
+	player1Name.textContent = player_name;
+	player2Name.textContent = opponent_name;
 }
 
 export function setGameBoardSize(isInitialSetup = false) {
