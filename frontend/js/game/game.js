@@ -26,6 +26,8 @@ eventListeners.push({element: document, type: 'keyup', listener: stopMovement});
 const player_name = localStorage.getItem('username') || 'Player 1';
 document.getElementById('player1Name').textContent = player_name;
 
+const opponent_name = document.getElementById('player2Name');
+
 //Main Loop
 export function gameLoop() {
 	gameMode = gameModeSelector.value;
@@ -90,57 +92,53 @@ export function cleanupGame(){
 
 export const socket = new WebSocket('wss://localhost/ws/pong/');
 
-		// Open WebSocket connection
-		socket.onopen = () => {
-			console.log('WebSocket connection established');
-		};
+const joinGameContainer = document.getElementById('lobbyInput');
 
-		// Handle incoming messages
-		socket.onmessage = (event) => {
-			try {
-				const message = JSON.parse(event.data);
-				console.log('Received message:', message);
-			} catch (e) {
-				console.error('Error parsing received JSON:', e);
-			}
-		};
-		// Handle WebSocket errors
-		socket.onerror = (error) => {
-			console.error('WebSocket Error:', error);
-		};
+if (localStorage.getItem('username') !== null)
+{
+	// Open WebSocket connection
+	socket.onopen = () => {
+		console.log('WebSocket connection established');
+	};
+	
+	// Handle incoming messages
+	socket.onmessage = (event) => {
+		try {
+			const message = JSON.parse(event.data);
+			console.log('Received message:', message);
+		} catch (e) {
+			console.error('Error parsing received JSON:', e);
+		}
+	};
+	// Handle WebSocket errors
+	socket.onerror = (error) => {
+		console.error('WebSocket Error:', error);
+	};
 
-		// Handle WebSocket close
-		socket.onclose = () => {
-			console.log('WebSocket connection closed');
-		};
+	// Handle WebSocket close
+	socket.onclose = () => {
+		console.log('WebSocket connection closed');
+	};
+	document.getElementById("startGame").addEventListener('click', startGameListener);
+	document.getElementById("joinGame").addEventListener('click', joinGame);
+	joinGameContainer.style.display = 'flex';
+	// opponent_name.textContent = 'Waiting for opponent...';
+}
+
+function sendToSocket(message) {
+	console.log("Sending message:", message);
+	socket.send(message);
+}
 
 function startGameListener() {
 	const message = {
 		action: 'start_game',
-		message: 'Game Start',
-		timestamp: new Date().toISOString
 	};
 	const messageJSON = JSON.stringify(message);
-	console.log("Sending message:", messageJSON);
-	socket.send(messageJSON);
-}
-
-function joinGameListener() {
-	const message = {
-		action: 'join_lobby',
-		player_pk: '1',
-		game_id: 'hello2pong',
-		game_type: 'pong',
-		message: 'Join Game',
-		timestamp: new Date().toISOString
-	};
-	const messageJSON = JSON.stringify(message);
-	console.log("Sending message:", messageJSON);
-	socket.send(messageJSON);
+	sendToSocket(messageJSON);
 }
 
 function joinGame() {
-	// const player_pk = document.getElementById('playerPk').value;
 	const player_pk = localStorage.getItem('user_id');
 	const lobby = document.getElementById('lobbyId').value;
 
@@ -148,14 +146,10 @@ function joinGame() {
 		action: 'join_lobby',
 		player_pk: player_pk,
 		game_id: lobby,
-		game_type: 'pong',
-		message: 'Join Game',
-		timestamp: new Date().toISOString
 	};
 	const messageJSON = JSON.stringify(message);
-	console.log("Sending message:", messageJSON);
-	socket.send(messageJSON);
-}
+	sendToSocket(messageJSON);
 
 document.getElementById("startGame").addEventListener('click', startGameListener);
 document.getElementById("joinGame").addEventListener('click', joinGame);
+}

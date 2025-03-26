@@ -120,27 +120,27 @@ function listenerMode() {
 	gameMode = gameModeSelector.value;
 	const difficulty = document.getElementById("difficulty");
 	const difficultyCol = document.getElementById("difficultyCol");
-
+	const player2Name = document.getElementById("player2Name");
+	const player1Name = document.getElementById("player1Name");
+	let player_name;
 	// Take action based on the selected value
 	console.log('Selected game mode:', gameMode);
 	resetGame();
-	if (gameMode === 'human') {
-		document.getElementById("player1Name").innerText = "Player 1";
-		document.getElementById("player2Name").innerText = "Player 2";
-		console.log('Action for Human vs Human');
+	if (gameMode !== 'ai')
 		difficultyCol.style.display = "none";
-	} else if (gameMode === 'ai') {
-		document.getElementById("player2Name").innerText = "AI";
-		console.log('Action for Human vs AI');
+	else
 		difficultyCol.style.display = "block";
-		difficulty.addEventListener('change', setAiReaction);
-	} else if (gameMode === 'ai2') {
-		document.getElementById("player1Name").innerText = "AI";
-		document.getElementById("player2Name").innerText = "AI";
-		console.log('Action for AI vs AI');
-		difficultyCol.style.display = "none";
+	if (gameMode !== 'human') {
+		player2Name.innerText = "AI";
 		difficulty.addEventListener('change', setAiReaction);
 	}
+	else
+		player2Name.innerText = "Player 2";
+	if (gameMode !== 'ai2')
+		player_name = localStorage.getItem('username') || 'Player 1';
+	else
+		player_name = "AI";
+	player1Name.innerText = player_name;
 }
 
 export function setGameBoardSize(isInitialSetup = false) {
