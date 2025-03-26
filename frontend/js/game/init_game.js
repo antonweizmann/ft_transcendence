@@ -5,12 +5,11 @@ import {gameLoop, cleanupGame, resetGame} from "./game.js"
 
 const PINK = '#8A4FFF';
 const PURPLE = '#9932CC';
-const BLUE = '#5D3FD3';
 export let gameModeSelector, gameMode;
-export let HEIGHTBOARD = 500;
-export let WIDTHBOARD = 800;
-export let WIDTHOBJECTS = WIDTHBOARD / 40;
-export let HEIGHTOBJECTS = HEIGHTBOARD / 5;
+export let BOARD_HEIGHT = 500;
+export let BOARD_WIDTH = 800;
+export let OBJ_WIDTH = BOARD_WIDTH / 40;
+export let OBJ_HEIGHT = BOARD_HEIGHT / 5;
 export let player1, player2, ball;
 
 export function ensureInit() {
@@ -48,34 +47,34 @@ function initGame() {
 	const ctx = gameBoard.getContext('2d');
 
 	let startPlayer1 = {
-		x: () => WIDTHBOARD / 80,
-		y: () => HEIGHTBOARD / 2 - HEIGHTOBJECTS / 2,
-		height: () => HEIGHTOBJECTS,
-		width: () => WIDTHOBJECTS,
-		maxY: () => HEIGHTBOARD - HEIGHTOBJECTS,
-		maxX: () => WIDTHBOARD - WIDTHOBJECTS,
-		speed: () => HEIGHTBOARD / 50,
+		x: () => BOARD_WIDTH / 80,
+		y: () => BOARD_HEIGHT / 2 - OBJ_HEIGHT / 2,
+		height: () => OBJ_HEIGHT,
+		width: () => OBJ_WIDTH,
+		maxY: () => BOARD_HEIGHT - OBJ_HEIGHT,
+		maxX: () => BOARD_WIDTH - OBJ_WIDTH,
+		speed: () => BOARD_HEIGHT / 50,
 		color: PINK,
 	};
 
 	let startPlayer2 = {
-		x: () => WIDTHBOARD -  WIDTHBOARD / 80 - WIDTHOBJECTS,
-		y: () => HEIGHTBOARD / 2 - HEIGHTOBJECTS / 2,
-		height: () => HEIGHTOBJECTS,
-		width: () => WIDTHOBJECTS,
-		maxY: () => HEIGHTBOARD - HEIGHTOBJECTS,
-		maxX: () => WIDTHBOARD - WIDTHOBJECTS,
-		speed: () => HEIGHTBOARD / 50,
+		x: () => BOARD_WIDTH -  BOARD_WIDTH / 80 - OBJ_WIDTH,
+		y: () => BOARD_HEIGHT / 2 - OBJ_HEIGHT / 2,
+		height: () => OBJ_HEIGHT,
+		width: () => OBJ_WIDTH,
+		maxY: () => BOARD_HEIGHT - OBJ_HEIGHT,
+		maxX: () => BOARD_WIDTH - OBJ_WIDTH,
+		speed: () => BOARD_HEIGHT / 50,
 		color: PINK,
 	};
 	let startBallValues = {
-		x: () => WIDTHBOARD / 2 - WIDTHOBJECTS / 2,
-		y: () => HEIGHTBOARD / 2 - HEIGHTOBJECTS / 10,
-		height: () => HEIGHTOBJECTS / 5,
-		width: () => WIDTHOBJECTS,
-		maxY: () => HEIGHTBOARD - HEIGHTOBJECTS / 5,
-		maxX: () => WIDTHBOARD - WIDTHOBJECTS,
-		speed: () => WIDTHBOARD / 120,
+		x: () => BOARD_WIDTH / 2 - OBJ_WIDTH / 2,
+		y: () => BOARD_HEIGHT / 2 - OBJ_HEIGHT / 10,
+		height: () => OBJ_HEIGHT / 5,
+		width: () => OBJ_WIDTH,
+		maxY: () => BOARD_HEIGHT - OBJ_HEIGHT / 5,
+		maxX: () => BOARD_WIDTH - OBJ_WIDTH,
+		speed: () => BOARD_WIDTH / 120,
 		dirX: Math.round(Math.random()) ? -1 : 1,
 		dirY: Math.round(Math.random()) ? -1 : 1,
 		color: PURPLE,
@@ -87,8 +86,6 @@ function initGame() {
 	player2.original = startPlayer2;
 	ball = new Element(startBallValues);
 	ball.original = startBallValues;
-
-
 
 	ball.reset = function () {
 		ball.x = startBallValues.x();
@@ -107,15 +104,14 @@ function initGame() {
 		player2.x = startPlayer2.x();
 		player2.y = startPlayer2.y();
 	}
-	console.log('Starting game loop with dimensions:', WIDTHBOARD, HEIGHTBOARD);
+	console.log('Starting game loop with dimensions:', BOARD_WIDTH, BOARD_HEIGHT);
 	setGameBoardSize();
 	document.getElementById('startGame').addEventListener('click', gameLoop, { once: true });
 	gameModeSelector = document.getElementById('gameMode');
-
-	gameModeSelector.addEventListener('change', listenerMode);
+	gameModeSelector.addEventListener('change', changeGameMode);
 }
 
-function listenerMode() {
+function changeGameMode() {
 	// Get the selected value
 	gameMode = gameModeSelector.value;
 	const difficulty = document.getElementById("difficulty");
@@ -146,25 +142,25 @@ function listenerMode() {
 export function setGameBoardSize(isInitialSetup = false) {
 
 	const smallerDimension = Math.min(window.innerWidth, window.innerHeight);
-	WIDTHBOARD = Math.floor(smallerDimension * 1);
-	HEIGHTBOARD = Math.floor(WIDTHBOARD * (5/9)); // Maintain a 9 / 5 Ratio
+	BOARD_WIDTH = Math.floor(smallerDimension * 1);
+	BOARD_HEIGHT = Math.floor(BOARD_WIDTH * (5/9)); // Maintain a 9 / 5 Ratio
 
 	// adjust size of buttons below board
 	document.querySelectorAll('.playRow').forEach(function(element) {
-		element.style.width = WIDTHBOARD + 'px';
+		element.style.width = BOARD_WIDTH + 'px';
 	});
 
 	document.querySelectorAll('.playRow')
 
 	// Recalculate other dependent variables
-	WIDTHOBJECTS = WIDTHBOARD / 45;
-	HEIGHTOBJECTS = HEIGHTBOARD / 5;
+	OBJ_WIDTH = BOARD_WIDTH / 45;
+	OBJ_HEIGHT = BOARD_HEIGHT / 5;
 	const gameBoard = document.getElementById('gameBoard');
 	if (gameBoard) {
-		gameBoard.width = WIDTHBOARD;
-		gameBoard.height = HEIGHTBOARD;
+		gameBoard.width = BOARD_WIDTH;
+		gameBoard.height = BOARD_HEIGHT;
 		// updateElements(); // Redraw after resize
-		console.log('Canvas resized to:', WIDTHBOARD, HEIGHTBOARD);
+		console.log('Canvas resized to:', BOARD_WIDTH, BOARD_HEIGHT);
 		if (!isInitialSetup)
 			updateElements();
 	}

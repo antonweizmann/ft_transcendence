@@ -1,4 +1,4 @@
-import { ball, player1, player2, WIDTHBOARD} from "./init_game.js";
+import { ball, player1, player2, BOARD_WIDTH} from "./init_game.js";
 import { isAi } from "./ai.js";
 import { socket } from "./game.js";
 
@@ -77,10 +77,10 @@ function checkCollision() {
 		ball.dirX === stopDoubleCollision) {
 		ball.dirX *= -1;
 		ball.dirY = ((ball.y + ball.height/2) - (player1.y + player1.height/2)) / (player1.height/2);
-		if (ball.speed <= WIDTHBOARD / 60)
-			ball.speed += WIDTHBOARD / 1000;
+		if (ball.speed <= BOARD_WIDTH / 60)
+			ball.speed += BOARD_WIDTH / 1000;
 		else if (gameMode === "ai2")
-			ball.speed += WIDTHBOARD / 1000;
+			ball.speed += BOARD_WIDTH / 1000;
 	}
 	if (ball.x + ball.width >= player2.x &&
 		ball.x <= player2.x + player2.width &&
@@ -89,10 +89,10 @@ function checkCollision() {
 		ball.dirX === stopDoubleCollision) {
 			ball.dirX *= -1;
 			ball.dirY = ((ball.y + ball.height/2) - (player2.y + player2.height/2)) / (player2.height/2);
-		if (ball.speed <= WIDTHBOARD / 60)
-			ball.speed += WIDTHBOARD / 1000 ;
+		if (ball.speed <= BOARD_WIDTH / 60)
+			ball.speed += BOARD_WIDTH / 1000 ;
 		else if (gameMode === "ai2")
-			ball.speed += WIDTHBOARD / 1000;
+			ball.speed += BOARD_WIDTH / 1000;
 	}
 }
 

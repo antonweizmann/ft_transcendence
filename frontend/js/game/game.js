@@ -1,5 +1,5 @@
 import { aiLoop, cleanAi} from "./ai.js";
-import { gameModeSelector, WIDTHBOARD, player1, player2, ball} from "./init_game.js";
+import { gameModeSelector, BOARD_WIDTH, player1, player2, ball} from "./init_game.js";
 import { updateElements } from "./draw_game.js";
 import { handleMovement , addMovement, stopMovement, resetScore } from "./movement_game.js";
 import { errorHandler, listenerResize} from "./listeners_game.js";
@@ -46,8 +46,8 @@ export function gameLoop() {
 		aiLoop(ball, player2, "ArrowUp", "ArrowDown");
 	else if (gameMode == 'ai2')
 	{
-		if (ball.speed < WIDTHBOARD / 30)
-			ball.speed = WIDTHBOARD / 30;
+		if (ball.speed < BOARD_WIDTH / 30)
+			ball.speed = BOARD_WIDTH / 30;
 		aiLoop(ball, player2, "ArrowUp", "ArrowDown");
 		aiLoop(ball, player1, 'w', 's');
 	}
