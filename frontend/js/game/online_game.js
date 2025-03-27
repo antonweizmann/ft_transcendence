@@ -119,7 +119,10 @@ function parseMessage(data) {
 	else if (message.type === 'lobby_update') {
 		updateLobby(message.players);
 	} else {
-		console.log('Received message:', message.message);
+		if (message.message)
+			console.log('Received message:', message.message);
+		else
+			console.log('Received message:', message);
 	}
 }
 
