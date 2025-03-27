@@ -18,7 +18,6 @@ document.addEventListener('keydown', addMovement);
 eventListeners.push({element: document, type: 'keydown', listener: addMovement});
 
 document.addEventListener('keyup', stopMovement);
-console.log('stopMovement listener added');
 eventListeners.push({element: document, type: 'keyup', listener: stopMovement});
 
 //Main Loop

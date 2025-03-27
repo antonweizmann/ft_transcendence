@@ -8,19 +8,15 @@ let stopDoubleCollision;
 
 export function handleMovement() {
 	if(keysPressed['w']) {
-		console.log('Player 1 Up');
 		player1.y -=player1.speed;
 	}
 	else if(keysPressed['s']) {
-		console.log('Player 1 Down');
 		player1.y +=player1.speed;
 	}
 	if(keysPressed['ArrowUp']){
-		console.log('Player 2 Up');
 		player2.y -=player2.speed;
 	}
 	else if(keysPressed['ArrowDown']) {
-		console.log('Player 2 Down');
 		player2.y += player2.speed;
 	}
 	const magnitude = Math.sqrt(ball.dirX * ball.dirX + ball.dirY * ball.dirY);

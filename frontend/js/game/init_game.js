@@ -120,6 +120,8 @@ function initGame() {
 	document.getElementById('lobbyInput').style.display = "none";
 	gameModeSelector = document.getElementById('gameMode');
 	gameModeSelector.addEventListener('change', changeGameMode);
+	if (localStorage.getItem('isLoggedIn'))
+		document.getElementById('onlineOption').style.display = "block";
 }
 
 function changeGameMode() {
@@ -129,11 +131,15 @@ function changeGameMode() {
 	gameMode = gameModeSelector.value;
 	console.log('Selected game mode:', gameMode);
 	resetGame();
+	if (localStorage.getItem('isLoggedIn'))
+		document.getElementById('onlineOption').style.display = "block";
+	else
+		document.getElementById('onlineOption').style.display = "none";
 	if (gameMode !== 'ai')
 		difficultyCol.style.display = "none";
 	else
 		difficultyCol.style.display = "block";
-	if (gameMode !== 'human')
+	if (gameMode === 'ai' || gameMode === 'ai2')
 		difficulty.addEventListener('change', setAiReaction);
 	if (gameMode === 'online')
 		initSocket();
@@ -143,18 +149,25 @@ function changeGameMode() {
 	setNames();
 	setButtonListeners();
 }
+window.changeGameMode = changeGameMode;
 
 function setButtonListeners() {
 	const	startButton = document.getElementById("startGame");
 	const	joinButton = document.getElementById("joinGame");
 	const	lobbyInput = document.getElementById("lobbyInput");
 
+	startButton.style.display = "flex";
 	if (gameMode === 'online')
 	{
 		lobbyInput.style.display = "flex";
 		joinButton.addEventListener('click', joinGame, { once: true });
 		startButton.removeEventListener('click', gameLoop);
 		startButton.addEventListener('click', startGame);
+		if (!localStorage.getItem('username'))
+		{
+			lobbyInput.style.display = "none";
+			startButton.style.display = "none";
+		}
 	}
 	else
 	{
