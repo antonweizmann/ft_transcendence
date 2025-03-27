@@ -27,9 +27,6 @@ class GameBaseConsumer(CoreBaseConsumer):
 			if not self._handler:
 				self.send(json.dumps({'message': 'You are not in a game.'}))
 				return
-			self.send(json.dumps({
-				'message': f'Move: {move}, Player index: {self.player_index}'
-			}))
 			try:
 				self._handler.move(self.player_index, move)
 			except ValueError as e:

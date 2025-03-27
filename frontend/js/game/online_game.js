@@ -47,7 +47,7 @@ function handleMovement() {
 		move: direction,
 	};
 	const messageJSON = JSON.stringify(message);
-	sendToSocket(messageJSON);
+	socket.send(messageJSON);
 };
 
 export function joinGame() {
