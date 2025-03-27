@@ -52,7 +52,6 @@ export function gameLoop() {
 
 export function resetGame(){
 	console.log('Game was reset');
-	setAnimationId(null);
 	gameButton = document.getElementById('startGame');
 	ball.reset();
 	player1.reset();
@@ -60,6 +59,7 @@ export function resetGame(){
 	resetScore();
 	updateElements();
 	cancelAnimationFrame(getAnimationId());
+	setAnimationId(null);
 	gameButton.textContent = 'Start';
 	gameButton.addEventListener('click', gameLoop, { once: true });
 }
