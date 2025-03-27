@@ -46,9 +46,10 @@ class PongGameHandler(GameHandlerBase):
 	def __start_countdown(self):
 		i = 0
 		for i in range(3, 0, -1):
-			self._send_func(json.dumps({
+			self._send_func({
+				'type': 'countdown',
 				'message': f'Game starting in {i}...'
-			}))
+			})
 			time.sleep(1)
 
 	def _run_game(self):
@@ -134,11 +135,11 @@ class PongGameHandler(GameHandlerBase):
 		with self._lock:
 			if (self._state['score'][self.players[1].__str__()] >= WINNING_SCORE
 					or self._state['score'][self.players[0].__str__()] >= WINNING_SCORE):
-				self._send_func(json.dumps({
+				self._send_func({
 					'type': 'game_over',
 					'game_id': self._id,
 					'game_state': self._state
-				}))
+				})
 				self._is_active = False
 				self._model.status = 'finished'
 				self._model.save()
