@@ -31,6 +31,6 @@ class PongGameModel(GameBaseModel):
 				self.id,
 				players[0].id,
 				players[1].id,
-				self.scores.get(players[0].__str__()),
-				self.scores.get(players[1].__str__())
+				self.scores.get(players[0].username),
+				self.scores.get(players[1].username)
 			).transact({'from': account.address})

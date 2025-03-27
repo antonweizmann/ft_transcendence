@@ -2,8 +2,9 @@
 import { gameModeSelector, BOARD_HEIGHT, player1, player2, ball, setAnimationId, getAnimationId} from "./init_game.js";
 import { updateElements } from "./draw_game.js";
 import { keysPressed } from "./movement_game.js";
+import { cleanupGame, resetGame } from "./game.js";
 
-export	let socket;
+export let	socket;
 
 export function startGame() {
 	console.log('Starting game');
@@ -110,7 +111,7 @@ function parseMessage(data) {
 	if (message.type === 'pong_game_update') {
 		updateGame(message.game_state);
 	}
-	else if (message.type === 'pong_game_over') {
+	else if (message.type === 'game_over') {
 		gameOver(message.game_state);
 	}
 	else if (message.type === 'lobby_update') {
@@ -125,13 +126,6 @@ function parseMessage(data) {
 	}
 }
 
-// "game_state": {
-// 	"score": {"1_jfikents": 2, "2_1@1.com": 2},
-// 	"ball_position": [56.218825122723885, 113.4293962816304],
-// 	"ball_direction": [-1, 1],
-// 	"paddle_1_position": 250,
-// 	"paddle_2_position": 250
-// }
 function updateGame(game_state) {
 	const X = 0;
 	const Y = 1;
@@ -141,12 +135,42 @@ function updateGame(game_state) {
 	player2.y = game_state.paddle_2_position * scale;
 	ball.x = game_state.ball_position[X] * scale;
 	ball.y = game_state.ball_position[Y] * scale;
+	updateScore(game_state.score);
+}
+
+function updateScore(score) {
+	const	player1Container = document.getElementById('player1Name');
+	const	player2Container = document.getElementById('player2Name');
+	const	scoreContainer = document.getElementById('scoreGame');
+	let		player1Score = 0;
+	let		player2Score = 0;
+
+	player1Score = score[player1Container.textContent];
+	player2Score = score[player2Container.textContent];
+	scoreContainer.textContent = `${player1Score} - ${player2Score}`;
 }
 
 function gameOver(game_state) {
 	console.log('Game over:', game_state);
+	resetSocket();
+	resetGame();
+	updateScore(game_state.score);
 }
 
 function updateLobby(players) {
+	const player1Container = document.getElementById('player1Name');
+	const player2Container = document.getElementById('player2Name');
 
+	player1Container.textContent = '';
+	player2Container.textContent = '';
+	for (const player of players) {
+		if (player.index === 0) {
+			player1Container.textContent = player.username;
+		} else {
+			player2Container.textContent = player.username;
+		}
+	}
+	if (player2Container.textContent === '') {
+		player2Container.textContent = 'Waiting for player 2...';
+	}
 }

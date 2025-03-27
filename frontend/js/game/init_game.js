@@ -192,7 +192,7 @@ function setNames() {
 	{
 		if (!localStorage.getItem('username'))
 			player_name = "Please Login"
-		opponent_name = "Waiting for Opponent";
+		opponent_name = 'Waiting for player 2...';
 	}
 	player1Name.textContent = player_name;
 	player2Name.textContent = opponent_name;
