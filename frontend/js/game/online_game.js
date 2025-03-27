@@ -1,5 +1,5 @@
 
-import { gameModeSelector, BOARD_WIDTH, player1, player2, ball, setAnimationId} from "./init_game.js";
+import { gameModeSelector, BOARD_HEIGHT, player1, player2, ball, setAnimationId} from "./init_game.js";
 import { updateElements } from "./draw_game.js";
 import { keysPressed } from "./movement_game.js";
 
@@ -136,12 +136,12 @@ function parseMessage(data) {
 function updateGame(game_state) {
 	const X = 0;
 	const Y = 1;
+	const scale = BOARD_HEIGHT / 500;
 
-	player1.y = game_state.paddle_1_position;
-	player2.y = game_state.paddle_2_position;
-	ball.x = game_state.ball_position[X];
-	ball.y = game_state.ball_position[Y];
-	console.log('Updating game state:', game_state);
+	player1.y = game_state.paddle_1_position * scale;
+	player2.y = game_state.paddle_2_position * scale;
+	ball.x = game_state.ball_position[X] * scale;
+	ball.y = game_state.ball_position[Y] * scale;
 }
 
 function gameOver(game_state) {

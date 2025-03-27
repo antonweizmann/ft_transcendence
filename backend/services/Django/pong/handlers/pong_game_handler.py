@@ -11,15 +11,15 @@ Y = 1
 BOARD_WIDTH = 800.0
 BOARD_HEIGHT = 500.0
 
-MIN_BALL_X = 10
-MIN_BALL_Y = 10
-MAX_BALL_X = BOARD_WIDTH - 10
-MAX_BALL_Y = BOARD_HEIGHT - 10
+MIN_BALL_X = 0
+MIN_BALL_Y = 0
+MAX_BALL_X = BOARD_WIDTH - 20
+MAX_BALL_Y = BOARD_HEIGHT - 20
 BALL_SPEED = 6.66
-INITIAL_BALL_POSITION: list[float, float] = [BOARD_WIDTH / 2, BOARD_HEIGHT / 2]
+INITIAL_BALL_POSITION: list[float, float] = [BOARD_WIDTH / 2 - 10, BOARD_HEIGHT / 2 - 10]
 
-MIN_PLAYER_Y = 50
-MAX_PLAYER_Y = BOARD_HEIGHT - 50
+MIN_PLAYER_Y = 0
+MAX_PLAYER_Y = BOARD_HEIGHT - 100
 PLAYER_SPEED = 10
 
 WINNING_SCORE = 3
@@ -37,8 +37,8 @@ class PongGameHandler(GameHandlerBase):
 		self._state.update({
 			'ball_position': INITIAL_BALL_POSITION.copy(),
 			'ball_direction': self.__set_random_ball_direction(),
-			'paddle_1_position': 250,
-			'paddle_2_position': 250,
+			'paddle_1_position': 200,
+			'paddle_2_position': 200,
 		})
 		self.__ball_speed = BALL_SPEED
 		self.__allowed_to_move = False
@@ -103,7 +103,7 @@ class PongGameHandler(GameHandlerBase):
 		with self._lock:
 			self._state['ball_direction'][X] *= -1
 			self._state['ball_direction'][Y] = (
-				self._state['ball_position'][Y] - paddle_position) / 50
+				self._state['ball_position'][Y] - paddle_position - 40) / 50
 			if self.__ball_speed < 11:
 				self.__ball_speed += 0.66
 
@@ -111,14 +111,14 @@ class PongGameHandler(GameHandlerBase):
 		with self._lock:
 			# Paddle 1 collision
 			if (self._state['ball_position'][X] <= 20
-				and self._state['ball_position'][Y] >= self._state['paddle_1_position'] - 50
-				and self._state['ball_position'][Y] <= self._state['paddle_1_position'] + 50):
+				and self._state['ball_position'][Y] >= self._state['paddle_1_position'] - 100
+				and self._state['ball_position'][Y] <= self._state['paddle_1_position'] + 100):
 				self.__bounce_from_paddle(self._state['paddle_1_position'])
 
 			# Paddle 2 collision
-			if (self._state['ball_position'][X] >= 780
-				and self._state['ball_position'][Y] >= self._state['paddle_2_position'] - 50
-				and self._state['ball_position'][Y] <= self._state['paddle_2_position'] + 50):
+			if (self._state['ball_position'][X] >= 760
+				and self._state['ball_position'][Y] >= self._state['paddle_2_position'] - 100
+				and self._state['ball_position'][Y] <= self._state['paddle_2_position'] + 100):
 				self.__bounce_from_paddle(self._state['paddle_2_position'])
 
 	def __move_ball(self):

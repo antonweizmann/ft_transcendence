@@ -103,8 +103,7 @@ function initGame() {
 		ball.speed = startBallValues.speed();
 		// -1 is to the left and 1 to the right
 		ball.dirX = Math.round(Math.random()) ? -1 : 1,
-		ball.dirY = Math.round(Math.random()) ? -1 : 1,
-		console.log('Ball was reset');
+		ball.dirY = Math.round(Math.random()) ? -1 : 1
 	}
 	player1.reset = function() {
 		player1.x = startPlayer1.x();
@@ -208,7 +207,7 @@ export function setGameBoardSize(isInitialSetup = false) {
 
 	const smallerDimension = Math.min(window.innerWidth, window.innerHeight);
 	BOARD_WIDTH = Math.floor(smallerDimension * 1);
-	BOARD_HEIGHT = Math.floor(BOARD_WIDTH * (5/9)); // Maintain a 9 / 5 Ratio
+	BOARD_HEIGHT = Math.floor(BOARD_WIDTH * (5/8)); // Maintain a 8 / 5 Ratio
 
 	// adjust size of buttons below board
 	document.querySelectorAll('.playRow').forEach(function(element) {
