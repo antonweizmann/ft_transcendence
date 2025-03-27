@@ -7,10 +7,6 @@ export	let socket;
 
 export function startGame() {
 	console.log('Starting game');
-	if (!socket) {
-		console.error('You must join a game before starting it');
-		return;
-	}
 	const message = {
 		action: 'start_game',
 	};

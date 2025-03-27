@@ -1,5 +1,5 @@
 import { aiLoop, cleanAi } from "./ai.js";
-import { gameModeSelector, BOARD_WIDTH, player1, player2, ball, getAnimationId, setAnimationId } from "./init_game.js";
+import { gameModeSelector, startGameTimer, BOARD_WIDTH, player1, player2, ball, getAnimationId, setAnimationId } from "./init_game.js";
 import { updateElements } from "./draw_game.js";
 import { handleMovement , addMovement, stopMovement, resetScore } from "./movement_game.js";
 import { errorHandler, listenerResize } from "./listeners_game.js";
@@ -23,12 +23,6 @@ eventListeners.push({element: document, type: 'keyup', listener: stopMovement});
 //Main Loop
 export function gameLoop() {
 	gameMode = gameModeSelector.value;
-	gameButton = document.getElementById('startGame');
-	if (gameButton.textContent === 'Start')
-	{
-		gameButton.addEventListener('click', resetGame, { once: true });
-		gameButton.textContent = 'Reset';
-	}
 	const gameBoard = document.getElementById('gameBoard');
 	if (!gameBoard) {
 		console.log('Game board not found, stopping game loop');
@@ -50,7 +44,7 @@ export function gameLoop() {
 	setAnimationId(requestAnimationFrame(gameLoop));
 }
 
-export function resetGame(){
+export function resetGame() {
 	console.log('Game was reset');
 	gameButton = document.getElementById('startGame');
 	ball.reset();
@@ -61,11 +55,11 @@ export function resetGame(){
 	cancelAnimationFrame(getAnimationId());
 	setAnimationId(null);
 	gameButton.textContent = 'Start';
-	gameButton.addEventListener('click', gameLoop, { once: true });
+	gameButton.addEventListener('click', startGameTimer);
 }
 
 //Clean Up
-export function cleanupGame(){
+export function cleanupGame() {
 	console.log('cleanup GAME called');
 	const animationID = getAnimationId();
 	if (animationID)
@@ -82,4 +76,3 @@ export function cleanupGame(){
 	eventListeners = [];
 	resetSocket();
 }
-

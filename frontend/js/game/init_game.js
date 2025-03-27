@@ -115,7 +115,7 @@ function initGame() {
 	}
 	console.log('Starting game loop with dimensions:', BOARD_WIDTH, BOARD_HEIGHT);
 	setGameBoardSize();
-	document.getElementById('startGame').addEventListener('click', gameLoop, { once: true });
+	document.getElementById('startGame').addEventListener('click', startGameTimer);
 	document.getElementById('lobbyInput').style.display = "none";
 	gameModeSelector = document.getElementById('gameMode');
 	gameModeSelector.addEventListener('change', changeGameMode);
@@ -160,8 +160,7 @@ function setButtonListeners() {
 	{
 		lobbyInput.style.display = "flex";
 		joinButton.addEventListener('click', joinGame, { once: true });
-		startButton.removeEventListener('click', gameLoop);
-		startButton.addEventListener('click', startGame);
+		startButton.addEventListener('click', startGameTimer);
 		if (!localStorage.getItem('username'))
 		{
 			lobbyInput.style.display = "none";
@@ -169,11 +168,7 @@ function setButtonListeners() {
 		}
 	}
 	else
-	{
 		lobbyInput.style.display = "none";
-		startButton.removeEventListener('click', startGame);
-		startButton.addEventListener('click', gameLoop, { once: true });
-	}
 }
 
 function setNames() {
@@ -228,6 +223,28 @@ export function setGameBoardSize(isInitialSetup = false) {
 		if (!isInitialSetup)
 			updateElements();
 	}
+}
+
+export async function startGameTimer() {
+	const gameTimer = document.getElementById('scoreGame');
+	const gameButton = document.getElementById('startGame');
+	let time = 3;
+
+	gameButton.removeEventListener('click', startGameTimer);
+	gameButton.addEventListener('click', resetGame, { once: true });
+	gameButton.textContent = 'Reset';
+	while (time >= 0)
+	{
+		await new Promise(r => setTimeout(r, 1000));
+		if (gameButton.textContent === 'Start')
+			return ;
+		gameTimer.textContent = time + ' : ' + time;
+		time--;
+	}
+	if (gameModeSelector.value === "online")
+		startGame();
+	else
+		gameLoop();
 }
 
 ensureInit();
