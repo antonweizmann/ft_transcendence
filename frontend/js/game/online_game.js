@@ -1,5 +1,5 @@
 
-import { gameModeSelector, BOARD_HEIGHT, player1, player2, ball, setAnimationId} from "./init_game.js";
+import { gameModeSelector, BOARD_HEIGHT, player1, player2, ball, setAnimationId, getAnimationId} from "./init_game.js";
 import { updateElements } from "./draw_game.js";
 import { keysPressed } from "./movement_game.js";
 
@@ -104,6 +104,7 @@ export function resetSocket() {
 
 function parseMessage(data) {
 	let message;
+
 	try {
 		message = JSON.parse(data);
 	} catch (error) {
@@ -118,6 +119,8 @@ function parseMessage(data) {
 	}
 	else if (message.type === 'lobby_update') {
 		updateLobby(message.players);
+	} else if (message.type === 'countdown' && getAnimationId() === null) {
+		setAnimationId(requestAnimationFrame(onlineGameLoop));
 	} else {
 		if (message.message)
 			console.log('Received message:', message.message);
