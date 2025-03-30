@@ -10,7 +10,6 @@ let addedScripts = []; // Array to store references to added scripts
 
 document.addEventListener('DOMContentLoaded', function() {
 	setupDropdownValidation('.login-drop', validateLoginForm);
-	// setupDropdownValidation('.signup-drop', validateSignupForm);
 
 	setupLoginOrProfile();
 });
@@ -254,7 +253,7 @@ function signUpInstead() {
 	const dropdown = new bootstrap.Dropdown(dropdownButton);
 
 	dropdown.hide();
-	loadPage('signup');
+	loadPage('signUp');
 }
 
 function setImagePreview(inputElement) {

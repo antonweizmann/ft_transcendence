@@ -24,126 +24,115 @@ function setupDropdownValidation(formName, validationFunction)
 
 async function validateLoginForm(event)
 {
-	const email = document.getElementById('loginEmail'); // THIS SHOULD BE USERNAME NOT EMAIL
+	const username = document.getElementById('loginUsername');
 	const password = document.getElementById('loginPassword');
-	let	isValid = true
 
 	removeErrorMessage(password);
-	removeErrorMessage(email);
-
-	// ! We are using username not email
-	if (!email.value.trim())
-	{
-		isValid = false;
-		email.classList.add('is-invalid');
-		showErrorMessage(email, 'Please enter your email address');
-	}
-	if (!password.value.trim())
-	{
-		isValid = false;
-		password.classList.add('is-invalid');
-		showErrorMessage(password, 'Please enter your password');
-	}
-	if (isValid)
-	{
-		const loginSuccess = await window.loginUser(email.value, password.value);
-		if (!loginSuccess)
-			console.log('Error logging in user');
-		isValid = loginSuccess;
-	}
-	return isValid;
-}
-
-async function validateSignupForm(event)
-{
-	event.preventDefault();
-
-	const username = document.getElementById('signupUsername');
-	const first_name = document.getElementById('signupFirstName');
-	const last_name = document.getElementById('signupLastName');
-	const email = document.getElementById('signupEmail');
-	const password = document.getElementById('signupPassword');
-	const password2 = document.getElementById('signupPassword2');
-	let isValid = true;
-
 	removeErrorMessage(username);
-	removeErrorMessage(first_name);
-	removeErrorMessage(last_name);
-	removeErrorMessage(email);
-	removeErrorMessage(password);
-	removeErrorMessage(password2);
+
 	if (!username.value.trim())
 	{
-		isValid = false;
 		username.classList.add('is-invalid');
 		showErrorMessage(username, 'Please enter your username');
 	}
-	if (!first_name.value.trim())
-	{
-		isValid = false;
-		first_name.classList.add('is-invalid');
-		showErrorMessage(first_name, 'Please enter your first_name');
-	}
-	if (!last_name.value.trim())
-	{
-		isValid = false;
-		last_name.classList.add('is-invalid');
-		showErrorMessage(last_name, 'Please enter your last_name');
-	}
-	if (!email.value.trim())
-	{
-		isValid = false;
-		email.classList.add('is-invalid');
-		showErrorMessage(email, 'Please enter your email address');
-	}
 	if (!password.value.trim())
 	{
-		isValid = false;
 		password.classList.add('is-invalid');
 		showErrorMessage(password, 'Please enter your password');
 	}
-	if (!password2.value.trim())
-	{
-		isValid = false;
-		password2.classList.add('is-invalid');
-		showErrorMessage(password2, 'Please enter your password');
+	if (!password.value.trim() || !username.value.trim())
+		return false;
+	const loginSuccess = await window.loginUser(username.value, password.value);
+	if (!loginSuccess)
+		console.log('Error logging in user');
+	return loginSuccess;
+}
+
+async function validateSignUpForm(event)
+{
+	event.preventDefault();
+
+	let errors = {};
+	const fields = [
+		{ key : 'username',		field : document.getElementById('signUpUsername') },
+		{ key : 'first_name',	field : document.getElementById('signUpFirstName') },
+		{ key : 'last_name',	field : document.getElementById('signUpLastName') },
+		{ key : 'email',		field : document.getElementById('signUpEmail') },
+		{ key : 'password',		field : document.getElementById('signUpPassword') },
+		{ key : 'password2',	field : document.getElementById('signUpPassword2') }
+	];
+
+	fields.forEach(({ key, field }) => {
+		removeErrorMessage(field);
+		if (!field.value.trim())
+			errors[key] = 'Please enter your ' + key;
+	});
+	if (Object.keys(errors).length == 0) {
+		isEmailValid(errors);
+		isPasswordValid(errors);
 	}
-	else if (password.value != password2.value)
-	{
-		isValid = false;
-		password.classList.add('is-invalid');
-		password2.classList.add('is-invalid');
-		showErrorMessage(password, 'Passwords do not match');
-		showErrorMessage(password2, 'Passwords do not match');
+	if (Object.keys(errors).length > 0) {
+		showErrors(fields, errors);
+		return false;
 	}
-	if (isValid)
-	{
-		const registrationSuccess = await window.registerUser(username, first_name, last_name, email, password);
-		if (registrationSuccess)
-		{
-			loadPage('home');
-			setupLoginOrProfile();
+	if (!await window.registerUser(fields))
+		return false;
+	loadPage('home');
+	setupLoginOrProfile();
+	return true;
+}
+
+function isEmailValid(errors) {
+	const email = document.getElementById('signUpEmail');
+	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+	errors.email = errors.email || [];
+	if (!emailRegex.test(email.value)) {
+		email.classList.add('is-invalid');
+		errors.email.push('Please enter a valid email address');
+	}
+	if (errors.email.length === 0)
+		delete errors.email;
+}
+
+function isPasswordValid(errors)
+{
+	const password = document.getElementById('signUpPassword');
+	const password2 = document.getElementById('signUpPassword2');
+	const rules = [
+		{ test: () => password.value !== password2.value,
+			message: 'Passwords do not match',
+			fields: [password, password2] },
+		{ test: () => password.value.length < 8,
+			message: 'Password must be at least 8 characters',
+			fields: [password] },
+		{ test: () => !/\d/.test(password.value),
+			message: 'Password must contain at least one number',
+			fields: [password] },
+		{ test: () => !/[a-z]/.test(password.value),
+			message: 'Password must contain at least one lowercase letter',
+			fields: [password] },
+		{ test: () => !/[A-Z]/.test(password.value),
+			message: 'Password must contain at least one uppercase letter',
+			fields: [password] },
+		{ test: () => !/[!@#$%^&*]/.test(password.value),
+			message: 'Password must contain at least one special character (!@#$%^&*)',
+			fields: [password] },
+	];
+
+	errors.password = errors.password || [];
+	errors.password2 = errors.password2 || [];
+
+	rules.forEach(({ test, message, fields }) => {
+		if (test()) {
+			fields.forEach(field => field.classList.add('is-invalid'));
+			errors.password.push(message);
 		}
-		else
-			console.log('Error registering user');
-		isValid = registrationSuccess;
-	}
-	return isValid;
-}
-
-function showErrorMessage(input, message)
-{
-	const errorMessage = document.createElement('div');
-	errorMessage.classList.add('invalid-feedback', 'd-block');
-	errorMessage.textContent = message;
-	input.parentNode.appendChild(errorMessage);
-}
-
-function removeErrorMessage(input)
-{
-	input.classList.remove('is-invalid');
-	const existingErrors = input.parentNode.querySelectorAll('.invalid-feedback');
-	existingErrors.forEach(error => error.remove());
+	});
+	if (errors.password.length === 0)
+		delete errors.password;
+	if (errors.password2.length === 0)
+		delete errors.password2;
 }
 
 function updateActive(pageName)
@@ -161,5 +150,4 @@ function updateActive(pageName)
 		newActiveNavLink.classList.add('active');
 		newActiveNavLink.setAttribute('aria-current', 'page');
 	}
-
 }

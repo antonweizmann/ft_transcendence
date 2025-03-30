@@ -1,32 +1,31 @@
-async function registerUser(username, first_name, last_name, email, password)
+async function registerUser(fields)
 {
 	const form_data = new FormData();
-	form_data.append('username', username.value);
-	form_data.append('first_name', first_name.value);
-	form_data.append('last_name', last_name.value);
-	form_data.append('email', email.value);
-	form_data.append('password', password.value);
 
+	fields.forEach(({ key, field }) => {
+		form_data.append(key, field.value);
+	});
 	try {
 		const response = await fetch('https://localhost/api/player/register/', {
 			method: 'POST',
 			body: form_data,
 		});
-		if (response.ok)
-		{
-			console.log(`user ${username} registered successfully!`);
-			loginUser(username.value, password.value);
-		}
-		else {
-			console.error("Error:", await response.json());
+		if (!response.ok) {
+			const errors = await response.json();
+			showErrors(fields, errors);
 			return false
 		}
 	} catch (error) {
-		console.error(error);
+		console.error("Failed registration:", error);
+		return false
 	}
+	const username = fields.find(f => f.key === 'username').field.value;
+	const password = fields.find(f => f.key === 'password').field.value;
+
+	console.log(`user ${username} registered successfully!`);
+	loginUser(username, password);
 	return true;
 }
-window.registerUser = registerUser;
 
 async function loginUser(username, password)
 {
@@ -61,7 +60,6 @@ async function loginUser(username, password)
 		document.getElementById('onlineOption').style.display = "block";
 	return true;
 }
-window.loginUser = loginUser;
 
 function logoutUser()
 {
@@ -82,4 +80,3 @@ function logoutUser()
 		}
 	}
 }
-window.logoutUser = logoutUser;
