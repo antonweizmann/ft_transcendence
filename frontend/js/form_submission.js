@@ -3,7 +3,7 @@ async function registerUser(fields)
 	const form_data = new FormData();
 
 	fields.forEach(({ key, field }) => {
-		if (field.type === 'file')
+		if (field.type === 'file' && field.files.length > 0)
 			form_data.append(key, field.files[0]);
 		else
 			form_data.append(key, field.value);

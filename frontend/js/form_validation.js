@@ -65,7 +65,7 @@ async function validateSignUpForm(event)
 
 	fields.forEach(({ key, field }) => {
 		removeErrorMessage(field);
-		if (key === 'profile_pic')
+		if (key === 'profile_picture')
 			return ;
 		if (!field.value.trim())
 			errors[key] = 'Please enter your ' + key;
