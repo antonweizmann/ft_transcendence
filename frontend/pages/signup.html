@@ -1,6 +1,6 @@
 <div class="container-sm mx-auto signup-container">
     <!-- SignUp Form -->
-    <form id="signUpForm" onsubmit="return validateSignUpForm(event)">
+    <form id="signUpForm" enctype="multipart/form-data" onsubmit="return validateSignUpForm(event)">
         <div class="mb-3 signup-header">
             <h2>Sign up now!</h2>
         </div>
@@ -8,8 +8,8 @@
         <!-- Profile Pic -->
         <div class="mb-3">
             <div class="row align-items-center">
-                <div class="col-3">
-                    <img id="previewImage" src="../assets/default_profile.png" class="object-fit-cover profile-pic" alt="...">
+                <div class="col-3 text-center">
+                    <img id="previewImage" src="../assets/default_profile.png" class="object-fit-cover profile-pic" alt="Default Profile Picture">
                 </div>
                 <div class="col-8">
                     <label for="formFile" class="form-label">Pick profile picture</label>

@@ -54,20 +54,23 @@ async function validateSignUpForm(event)
 
 	let errors = {};
 	const fields = [
-		{ key : 'username',		field : document.getElementById('signUpUsername') },
-		{ key : 'first_name',	field : document.getElementById('signUpFirstName') },
-		{ key : 'last_name',	field : document.getElementById('signUpLastName') },
-		{ key : 'email',		field : document.getElementById('signUpEmail') },
-		{ key : 'password',		field : document.getElementById('signUpPassword') },
-		{ key : 'password2',	field : document.getElementById('signUpPassword2') }
+		{ key : 'username',			field : document.getElementById('signUpUsername') },
+		{ key : 'first_name',		field : document.getElementById('signUpFirstName') },
+		{ key : 'last_name',		field : document.getElementById('signUpLastName') },
+		{ key : 'email',			field : document.getElementById('signUpEmail') },
+		{ key : 'password',			field : document.getElementById('signUpPassword') },
+		{ key : 'password2',		field : document.getElementById('signUpPassword2') },
+		{ key : 'profile_picture',	field : document.getElementById('formFile') },
 	];
 
 	fields.forEach(({ key, field }) => {
 		removeErrorMessage(field);
+		if (key === 'profile_pic')
+			return ;
 		if (!field.value.trim())
 			errors[key] = 'Please enter your ' + key;
 	});
-	if (Object.keys(errors).length == 0) {
+	if (Object.keys(errors).length === 0) {
 		isEmailValid(errors);
 		isPasswordValid(errors);
 	}

@@ -3,7 +3,10 @@ async function registerUser(fields)
 	const form_data = new FormData();
 
 	fields.forEach(({ key, field }) => {
-		form_data.append(key, field.value);
+		if (field.type === 'file')
+			form_data.append(key, field.files[0]);
+		else
+			form_data.append(key, field.value);
 	});
 	try {
 		const response = await fetch('https://localhost/api/player/register/', {
