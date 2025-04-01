@@ -4,6 +4,17 @@ from .models import Player
 from django.utils.html import format_html # type: ignore
 from PIL import Image # type: ignore
 
+class FriendRequestsReceivedInline(admin.TabularInline):
+	model = Player.friend_requests.through  # Access the through model for the ManyToManyField
+	fk_name = 'to_player'  # Specify the reverse relationship field
+	extra = 0
+	fields = ('received_requests',)  # Display the player who sent the request
+	readonly_fields = ('received_requests',)
+
+	def received_requests(self, player):
+		return f"ID: {player.from_player.id}\nUsername: {player.from_player.username}"
+	received_requests.short_description = "Friend Request From"
+
 class PlayerAdmin(UserAdmin):
 	model = Player
 	fieldsets =(
@@ -16,6 +27,7 @@ class PlayerAdmin(UserAdmin):
 		'id', 'profile_picture_preview', 'username', 'first_name',
 		'last_name', 'email', 'is_staff'
 		)
+	inlines = [FriendRequestsReceivedInline]
 
 	def __get_new_dimensions_image(self, img, max_size: tuple) -> tuple:
 		width, height = img.size
