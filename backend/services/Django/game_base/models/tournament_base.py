@@ -1,6 +1,6 @@
 from django.db import models # type: ignore
 from django.contrib.auth import get_user_model # type: ignore
-from .match_base import STATUS_CHOICES
+from .game_base import STATUS_CHOICES
 
 import gc
 
