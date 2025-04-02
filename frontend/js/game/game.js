@@ -22,7 +22,7 @@ eventListeners.push({element: document, type: 'keyup', listener: stopMovement});
 
 //Main Loop
 export function gameLoop() {
-	gameMode = gameModeSelector.value;
+	const gameMode = gameModeSelector.value;
 	const gameBoard = document.getElementById('gameBoard');
 	if (!gameBoard) {
 		console.log('Game board not found, stopping game loop');

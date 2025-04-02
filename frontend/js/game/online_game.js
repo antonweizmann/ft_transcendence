@@ -18,8 +18,6 @@ export function startGame() {
 
 //Main Loop
 function onlineGameLoop() {
-	gameMode = gameModeSelector.value;
-
 	const gameBoard = document.getElementById('gameBoard');
 	if (!gameBoard) {
 		console.log('Game board not found, stopping game loop');
