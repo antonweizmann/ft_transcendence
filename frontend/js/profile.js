@@ -17,25 +17,40 @@ export function initProfile() {
 function loadProfile() {
 	console.log("Profile JS loaded");
 	const userId = localStorage.getItem('user_id');
+	const username = localStorage.getItem('username');
 
-	authenticatedFetch('https://localhost/api/player/' + userId + '/', {
-		method: 'GET',
-	})
-		.then(response => {
-			if (!response.ok) {
-				throw new Error('Network response was not ok');
-			}
-			return response.json();
-		})
-		.then(data => {
-			document.getElementById('username').textContent = data.username;
-			if (data.profile_picture)
-				document.getElementById('profile_pic').src = "https://localhost" + data.profile_picture;
-			document.getElementById('profile-container').classList.remove('loading');
-		})
-		.catch(error => {
-			console.error('Error fetching user data:', error);
-		});
+	LoadDataFromBackend(`/api/player/${userId}/`, setProfileData);
+	LoadDataFromBackend(`/api/pong/match/list/?username=${username}`, setStats);
 }
 
-// loadProfile();
+function setProfileData(data) {
+	const profile_pic = document.getElementById('profile_pic');
+	const username = document.getElementById('username');
+	const profile_container = document.getElementById('profile_container');
+
+	username.textContent = data.username;
+	if (data.profile_picture)
+		profile_pic.src = "https://localhost" + data.profile_picture;
+	profile_container.classList.remove('loading');
+}
+
+async function LoadDataFromBackend(url, setter) {
+	try {
+		const response = await authenticatedFetch(url, { method: 'GET' });
+
+		if (!response.ok) {
+			throw new Error('Network response was not ok');
+		}
+		const data = await response.json();
+		if (setter)
+			setter(data);
+		return data;
+	}
+	catch (error) {
+		console.error('Error fetching data:', error);
+	}
+}
+
+function setStats(data) {
+	console.log(data);
+}
