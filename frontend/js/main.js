@@ -256,7 +256,7 @@ function signUpInstead() {
 	const dropdown = new bootstrap.Dropdown(dropdownButton);
 
 	dropdown.hide();
-	loadPage('signUp');
+	loadPage('signup');
 }
 
 function setImagePreview(inputElement) {
