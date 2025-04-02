@@ -146,6 +146,9 @@ async function getPage(pageName)
 		} 
 		else if (pageName === 'profile') {
 			loadScripts(['profile.js']);
+			setTimeout(() => {
+					window.initProfile();
+			}, 500);
 		}
 		// else if (pageName === 'tournament')
 		// {

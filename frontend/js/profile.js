@@ -1,5 +1,5 @@
 console.log("Profile JS pre-loaded");
-initProfile();
+window.initProfile = initProfile;
 
 export function initProfile() {
 	if (document.readyState === 'complete') {
@@ -25,8 +25,10 @@ function loadProfile() {
 			return response.json();
 		})
 		.then(data => {
-			console.log('User data:', data);
-			console.log(document.getElementById('username'));
+			document.getElementById('username').textContent = data.username;
+			if (data.profile_picture)
+				document.getElementById('profile_pic').src = "https://localhost" + data.profile_picture;
+			document.getElementById('profile-container').classList.remove('loading');
 		})
 		.catch(error => {
 			console.error('Error fetching user data:', error);

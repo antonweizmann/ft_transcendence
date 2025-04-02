@@ -54,6 +54,17 @@ html {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 }
 
+#profile_pic {
+    width: 50%;
+    max-width: 300px;
+    height: auto;
+    max-height: 300px;
+    margin-top: 1rem;
+    border-radius: 50%;
+    border: 3px solid var(--vibrant-purple);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
 /* Card Styling */
 .card {
     background-color: var(--deep-blue);
@@ -580,4 +591,17 @@ body {
 
 .form-select-primary:focus {
     box-shadow: none;
+}
+
+#profile-container.loading img,
+#profile-container.loading h1 {
+    visibility: hidden; /* Hide the content */
+}
+
+#profile-container.loading::after {
+    content: 'Loading...'; /* Show a loading message */
+    display: block;
+    text-align: center;
+    font-size: 1.2rem;
+    color: rgb(110, 45, 157);
 }
