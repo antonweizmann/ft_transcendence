@@ -19,15 +19,14 @@ from django.contrib import admin # type: ignore
 from django.urls import path, include # type: ignore
 from django.conf import settings # type: ignore
 from blockchain.views import get_blockchain_scores
-from game_base.views import OpenTournamentListView
-from pong.models import PongTournamentModel
 from player.urls import player_patterns as player_urls, token_patterns as token_urls
+from pong.urls import urlpatterns as pong_urls
 
 urlpatterns = [
 	path('admin/', admin.site.urls),
 	path('api/blockchain/', get_blockchain_scores, name='blockchain_scores'),
 	path('api/player/', include((player_urls, 'player'), namespace='player')),
 	path('api/token/', include((token_urls, 'token'), namespace='token')),
-	path('api/tournament/list/', OpenTournamentListView.as_view(tournament_model=PongTournamentModel), name='tournament_list'),
+	path('api/pong/', include((pong_urls, 'pong'), namespace='pong')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
