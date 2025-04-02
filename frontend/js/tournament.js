@@ -1,3 +1,4 @@
+window.addPlayer = addPlayer;
 
 function addPlayer() {
 	const list = document.getElementById('player-list');

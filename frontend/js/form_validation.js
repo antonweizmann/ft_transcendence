@@ -1,5 +1,11 @@
+import { loadPage, setupLoginOrProfile } from './main.js';
+import { removeErrorMessage, showErrors, showErrorMessage } from './error_handling.js';
+import { registerUser, loginUser } from './form_submission.js';
+
+window.validateSignUpForm = validateSignUpForm;
+
 // Stop dropdown menu from closing and validate
-function setupDropdownValidation(formName, validationFunction)
+export function setupDropdownValidation(formName, validationFunction)
 {
 	const form = document.querySelector(formName);
 	const dropdownToggle = form.closest('.dropdown').querySelector('.dropdown-toggle');
@@ -22,7 +28,7 @@ function setupDropdownValidation(formName, validationFunction)
 	}
 }
 
-async function validateLoginForm(event)
+export async function validateLoginForm(event)
 {
 	const username = document.getElementById('loginUsername');
 	const password = document.getElementById('loginPassword');
@@ -42,7 +48,7 @@ async function validateLoginForm(event)
 	}
 	if (!password.value.trim() || !username.value.trim())
 		return false;
-	const loginSuccess = await window.loginUser(username.value, password.value);
+	const loginSuccess = await loginUser(username.value, password.value);
 	if (!loginSuccess)
 		console.log('Error logging in user');
 	return loginSuccess;
@@ -78,7 +84,7 @@ async function validateSignUpForm(event)
 		showErrors(fields, errors);
 		return false;
 	}
-	if (!await window.registerUser(fields))
+	if (!await registerUser(fields))
 		return false;
 	loadPage('home');
 	setupLoginOrProfile();
@@ -138,7 +144,7 @@ function isPasswordValid(errors)
 		delete errors.password2;
 }
 
-function updateActive(pageName)
+export function updateActive(pageName)
 {
 	const activeNavLink = document.querySelector('a.nav-link.active');
 	if (activeNavLink)

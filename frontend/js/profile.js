@@ -1,5 +1,8 @@
-console.log("Profile JS pre-loaded");
+import { authenticatedFetch } from './authentication.js';
+
 window.initProfile = initProfile;
+
+console.log("Profile JS pre-loaded");
 
 export function initProfile() {
 	if (document.readyState === 'complete') {

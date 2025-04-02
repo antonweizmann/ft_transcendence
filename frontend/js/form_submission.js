@@ -1,4 +1,9 @@
-async function registerUser(fields)
+import { showErrors } from './error_handling.js';
+import { setupLoginOrProfile } from './main.js';
+
+window.logoutUser = logoutUser;
+
+export async function registerUser(fields)
 {
 	const form_data = new FormData();
 
@@ -30,7 +35,7 @@ async function registerUser(fields)
 	return true;
 }
 
-async function loginUser(username, password)
+export async function loginUser(username, password)
 {
 	const form_data = new FormData();
 	form_data.append('username', username);
@@ -64,7 +69,7 @@ async function loginUser(username, password)
 	return true;
 }
 
-function logoutUser()
+export function logoutUser()
 {
 	localStorage.removeItem('isLoggedIn');
 	localStorage.removeItem('token');

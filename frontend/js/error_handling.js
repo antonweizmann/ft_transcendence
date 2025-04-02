@@ -1,4 +1,4 @@
-function showErrorMessage(input, message)
+export function showErrorMessage(input, message)
 {
 	const errorMessage = document.createElement('div');
 	errorMessage.classList.add('invalid-feedback', 'd-block');
@@ -10,14 +10,14 @@ function showErrorMessage(input, message)
 	input.parentNode.appendChild(errorMessage);
 }
 
-function removeErrorMessage(input)
+export function removeErrorMessage(input)
 {
 	input.classList.remove('is-invalid');
 	const existingErrors = input.parentNode.querySelectorAll('.invalid-feedback');
 	existingErrors.forEach(error => error.remove());
 }
 
-function showErrors(fields, errors)
+export function showErrors(fields, errors)
 {
 	console.log("showing errors:", errors);
 	fields.forEach(({ field }) => removeErrorMessage(field));

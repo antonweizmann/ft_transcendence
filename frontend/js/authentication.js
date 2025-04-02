@@ -1,4 +1,4 @@
-async function refreshAccessToken() {
+export async function refreshAccessToken() {
 	const refreshToken = localStorage.getItem('refresh');
 	if (!refreshToken) {
 		console.error('No refresh token found');
@@ -29,7 +29,7 @@ async function refreshAccessToken() {
 	}
 }
 
-async function authenticatedFetch(url, options = {}) {
+export async function authenticatedFetch(url, options = {}) {
 	const token = localStorage.getItem('token');
 	if (!options.headers) {
 		options.headers = {};
@@ -57,6 +57,3 @@ async function authenticatedFetch(url, options = {}) {
 
 	return response;
 }
-
-window.authenticatedFetch = authenticatedFetch;
-window.refreshAccessToken = refreshAccessToken;

@@ -1,3 +1,11 @@
+import { setupDropdownValidation, validateLoginForm, updateActive } from './form_validation.js';
+import { logoutUser } from './form_submission.js';
+import { refreshAccessToken } from './authentication.js';
+
+window.loadPage = loadPage;
+window.signUpInstead = signUpInstead;
+window.changeLanguage = changeLanguage;
+window.setImagePreview = setImagePreview;
 
 const startPage = 'home';
 
@@ -23,15 +31,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 	if (isTokenExpired) {
 		console.warn('Access token expired, refreshing...');
-		const tokenRefreshed = await window.refreshAccessToken();
+		const tokenRefreshed = await refreshAccessToken();
 		if (!tokenRefreshed) {
 			console.error('Failed to refresh token, logging out...');
-			window.logoutUser();
+			logoutUser();
 		}
 	}
 });
 
-function setupLoginOrProfile() {
+export function setupLoginOrProfile() {
 	//replace by validation of choice
 	const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
 
@@ -84,7 +92,7 @@ function removeAddedScripts() {
  * and wait until the text method extracts the text for the response of fetch.
  * @param {string} pageName - Page to load.
  */
-async function loadPage(pageName)
+export async function loadPage(pageName)
 {
 	window.history.pushState({page: pageName}, '', `/${pageName}`);
 	getPage(pageName);
@@ -187,7 +195,7 @@ window.onload = function () {
 		return;
 	}
 	if (path === 'profile' && !localStorage.getItem('user_id')) {
-		window.logoutUser();
+		logoutUser();
 		loadPageReplace(startPage);
 		return;
 	}
