@@ -59,6 +59,8 @@ INSTALLED_APPS = [
 	'pong',
 	'channels',
 	'game_base',
+	'corsheaders',
+	# 'blockchain',
 	'blockchain',
 ]
 
@@ -66,6 +68,7 @@ ASGI_APPLICATION = "core.asgi.application"
 AUTH_USER_MODEL = 'player.Player'
 
 MIDDLEWARE = [
+	'corsheaders.middleware.CorsMiddleware',
 	'django.middleware.security.SecurityMiddleware',
 	'django.contrib.sessions.middleware.SessionMiddleware',
 	'django.middleware.common.CommonMiddleware',
@@ -74,6 +77,14 @@ MIDDLEWARE = [
 	'django.contrib.messages.middleware.MessageMiddleware',
 	'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ALLOW_CREDENTIALS = True
+
+# Allow all methods and headers
+CORS_ALLOW_METHODS = ['DELETE', 'GET', 'OPTIONS', 'PATCH', 'POST', 'PUT']
+CORS_ALLOW_HEADERS = ['*']
 
 REST_FRAMEWORK = {
 	'DEFAULT_AUTHENTICATION_CLASSES': (

@@ -6,4 +6,6 @@ channels==4.2.0
 daphne==4.1.2
 Pillow==11.1.0
 channels-redis==4.2.1
+django-cors-headers
+
 web3==7.8.0
