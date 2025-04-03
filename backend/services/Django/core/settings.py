@@ -59,7 +59,7 @@ INSTALLED_APPS = [
 	'pong',
 	'channels',
 	'game_base',
-	'blockchain',
+	# 'blockchain',
 ]
 
 ASGI_APPLICATION = "core.asgi.application"

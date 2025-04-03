@@ -1,21 +1,21 @@
 services:
 
   # Blockchain service
-  Blockchain:
-    image: node:20-alpine
-    container_name: blockchain
-    build: ./blockchain
-    volumes:
-      - ./blockchain:/solidity
-      - ./web3_share:/web3_share
-    restart: always
-    networks:
-      - Ft_Transcendence
-    healthcheck:
-      test: ["CMD-SHELL", "if [ -f /web3_share/MatchScore.json ]; then exit 0; else exit 1; fi"]
-      interval: 5s
-      timeout: 2s
-      retries: 5
+  # Blockchain:
+  #   image: node:20-alpine
+  #   container_name: blockchain
+  #   build: ./blockchain
+  #   volumes:
+  #     - ./blockchain:/solidity
+  #     - ./web3_share:/web3_share
+  #   restart: always
+  #   networks:
+  #     - Ft_Transcendence
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "if [ -f /web3_share/MatchScore.json ]; then exit 0; else exit 1; fi"]
+  #     interval: 5s
+  #     timeout: 2s
+  #     retries: 5
 
   # Backend service
   Django:
@@ -27,11 +27,11 @@ services:
         condition: service_healthy
       redis:
         condition: service_started
-      Blockchain:
-        condition: service_healthy
+      # Blockchain:
+      #   condition: service_healthy
     volumes:
       - ./backend/services/Django:/app
-      - ./web3_share:/web3_share
+    #  - ./web3_share:/web3_share
     restart: always
     networks:
       - Ft_Transcendence

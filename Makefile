@@ -4,12 +4,12 @@ ifeq ($(DETACH), 1)
 DOCKER_COMPOSE += -d
 endif
 
-start: all_secrets .env | backend/services/nginx/certs/ web3_share
+start: all_secrets .env | backend/services/nginx/certs/ #web3_share
 	@echo "Starting the project..."
 	@$(DOCKER_COMPOSE) up
 .PHONY: start
 
-build: all_secrets .env | backend/services/nginx/certs/ web3_share
+build: all_secrets .env | backend/services/nginx/certs/ #web3_share
 	@echo "Building the project..."
 	@$(DOCKER_COMPOSE) up --build
 .PHONY: build
@@ -17,8 +17,8 @@ build: all_secrets .env | backend/services/nginx/certs/ web3_share
 backend/services/nginx/certs/:
 	@mkdir -p backend/services/nginx/certs/
 
-web3_share:
-	@mkdir web3_share
+#web3_share:
+#	@mkdir web3_share
 
 secrets:
 	@mkdir -p secrets
@@ -62,7 +62,7 @@ clean: stop
 	@docker system prune --volumes -f
 	@rm -rf ./backend/services/django/media/*/*_*.*
 	@rm -rf ./backend/services/nginx/certs/*
-	@rm -rf ./web3_share/*
+	#@rm -rf ./web3_share/*
 .PHONY: clean
 
 fclean: clean
