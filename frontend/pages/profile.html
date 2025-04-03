@@ -1,40 +1,44 @@
 <!DOCTYPE html>
 <main class="container mt-5">
     <section class="row justify-content-center">
-        <div id="profile_container" class="loading col-md-8 text-center loading">
+        <div id="profile_container" class="loading col-md-8 text-center">
             <img id="profile_pic" src="../assets/default_profile.png" alt="Profile Picture" class="mt-3">
             <h1 class="responsive-title" data-translate="profileTitle" id="username">Your Profile</h1>
         </div>
     </section>
     <section class="row justify-content-center mt-4 profile-columns">
-        <article class="col-md-4">
-            <div class="card mb-3">
-                <div class="card-body">
-                    <h2 class="card-title text-center" data-translate="statsTitle">Stats</h2>
-                    <p class="card-text" data-translate="gamesPlayed">Games Played: 50</p>
-                    <p class="card-text" data-translate="wins">Wins: 30</p>
-                    <p class="card-text" data-translate="losses">Losses: 20</p>
+        <article class="card col-md-4 mb-3">
+            <div class="card-body">
+                <h2 class="card-title text-center" data-translate="statsTitle">Stats</h2>
+                <div id="stats_container" class="loading card-text">
+                    <p>
+                        <span data-translate="gamesPlayed">Games Played:</span>
+                        <span id="games_played">0</span>
+                    <p>
+                        <span data-translate="wins">Wins:</span>
+                        <span id="games_won">0</span>
+                    </p>
+                    <p>
+                        <span data-translate="losses">Losses:</span>
+                        <span id="games_lost">0</span>
+                    </p>
                 </div>
             </div>
         </article>
-        <article class="col-md-4">
-            <div class="card mb-3">
-                <div class="card-body">
-                    <h2 class="card-title text-center" data-translate="overviewTitle">Overview</h2>
-                    <p class="card-text" data-translate="overviewText">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
-                </div>
+        <article class="card col-md-4 mb-3">
+            <div class="card-body">
+                <h2 class="card-title text-center" data-translate="overviewTitle">Overview</h2>
+                <p class="card-text" data-translate="overviewText">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
             </div>
         </article>
-        <article class="col-md-4">
-            <div class="card mb-3">
-                <div class="card-body">
-                    <h2 class="card-title text-center" data-translate="achievementsTitle">Achievements</h2>
-                    <ul class="list-group">
-                        <li class="list-group-item" data-translate="achievement1">Achievement 1</li>
-                        <li class="list-group-item" data-translate="achievement2">Achievement 2</li>
-                        <li class="list-group-item" data-translate="achievement3">Achievement 3</li>
-                    </ul>
-                </div>
+        <article class="card col-md-4 mb-3">
+            <div class="card-body">
+                <h2 class="card-title text-center" data-translate="achievementsTitle">Achievements</h2>
+                <ul class="list-group">
+                    <li class="list-group-item" data-translate="achievement1">Achievement 1</li>
+                    <li class="list-group-item" data-translate="achievement2">Achievement 2</li>
+                    <li class="list-group-item" data-translate="achievement3">Achievement 3</li>
+                </ul>
             </div>
         </article>
     </section>
