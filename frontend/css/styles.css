@@ -593,12 +593,12 @@ body {
     box-shadow: none;
 }
 
-#profile-container.loading img,
-#profile-container.loading h1 {
+#profile_container.loading img,
+#profile_container.loading h1 {
     visibility: hidden; /* Hide the content */
 }
 
-#profile-container.loading::after {
+#profile_container.loading::after {
     content: 'Loading...'; /* Show a loading message */
     display: block;
     text-align: center;
