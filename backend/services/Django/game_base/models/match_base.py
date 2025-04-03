@@ -52,7 +52,7 @@ class GameBaseModel(models.Model):
 		if self.status == 'finished' and self.result is None and self.scores:
 			self.result = {
 				'player_scores': {
-					player.username: self.scores.get(str(player.__str__()), 0)
+					player.username: self.scores.get(str(player.username), 0)
 					for player in self.players.all()
 				}
 			}

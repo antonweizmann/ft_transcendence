@@ -27,7 +27,7 @@ class GameHandlerBase(CoreBaseHandler):
 
 	def start_game(self, player_index: int):
 		self._thread = threading.Thread(target=self._run_game)
-		self._state['score'] = {player.__str__(): 0 for player in self.players}
+		self._state['score'] = {player.username: 0 for player in self.players}
 		super()._start(player_index, self._thread.start)
 
 	def _send_game_state(self):

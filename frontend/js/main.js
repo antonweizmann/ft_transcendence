@@ -10,7 +10,6 @@ let addedScripts = []; // Array to store references to added scripts
 
 document.addEventListener('DOMContentLoaded', function() {
 	setupDropdownValidation('.login-drop', validateLoginForm);
-	// setupDropdownValidation('.signup-drop', validateSignupForm);
 
 	setupLoginOrProfile();
 });
@@ -129,12 +128,24 @@ async function getPage(pageName)
 				initialized: false,
 				cleanup: null
 			};
-			loadScripts(['game/game.js','game/ai.js', 'game/init_game.js', 'game/movement_game.js', 'game/listeners_game.js', 'game/element.js', 'game/draw_game.js']);
+			loadScripts([
+				'game/ai.js',
+				'game/draw_game.js',
+				'game/element.js',
+				'game/game.js',
+				'game/init_game.js',
+				'game/listeners_game.js',
+				'game/movement_game.js',
+				'game/online_game.js'
+			]);
 			setTimeout(() => {
 				if (window.ensureInit) {
 					window.ensureInit();
 				}
 			}, 50);
+		} 
+		else if (pageName === 'profile') {
+			loadScripts(['profile.js']);
 		}
 		// else if (pageName === 'tournament')
 		// {
