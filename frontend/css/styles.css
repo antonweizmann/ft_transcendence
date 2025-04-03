@@ -593,15 +593,15 @@ body {
     box-shadow: none;
 }
 
-#profile_container.loading img,
-#profile_container.loading h1 {
-    visibility: hidden; /* Hide the content */
+.loading {
+    visibility: hidden;
 }
 
-#profile_container.loading::after {
-    content: 'Loading...'; /* Show a loading message */
+.loading::after {
+    visibility: visible;
+    content: 'Loading...';
     display: block;
     text-align: center;
     font-size: 1.2rem;
-    color: rgb(110, 45, 157);
+    color: rgba(221, 190, 245, 0.621);
 }
