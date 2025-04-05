@@ -97,10 +97,13 @@ async function addFriend(username, inputUsername) {
 	.then(data => {
 		if (data.length > 0 && data[0]) {
 			const playerHTML = `
-				<div>
-				<span>${data[0].username}</span>
-				<button class="btn-purple" id="sendRequestButton" data-player-id="${data[0].id}">Send Request</button>
-				</div>
+			<div class="d-flex justify-content-between align-items-center mb-3 p-3 border border-purple rounded shadow-sm">
+			<span class="fs-5 fw-semibold">${data[0].username}</span>
+			<div class="d-flex">
+				<button class="btn btn-purple btn-sm" id="sendRequestButton" data-player-id="${data[0].id}">Send Request</button>
+			</div>
+			</div>
+
 			`;
 
 			const playerElement = document.createElement('div');
@@ -112,7 +115,7 @@ async function addFriend(username, inputUsername) {
 			sendRequestButton.addEventListener('click', () => {
 				const user_id = sendRequestButton.dataset.playerId;
 				sendRequest(user_id);
-				playerElement.remove();	
+				playerElement.remove();
 			});
 		} else
 		{
@@ -192,7 +195,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		const response = await authenticatedFetch('https://localhost/api/player/' + localStorage.getItem("user_id"));
 		const data = await response.json();
 		const user_id = data.friend_requests_received.find(request => request.id == event.target.dataset.userId).id;
- 
+
 		if (event.target.classList.contains('accept-button')) {
 			acceptRequest(user_id);
 		} else if (event.target.classList.contains('decline-button')) {
