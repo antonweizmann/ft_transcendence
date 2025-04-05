@@ -273,7 +273,7 @@ html {
 }
 
 /* Add Friend Button */
-#addFriendForm .btn-primary {
+.btn-purple {
     background-color: var(--vibrant-purple); /* Purple background */
     color: var(--white); /* White text */
     border: 2px solid var(--deep-blue); /* Deep blue border */

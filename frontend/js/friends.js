@@ -1,3 +1,20 @@
+// import {showErrorMessage, removeErrorMessage} from "./form_validation.js"
+
+function showErrorMessage(input, message)
+{
+	const errorMessage = document.createElement('div');
+	errorMessage.classList.add('invalid-feedback', 'd-block');
+	errorMessage.textContent = message;
+	input.parentNode.appendChild(errorMessage);
+}
+
+function removeErrorMessage(input)
+{
+	input.classList.remove('is-invalid');
+	const existingErrors = input.parentNode.querySelectorAll('.invalid-feedback');
+	existingErrors.forEach(error => error.remove());
+}
+
 async function friendList() {
 	try {
 		const response = await authenticatedFetch('https://localhost/api/player/' + localStorage.getItem("user_id"));
@@ -53,11 +70,13 @@ async function friendRequests() {
 					requestListItem.classList.add('list-group-item');
 
 					const requestHTML = `
-						<div>
+					<div class="d-flex justify-content-between align-items-center">
 						<span>${request.username}</span>
-						<button class="btn btn-success accept-button" data-user-id="${request.id}">Accept</button>
-						<button class="btn btn-danger decline-button" data-user-id="${request.id}">Decline</button>
+						<div class="d-flex justify-content-end">
+							<button class="btn btn-success accept-button me-2" data-user-id="${request.id}">Accept</button>
+							<button class="btn btn-danger decline-button" data-user-id="${request.id}">Decline</button>
 						</div>
+					</div>
 					`;
 					requestListItem.innerHTML = requestHTML;
 
@@ -72,7 +91,7 @@ async function friendRequests() {
 	}
 }
 
-async function addFriend(username) {
+async function addFriend(username, inputUsername) {
 	if (!username) {
 		console.error('Username is required');
 		return false;
@@ -85,7 +104,7 @@ async function addFriend(username) {
 			const playerHTML = `
 				<div>
 				<span>${data[0].username}</span>
-				<button id="sendRequestButton" data-player-id="${data[0].id}">Send Request</button>
+				<button class="btn-purple" id="sendRequestButton" data-player-id="${data[0].id}">Send Request</button>
 				</div>
 			`;
 
@@ -98,9 +117,14 @@ async function addFriend(username) {
 			sendRequestButton.addEventListener('click', () => {
 				const user_id = sendRequestButton.dataset.playerId;
 				sendRequest(user_id);
+				playerElement.remove();	
 			});
 		} else
-			console.log('Player not found');		
+		{
+			 inputUsername.classList.add('is-invalid');
+			showErrorMessage( inputUsername, 'This user does not exist');
+			console.log('Player not found');
+		}
 	})
 	.catch(error => {
 		console.error('Error adding friend:', error);
@@ -157,12 +181,14 @@ document.addEventListener('DOMContentLoaded', function() {
 	const requestsTabElement = document.getElementById('requests-tab');
 	const addFriendForm = document.getElementById('addFriendForm');
 	const requestsListElement = document.getElementById('requestsList');
+	const inputUsername  = document.getElementById('newFriendName');
 
 	addFriendForm.addEventListener('submit', (e) => {
 		e.preventDefault();
-		const username = document.getElementById('newFriendName').value.trim();
+		removeErrorMessage(inputUsername);
+		const username = inputUsername.value.trim();
 		if (username)
-			addFriend(username);
+			addFriend(username, inputUsername);
 		else
 			document.getElementById('addFriendFeedback').innerHTML = 'Please enter a username';
 	});
