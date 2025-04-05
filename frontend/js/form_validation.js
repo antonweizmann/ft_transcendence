@@ -6,6 +6,7 @@ window.validateSignUpForm = validateSignUpForm;
 window.validateChangeInfoForm = validateChangeInfoForm;
 
 // Stop dropdown menu from closing and validate
+
 export function setupDropdownValidation(formName, validationFunction)
 {
 	const form = document.querySelector(formName);
@@ -16,12 +17,15 @@ export function setupDropdownValidation(formName, validationFunction)
 			event.stopPropagation();
 		});
 
-		form.addEventListener('submit', function(event)
+		form.addEventListener('submit', async function(event)
 		{
 			const dropdownInstance = bootstrap.Dropdown.getOrCreateInstance(dropdownToggle);
 
 			event.preventDefault();
-			if (!validationFunction(event))
+			const isValid = await validationFunction(event); // <--- await here!
+
+			if (isValid === false)
+
 				event.stopPropagation();
 			else
 				dropdownInstance.hide();
