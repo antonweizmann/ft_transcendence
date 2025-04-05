@@ -1,4 +1,4 @@
-window.addPlayer = addPlayer;
+// window.addPlayer = addPlayer;
 
 function	addTournament() {
 	const list = document.getElementById('tournamentList');
