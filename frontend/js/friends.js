@@ -3,16 +3,21 @@ async function friendList() {
 		const response = await authenticatedFetch('https://localhost/api/player/' + localStorage.getItem("user_id"));
 		const data = await response.json();
 		const friendsListElement = document.getElementById('friendsList');
+		console.log(data);
 
 		if (friendsListElement) {
 			friendsListElement.innerHTML = '';
 
 			if (data.friends) {
-				data.friends.forEach((friend) => {
+				for (const friend of data.friends) {
+					const friend_response = await authenticatedFetch('https://localhost/api/player/' + friend);
+					
+					const friend_data = await friend_response.json();
 					const friendListItem = document.createElement('li');
+
 					const friendHTML = `
 						<div>
-						<span>${friend}</span>
+						<span>${friend_data.username}</span>
 						<button id="unfriend-button" class="btn btn-danger unfriend-button" data-user-id="${friend}">Unfriend</button>
 						</div>
 					`;
@@ -23,7 +28,7 @@ async function friendList() {
 					unfriendButton.addEventListener('click', () => {
 						unfriend(friend);
 					});
-				});
+				};
 			} else
 				console.log('No friends found');
 		} else
