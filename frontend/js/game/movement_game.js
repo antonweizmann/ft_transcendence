@@ -1,4 +1,4 @@
-import { ball, player1, player2, BOARD_WIDTH} from "./init_game.js";
+import { ball, player1, player2, BOARD_WIDTH, gameMode} from "./init_game.js";
 import { isAi } from "./ai.js";
 
 export const keysPressed = {};
@@ -91,7 +91,7 @@ function increaseScore(player) {
 export function addMovement(event)
 {
 	if ((gameMode == 'ai' || gameMode == 'ai2' ) && !isAi && (event.key === "ArrowUp" || event.key === "ArrowDown"))
-		return ;
+		return;
 	else
 		keysPressed[event.key] = true;
 }
