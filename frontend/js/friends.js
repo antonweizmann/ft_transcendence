@@ -162,12 +162,14 @@ document.addEventListener('DOMContentLoaded', function() {
 			document.getElementById('addFriendFeedback').innerHTML = 'Please enter a username';
 	});
 
-	requestsListElement.addEventListener('click', (event) => {
+	requestsListElement.addEventListener('click', async (event) => {
+		const response = await authenticatedFetch('https://localhost/api/player/' + localStorage.getItem("user_id"));
+		const data = await response.json();
+		const user_id = data.friend_requests_received.find(request => request.id == event.target.dataset.userId).id;
+ 
 		if (event.target.classList.contains('accept-button')) {
-			const user_id = event.target.dataset.user_id;
 			acceptRequest(user_id);
 		} else if (event.target.classList.contains('decline-button')) {
-			const user_id = event.target.dataset.user_id;
 			declineRequest(user_id);
 		}
 	});
