@@ -115,7 +115,7 @@ async function sendRequest(user_id) {
 
 async function acceptRequest(user_id) {
 	try {
-		await authenticatedFetch(`https://localhost/api/player/accept_request/${user_id}`, {
+		await authenticatedFetch(`https://localhost/api/player/accept_request/${user_id}/`, {
 			method: 'POST',
 		});
 		console.log('Request accepted');
@@ -126,7 +126,7 @@ async function acceptRequest(user_id) {
 
 async function declineRequest(user_id) {
 	try {
-		await authenticatedFetch(`https://localhost/api/player/reject_request/${user_id}`, {
+		await authenticatedFetch(`https://localhost/api/player/reject_request/${user_id}/`, {
 			method: 'POST',
 		});
 		console.log('Request declined');
