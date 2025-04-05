@@ -137,10 +137,10 @@ async function declineRequest(user_id) {
 
 async function unfriend(user_id) {
 	try {
-		await authenticatedFetch(`https://localhost/api/player/unfriend/${user_id}`, {
-			method: 'POST',
-			redirect: 'manual'
+		const response = await authenticatedFetch(`https://localhost/api/player/unfriend/${user_id}/`, {
+			method: 'POST'
 		});
+		console.log(response);
 		console.log('Friend removed');
 	} catch (error) {
 		console.error('Error removing friend:', error);
