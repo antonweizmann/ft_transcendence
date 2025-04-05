@@ -604,3 +604,9 @@ body {
     font-size: 1.2rem;
     color: rgba(221, 190, 245, 0.621);
 }
+
+@media (min-width: 1400px) {
+    #lobbyDropdown {
+        margin-left: 0px !important;
+    }
+}
