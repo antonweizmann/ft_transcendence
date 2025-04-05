@@ -1,5 +1,5 @@
 // Stop dropdown menu from closing and validate
-async function setupDropdownValidation(formName, validationFunction)
+function setupDropdownValidation(formName, validationFunction)
 {
 	const form = document.querySelector(formName);
 	const dropdownToggle = form.closest('.dropdown').querySelector('.dropdown-toggle');
@@ -9,7 +9,7 @@ async function setupDropdownValidation(formName, validationFunction)
 			event.stopPropagation();
 		});
 
-		form.addEventListener('submit', function(event)
+		form.addEventListener('submit', async function(event)
 		{
 			const dropdownInstance = bootstrap.Dropdown.getOrCreateInstance(dropdownToggle);
 
