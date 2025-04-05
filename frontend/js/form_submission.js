@@ -17,6 +17,8 @@ export async function registerUser(fields)
 		const response = await fetch('https://localhost/api/player/register/', {
 			method: 'POST',
 			body: form_data,
+			credentials: 'include',
+			mode: 'cors'
 		});
 		if (!response.ok) {
 			const errors = await response.json();
@@ -78,6 +80,7 @@ export function logoutUser()
 	localStorage.removeItem('user_id');
 	setupLoginOrProfile();
 	console.log('User logged out successfully!');
+	loadPage('home')
 	if (window.location.pathname === '/play')
 	{
 		document.getElementById('onlineOption').style.display = "none";

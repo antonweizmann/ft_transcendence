@@ -60,15 +60,9 @@
                                 <label for="loginPassword" class="form-label" data-translate="passwordLabel">Password</label>
                                 <input type="password" class="form-control" placeholder="Password" id="loginPassword">
                             </div>
-                            <div class="mb-3">
-                                <div class="form-check">
-                                  <input type="checkbox" class="form-check-input" id="loginCheck">
-                                  <label class="form-check-label" for="loginCheck" data-translate="rememberMe">Remember me</label>
-                                </div>
-                            </div>
                             <div class="row g-2 align-items-center">
                               <div class="col-auto">
-                                <button type="submit" class="btn btn-primary" data-translate="loginButton">Log in</button>
+                                <button type="submit" class="btn btn-primary" data-translate="loginButton">Login</button>
                               </div>
                               <div class="col-auto">
                                 <button type="button" class="sign-up-instead" onclick="signUpInstead()" data-translate="signUp">Sign up instead</button>
@@ -76,9 +70,14 @@
                             </div>
                         </form>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" onclick="loadPage('profile')" id='profileButton' data-translate="profile">Profile</a>
-                    </li>
+                    <li class="nav-item dropdown" id="profileDropdown">
+                      <a class="nav-link dropdown-toggle" href="#" id="profileButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-translate="profile">Profile</a>
+                      <div class="dropdown-menu profile-drop" aria-labelledby="profileButton">
+                          <a class="dropdown-item" onclick="loadPage('profile')" data-translate="viewProfile">View Profile</a>
+                          <a class="dropdown-item" onclick="loadPage('change-profile')" data-translate="settings">Settings</a>
+                          <a class="dropdown-item" onclick="logoutUser()" data-translate="logOut">Log Out</a>
+                      </div>
+                  </li>
                 </ul>
 			</div>
 		</div>
