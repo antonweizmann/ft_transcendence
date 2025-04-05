@@ -1,4 +1,5 @@
-// window.addPlayer = addPlayer;
+window.setPlayerCount = setPlayerCount;
+window.setWinningPoints = setWinningPoints;
 
 function	addTournament() {
 	const list = document.getElementById('tournamentList');
@@ -26,20 +27,4 @@ function	setWinningPoints() {
 	const winningPointsDisplay = document.getElementById('winningPointsDisplay');
 
 	winningPointsDisplay.innerText = winningPoints.value;
-}
-
-function	modeChangeInput() {
-	const id = document.getElementById('createLobbyId');
-	const password = document.getElementById('createLobbyPassword');
-	const mode = document.getElementById('createLobbyMode');
-
-	if (mode.value === "local")
-	{
-		id.disabled = true;
-		password.disabled = true;
-	} else {
-		id.disabled = false;
-		password.disabled = false;
-	}
-
 }
