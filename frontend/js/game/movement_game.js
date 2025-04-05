@@ -7,13 +7,13 @@ let scorePlayer2 = 0;
 let stopDoubleCollision;
 
 export function handleMovement() {
-	if(keysPressed['w']) {
+	if (keysPressed['w']) {
 		player1.y -=player1.speed;
 	}
-	else if(keysPressed['s']) {
+	else if (keysPressed['s']) {
 		player1.y +=player1.speed;
 	}
-	if(keysPressed['ArrowUp']){
+	if (keysPressed['ArrowUp']) {
 		player2.y -=player2.speed;
 	}
 	else if(keysPressed['ArrowDown']) {
