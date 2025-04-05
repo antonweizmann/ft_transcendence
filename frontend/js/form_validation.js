@@ -3,6 +3,7 @@ import { removeErrorMessage, showErrors, showErrorMessage } from './error_handli
 import { registerUser, loginUser } from './form_submission.js';
 
 window.validateSignUpForm = validateSignUpForm;
+window.validateChangeInfoForm = validateChangeInfoForm;
 
 // Stop dropdown menu from closing and validate
 export function setupDropdownValidation(formName, validationFunction)
@@ -77,8 +78,8 @@ async function validateSignUpForm(event)
 			errors[key] = 'Please enter your ' + key;
 	});
 	if (Object.keys(errors).length === 0) {
-		isEmailValid(errors);
-		isPasswordValid(errors);
+		isEmailValid(errors, document.getElementById('signUpEmail'));
+		isPasswordValid(errors, document.getElementById('signUpPassword'), document.getElementById('signUpPassword2'));
 	}
 	if (Object.keys(errors).length > 0) {
 		showErrors(fields, errors);
@@ -91,8 +92,7 @@ async function validateSignUpForm(event)
 	return true;
 }
 
-function isEmailValid(errors) {
-	const email = document.getElementById('signUpEmail');
+function isEmailValid(errors, email) {
 	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 	errors.email = errors.email || [];
@@ -104,10 +104,8 @@ function isEmailValid(errors) {
 		delete errors.email;
 }
 
-function isPasswordValid(errors)
+function isPasswordValid(errors, password, password2)
 {
-	const password = document.getElementById('signUpPassword');
-	const password2 = document.getElementById('signUpPassword2');
 	const rules = [
 		{ test: () => password.value !== password2.value,
 			message: 'Passwords do not match',
@@ -159,4 +157,37 @@ export function updateActive(pageName)
 		newActiveNavLink.classList.add('active');
 		newActiveNavLink.setAttribute('aria-current', 'page');
 	}
+}
+
+async function validateChangeInfoForm(event)
+{
+	event.preventDefault();
+
+	let errors = {};
+	const fields = [
+		{ key : 'username',			field : document.getElementById('changeInfoUsername') },
+		{ key : 'email',			field : document.getElementById('changeInfoEmail') },
+		{ key : 'password',			field : document.getElementById('changeInfoPassword') },
+		{ key : 'password2',		field : document.getElementById('changeInfoPassword2') },
+		{ key : 'profile_picture',	field : document.getElementById('formFile') },
+	];
+
+	fields.forEach(({ key, field }) => {
+		removeErrorMessage(field);
+		if (key === 'profile_picture')
+			return ;
+		if (!field.value.trim())
+			errors[key] = 'Please enter your ' + key;
+	});
+	if (Object.keys(errors).length === 0) {
+		isEmailValid(errors, document.getElementById('changeInfoEmail'));
+		isPasswordValid(errors, document.getElementById('changeInfoPassword'), document.getElementById('changeInfoPassword2'));
+	}
+	if (Object.keys(errors).length > 0) {
+		showErrors(fields, errors);
+		return false;
+	}
+	if (!await changeInfo(fields))
+		return false;
+	return true;
 }
