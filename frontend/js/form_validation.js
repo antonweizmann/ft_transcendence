@@ -1,5 +1,5 @@
 // Stop dropdown menu from closing and validate
-function setupDropdownValidation(formName, validationFunction)
+async function setupDropdownValidation(formName, validationFunction)
 {
 	const form = document.querySelector(formName);
 	const dropdownToggle = form.closest('.dropdown').querySelector('.dropdown-toggle');
@@ -14,7 +14,10 @@ function setupDropdownValidation(formName, validationFunction)
 			const dropdownInstance = bootstrap.Dropdown.getOrCreateInstance(dropdownToggle);
 
 			event.preventDefault();
-			if (!validationFunction(event))
+			const isValid = await validationFunction(event); // <--- await here!
+
+			if (isValid === false)
+
 				event.stopPropagation();
 			else
 				dropdownInstance.hide();

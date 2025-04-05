@@ -91,11 +91,11 @@ function increaseScore(player) {
 export function addMovement(event)
 {
 	if ((gameMode == 'ai' || gameMode == 'ai2' ) && !isAi && (event.key === "ArrowUp" || event.key === "ArrowDown"))
-		return ;
+		return;
 	else
 		keysPressed[event.key] = true;
 }
 export function stopMovement(event){
 	delete keysPressed[event.key];
-}\
+}
 
