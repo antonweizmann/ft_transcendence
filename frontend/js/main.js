@@ -272,8 +272,8 @@ function signUpInstead() {
 
 function setImagePreview(inputElement) {
 	const previewImage = document.getElementById('previewImage');
+	const file = inputElement.files[0];
 
-	file = inputElement.files[0];
 	if (file) {
 		const reader = new FileReader();
 		reader.onload = function (e) {
