@@ -1,4 +1,4 @@
-import { ball, player1, player2, BOARD_WIDTH} from "./init_game.js";
+import { ball, player1, player2, BOARD_WIDTH, gameMode} from "./init_game.js";
 import { isAi } from "./ai.js";
 
 export const keysPressed = {};
@@ -97,5 +97,5 @@ export function addMovement(event)
 }
 export function stopMovement(event){
 	delete keysPressed[event.key];
-}
+}\
 
