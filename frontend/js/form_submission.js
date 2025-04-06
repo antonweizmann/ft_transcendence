@@ -1,6 +1,6 @@
 import { showErrors, removeErrorMessage, showErrorMessage } from './error_handling.js';
 import { authenticatedFetch } from './authentication.js';
-import { setupLoginOrProfile } from './main.js';
+import { loadPage, setupLoginOrProfile } from './main.js';
 
 window.logoutUser = logoutUser;
 
@@ -68,6 +68,7 @@ export async function changeUserInfo(fields)
 	}
 
 	console.log("User info updated successfully!");
+	loadPage('profile');
 	return true;
 }
 
