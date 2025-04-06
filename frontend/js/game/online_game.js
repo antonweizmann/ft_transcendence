@@ -1,5 +1,5 @@
 
-import { gameModeSelector, BOARD_HEIGHT, player1, player2, ball, setAnimationId, getAnimationId} from "./init_game.js";
+import { BOARD_HEIGHT, player1, player2, ball, setAnimationId, getAnimationId} from "./init_game.js";
 import { updateElements } from "./draw_game.js";
 import { keysPressed } from "./movement_game.js";
 import { cleanupGame, resetGame } from "./game.js";
@@ -113,6 +113,10 @@ function parseMessage(data) {
 		gameOver(message.game_state);
 	}
 	else if (message.type === 'lobby_update') {
+		console.group('Lobby update');
+		console.log('game_id:', message.game_id);
+		console.log('players:', message.players);
+		console.groupEnd();
 		updateLobby(message.players);
 	} else if (message.type === 'countdown' && getAnimationId() === null) {
 		setAnimationId(requestAnimationFrame(onlineGameLoop));
@@ -129,6 +133,8 @@ function updateGame(game_state) {
 	const Y = 1;
 	const scale = BOARD_HEIGHT / 500;
 
+	if (getAnimationId() === null) 
+		setAnimationId(requestAnimationFrame(onlineGameLoop));
 	player1.y = game_state.paddle_1_position * scale;
 	player2.y = game_state.paddle_2_position * scale;
 	ball.x = game_state.ball_position[X] * scale;
@@ -164,7 +170,7 @@ function updateLobby(players) {
 	for (const player of players) {
 		if (player.index === 0) {
 			player1Container.textContent = player.username;
-		} else {
+		} else if (player.index === 1) {
 			player2Container.textContent = player.username;
 		}
 	}
