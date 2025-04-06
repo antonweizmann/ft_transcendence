@@ -3,19 +3,29 @@ import { removeErrorMessage, showErrorMessage } from "./error_handling.js";
 window.setPlayerCount = setPlayerCount;
 window.setWinningPoints = setWinningPoints;
 window.validateCreateLobby = validateCreateLobby;
+window.addTournament = addTournament;
 
-function	addTournament() {
+function	addTournament(id, amount, totalAmount) {
 	const list = document.getElementById('tournamentList');
-	// const input = document.getElementById('add-player-name');
+	var item = document.getElementById('tournamentExample').cloneNode(true);
 
-	var item = document.createElement('div');
-	item.className = 'list-group-item';
-	item.textContent = Tournament;
-	// input.value = '';
+	item.id = '';
+	item.style = 'display: block;';
+	item.querySelector('.col-3 div').textContent = id;
+	item.querySelector('.col-1 div').textContent = `${amount}/${totalAmount}`;
+	item.querySelector('.button').addEventListener('click', function() {
+		joinTournament(id);
+	});
 
 	if (item.textContent != '')
 		list.appendChild(item);
-	return false;
+}
+
+function	joinTournament(id) {
+	console.log('Joining tournament with ID:', id);
+}
+
+function	clearTournamentList() {
 }
 
 function	setPlayerCount() {
