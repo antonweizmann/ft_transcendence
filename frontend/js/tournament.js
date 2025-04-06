@@ -1,5 +1,8 @@
+import { removeErrorMessage, showErrorMessage } from "./error_handling.js";
+
 window.setPlayerCount = setPlayerCount;
 window.setWinningPoints = setWinningPoints;
+window.validateCreateLobby = validateCreateLobby;
 
 function	addTournament() {
 	const list = document.getElementById('tournamentList');
@@ -27,4 +30,17 @@ function	setWinningPoints() {
 	const winningPointsDisplay = document.getElementById('winningPointsDisplay');
 
 	winningPointsDisplay.innerText = winningPoints.value;
+}
+
+async function	validateCreateLobby() {
+	const lobbyId = document.getElementById('createLobbyId');
+
+	removeErrorMessage(lobbyId);
+	if (!lobbyId.value.trim()) {
+		lobbyId.classList.add('is-invalid');
+		showErrorMessage(lobbyId, 'Please enter a lobby ID');
+		return false;
+	}
+	loadPage('tournamentwait');
+	return true;
 }
