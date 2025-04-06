@@ -173,6 +173,14 @@ async function friendRequests() {
 
 async function addFriend(username, inputUsername) {
 	try {
+		const currentUsername = localStorage.getItem("username"); // Make sure username is stored in localStorage when logging in
+
+		if (username === currentUsername) {
+			inputUsername.classList.add('is-invalid');
+			showErrorMessage(inputUsername, "You can't add yourself as a friend");
+			return;
+		}
+
 		const response = await fetch(`https://localhost/api/player/list?username=${username}`, { method: 'GET' });
 		const data = await response.json();
 
