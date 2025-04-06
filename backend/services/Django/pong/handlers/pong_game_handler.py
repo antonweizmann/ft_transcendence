@@ -112,13 +112,13 @@ class PongGameHandler(GameHandlerBase):
 		with self._lock:
 			# Paddle 1 collision
 			if (self._state['ball_position'][X] <= 20
-				and self._state['ball_position'][Y] >= self._state['paddle_1_position'] - 100
+				and self._state['ball_position'][Y] + 20 >= self._state['paddle_1_position']
 				and self._state['ball_position'][Y] <= self._state['paddle_1_position'] + 100):
 				self.__bounce_from_paddle(self._state['paddle_1_position'])
 
 			# Paddle 2 collision
 			if (self._state['ball_position'][X] >= 760
-				and self._state['ball_position'][Y] >= self._state['paddle_2_position'] - 100
+				and self._state['ball_position'][Y] + 20 >= self._state['paddle_2_position']
 				and self._state['ball_position'][Y] <= self._state['paddle_2_position'] + 100):
 				self.__bounce_from_paddle(self._state['paddle_2_position'])
 

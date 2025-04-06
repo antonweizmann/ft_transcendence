@@ -48,4 +48,5 @@ python manage.py createsuperuser --noinput \
 	|| echo "Superuser already exists."
 
 echo "Starting Django server with Daphne..."
-exec daphne -b 0.0.0.0 -p 8000 core.asgi:application
+# exec daphne -b 0.0.0.0 -p 8000 core.asgi:application
+python manage.py runserver  0.0.0.0:8000
