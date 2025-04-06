@@ -97,46 +97,45 @@ async function validateSignUpForm(event)
 }
 
 async function validateChangeInfoForm(event) {
-    event.preventDefault();
+	event.preventDefault();
 
-    let errors = {};
-    const fields = [
-        { key: 'username', field: document.getElementById('changeInfoUsername') },
-        { key: 'email', field: document.getElementById('changeInfoEmail') },
-        { key: 'password', field: document.getElementById('changeInfoPassword') },
-        { key: 'password2', field: document.getElementById('changeInfoPassword2') },
-        { key: 'passwordCurrent', field: document.getElementById('changeInfoPasswordCurrent') },
-        { key: 'profile_picture', field: document.getElementById('formFile') },
-        { key: 'language', field: document.getElementById('languageSetting') }
-    ];
+	let errors = {};
+	const allFields = [
+		{ key : 'username',			field : document.getElementById('changeInfoUsername') },
+		{ key : 'email',			field : document.getElementById('changeInfoEmail') },
+		{ key : 'password',			field : document.getElementById('changeInfoPassword') },
+		{ key : 'password2',		field : document.getElementById('changeInfoPassword2') },
+		{ key : 'passwordCurrent',	field : document.getElementById('changeInfoPasswordCurrent') },
+		{ key : 'profile_picture',	field : document.getElementById('formFile') },
+		{ key: 'language',			field: document.getElementById('languageSetting') }
+	];
 
-    fields.forEach(({ key, field }) => {
-        removeErrorMessage(field);
-        if (key === 'profile_picture') return;
-        if (key === 'language') return;  // Assuming no validation for language selection
-        if (!field.value.trim()) {
-            errors[key] = 'Please enter your ' + key;
-        }
-    });
+	const fields = allFields.filter(({ key, field }) => field && field.value.trim() !== '' || key === 'passwordCurrent');
 
-    if (Object.keys(errors).length === 0) {
-        isEmailValid(errors, document.getElementById('changeInfoEmail'));
-        isPasswordValid(errors, document.getElementById('changeInfoPassword'), document.getElementById('changeInfoPassword2'));
-    }
+	fields.forEach(({ key, field }) => {
+		removeErrorMessage(field);
+		if (key === 'profile_picture' || key === 'language')
+			return ;
+	});
+	if (Object.keys(errors).length === 0) {
+		if (fields.find(({ key }) => key === 'email'))
+			isEmailValid(errors, document.getElementById('changeInfoEmail'));
+		if (fields.find(({ key }) => key === 'password') || fields.find(({ key }) => key === 'password2'))
+		isPasswordValid(errors, document.getElementById('changeInfoPassword'), document.getElementById('changeInfoPassword2'));
+	}
+	if (fields.find(({ key }) => key === 'passwordCurrent').field.value === '')
+		errors['passwordCurrent'] = 'Please enter your current password';
+	if (Object.keys(errors).length > 0) {
+		showErrors(fields, errors);
+		return false;
+	}
 
-    if (Object.keys(errors).length > 0) {
-        showErrors(fields, errors);
-        return false;
-    }
-
-    if (!await updateUserInfo(fields)) {
-        return false;
-    }
-
-    loadPage('profile');
-    setupProfile();
-    return true;
+	// this needs to be connected to the backend
+	// if (!await changeInfo(fields))
+	// 	return false;
+	return true;
 }
+
 
 
 function isEmailValid(errors, email) {
