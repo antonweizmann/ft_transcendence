@@ -259,8 +259,9 @@ html {
 /* Hover Effect on List Items */
 #friendsList .list-group-item:hover, #requestsList .list-group-item:hover {
     background-color: var(--vibrant-purple); /* Purple background on hover */
-    color: var(--deep-blue); /* Deep blue text on hover */
+
 }
+
 
 /* Add Friend Form */
 #addFriendForm {
@@ -283,7 +284,7 @@ html {
 }
 
 /* Add Friend Button */
-#addFriendForm .btn-primary {
+.btn-purple {
     background-color: var(--vibrant-purple); /* Purple background */
     color: var(--white); /* White text */
     border: 2px solid var(--deep-blue); /* Deep blue border */
