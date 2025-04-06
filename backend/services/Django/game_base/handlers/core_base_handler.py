@@ -32,7 +32,7 @@ class CoreBaseHandler:
 		return super(CoreBaseHandler, cls).__new__(cls)
 
 	def __del__(self):
-		if self._thread is not None:
+		if self._thread is not None and self._thread.is_alive():
 			self._thread.join()
 		if self._model.status == 'in_progress':
 			self._model.status = 'finished'
