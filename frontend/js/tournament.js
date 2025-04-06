@@ -109,13 +109,13 @@ function resetTournamentSocket() {
 	tournamentSocket = null;
 }
 
-function	addTournament() {
+function	addTournament(name, id, amount, totalAmount) {
 	const list = document.getElementById('tournamentList');
 	var item = document.getElementById('tournamentExample').cloneNode(true);
 
 	item.id = '';
 	item.style = 'display: block;';
-	item.querySelector('.col-3 div').textContent = id;
+	item.querySelector('.col-3 div').textContent = name;
 	item.querySelector('.col-1 div').textContent = `${amount}/${totalAmount}`;
 	item.querySelector('.button').addEventListener('click', function() {
 		joinTournament(id);
@@ -131,6 +131,10 @@ function	joinTournament(id) {
 
 function	clearTournamentList() {
 	document.getElementById('tournamentList').innerHTML = '';
+}
+
+function	refreshTournamentList() {
+
 }
 
 function	addPlayer(id) {
