@@ -42,9 +42,9 @@ export function resizeElement(element) {
     element._width = typeof element.original.width === 'function' ? element.original.width() : element.original.width;
     element._height = typeof element.original.height === 'function' ? element.original.height() : element.original.height;
 
-    // Calculate the scale factors
-    const scaleX = element.maxX / oldWidth;
-    const scaleY = element.maxY / oldHeight;
+    // // Calculate the scale factors
+    // const scaleX = element.maxX / oldWidth;
+    // const scaleY = element.maxY / oldHeight;
 
     // Adjust the position
     element.x = (element.x / oldWidth) * element.maxX;
