@@ -40,11 +40,11 @@ export async function registerUser(fields)
 export async function loginUser(username, password)
 {
 	const loginFields = [
-        { key: 'username', field: document.getElementById('loginUsername') },
-        { key: 'password', field: document.getElementById('loginPassword') }
-    ];
+		{ key: 'username', field: document.getElementById('loginUsername') },
+		{ key: 'password', field: document.getElementById('loginPassword') }
+	];
 
-    loginFields.forEach(({ field }) => removeErrorMessage(field));
+	loginFields.forEach(({ field }) => removeErrorMessage(field));
 
 
 	const form_data = new FormData();
@@ -66,44 +66,44 @@ export async function loginUser(username, password)
 			localStorage.setItem('isLoggedIn', true);
 			console.log(`user ${username} logged in successfully!`);
 
-            setupLoginOrProfile();
+			setupLoginOrProfile();
 
-            if (window.location.pathname === '/play')
-                document.getElementById('onlineOption').style.display = "block";
+			if (window.location.pathname === '/play')
+				document.getElementById('onlineOption').style.display = "block";
 
-            return true;
-        }
-        else {
-            const errors = await response.json();
+			return true;
+		}
+		else {
+			const errors = await response.json();
 
-            // Handle non-field errors (like invalid credentials)
-            if (errors.non_field_errors || errors.detail) {
-                const errorMessage = errors.non_field_errors || [errors.detail];
+			// Handle non-field errors (like invalid credentials)
+			if (errors.non_field_errors || errors.detail) {
+				const errorMessage = errors.non_field_errors || [errors.detail];
 
-                // Display error on both fields
-                loginFields.forEach(({ field }) => {
-                    field.classList.add('is-invalid');
-                    showErrorMessage(field, errorMessage);
-                });
-            } else {
-                // Handle field-specific errors
-                showErrors(loginFields, errors);
-            }
+				// Display error on both fields
+				loginFields.forEach(({ field }) => {
+					field.classList.add('is-invalid');
+					showErrorMessage(field, errorMessage);
+				});
+			} else {
+				// Handle field-specific errors
+				showErrors(loginFields, errors);
+			}
 
-            console.error("Login failed:", errors);
-            return false;
-        }
-    } catch (error) {
-        console.error("Login request failed:", error);
+			console.error("Login failed:", errors);
+			return false;
+		}
+	} catch (error) {
+		console.error("Login request failed:", error);
 
-        // Show a general error message on both fields
-        loginFields.forEach(({ field }) => {
-            field.classList.add('is-invalid');
-            showErrorMessage(field, ["Connection failed. Please try again."]);
-        });
+		// Show a general error message on both fields
+		loginFields.forEach(({ field }) => {
+			field.classList.add('is-invalid');
+			showErrorMessage(field, ["Connection failed. Please try again."]);
+		});
 
-        return false;
-    }
+		return false;
+	}
 }
 
 export function logoutUser()
