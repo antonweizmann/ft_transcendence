@@ -1,5 +1,6 @@
 import { removeErrorMessage, showErrorMessage } from "./error_handling.js";
 import { LoadDataFromBackend } from "./profile.js";
+import { joinTournament } from "./tournament/backend_communication.js";
 
 console.log("Tournament JS pre-loaded");
 
@@ -86,8 +87,23 @@ function gameOver(game_state) {
 	resetTournamentSocket();
 }
 
-function updateLobby(players) {
+// Lobby update: 
+// Array [ {…} ]
+// ​
+// 0: Object { index: 0, username: "default" }
+// ​​
+// index: 0
+// ​​
+// username: "default"
+// ​​
+// <prototype>: Object { … }
+// ​
+// length: 1
+async function updateLobby(players) {
 	console.log('Lobby update:', players);
+	const playerAmount = document.getElementById('playerCountDisplay').value;
+	const winningPoints = document.getElementById('winningPointsDisplay').value;
+	loadPage('tournamentwait');
 }
 
 function updateTournament(tournament_state) {
@@ -125,10 +141,6 @@ function	addTournament() {
 		list.appendChild(item);
 }
 
-function	joinTournament(id) {
-	console.log('Joining tournament with ID:', id);
-}
-
 function	clearTournamentList() {
 	document.getElementById('tournamentList').innerHTML = '';
 }
@@ -163,7 +175,7 @@ function	setWinningPoints() {
 	winningPointsDisplay.innerText = winningPoints.value;
 }
 
-async function	validateCreateLobby() {
+function	validateCreateLobby() {
 	const lobbyId = document.getElementById('createLobbyId');
 
 	removeErrorMessage(lobbyId);
@@ -172,6 +184,5 @@ async function	validateCreateLobby() {
 		showErrorMessage(lobbyId, 'Please enter a lobby ID');
 		return false;
 	}
-	loadPage('tournamentwait');
-	return true;
+	joinTournament(lobbyId.value);
 }
