@@ -207,7 +207,7 @@ function	validateCreateLobby() {
 	joinTournament(lobbyId.value);
 }
 
-function	setPlayerCount(amount, total) {
+function	setPlayerInLobby(amount, total) {
 	const playerCount = document.getElementById('playerCount');
 
 	playerCountDisplay.innerText = amount + "/" + total;
