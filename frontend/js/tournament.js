@@ -4,6 +4,7 @@ window.setPlayerCount = setPlayerCount;
 window.setWinningPoints = setWinningPoints;
 window.validateCreateLobby = validateCreateLobby;
 window.addTournament = addTournament;
+window.clearTournamentList = clearTournamentList;
 
 function	addTournament(id, amount, totalAmount) {
 	const list = document.getElementById('tournamentList');
@@ -26,6 +27,7 @@ function	joinTournament(id) {
 }
 
 function	clearTournamentList() {
+	document.getElementById('tournamentList').innerHTML = '';
 }
 
 function	setPlayerCount() {
