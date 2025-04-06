@@ -165,6 +165,8 @@ function updateLobby(players) {
 	const player1Container = document.getElementById('player1Name');
 	const player2Container = document.getElementById('player2Name');
 
+	if (getAnimationId() !== null)
+		return;
 	player1Container.textContent = '';
 	player2Container.textContent = '';
 	for (const player of players) {
