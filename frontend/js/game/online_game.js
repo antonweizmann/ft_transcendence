@@ -99,6 +99,7 @@ export function resetSocket() {
 
 function parseMessage(data) {
 	let message;
+	const gameTimer = document.getElementById('scoreGame');
 
 	try {
 		message = JSON.parse(data);
@@ -121,7 +122,12 @@ function parseMessage(data) {
 	} else if (message.type === 'countdown' && getAnimationId() === null) {
 		setAnimationId(requestAnimationFrame(onlineGameLoop));
 	} else {
-		if (message.message)
+		if (message.type === 'countdown' && message.message)
+		{
+			gameTimer.textContent = message.message[17] + ' : ' + message.message[17];
+			console.log('Received message:', message.message);
+		}
+		else if (message.message)
 			console.log('Received message:', message.message);
 		else
 			console.log('Received message:', message);
@@ -133,7 +139,7 @@ function updateGame(game_state) {
 	const Y = 1;
 	const scale = BOARD_HEIGHT / 500;
 
-	if (getAnimationId() === null) 
+	if (getAnimationId() === null)
 		setAnimationId(requestAnimationFrame(onlineGameLoop));
 	player1.y = game_state.paddle_1_position * scale;
 	player2.y = game_state.paddle_2_position * scale;
