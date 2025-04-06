@@ -3,6 +3,7 @@ import { BOARD_HEIGHT, player1, player2, ball, setAnimationId, getAnimationId} f
 import { updateElements } from "./draw_game.js";
 import { keysPressed } from "./movement_game.js";
 import { cleanupGame, resetGame } from "./game.js";
+import { loadPage } from "../main.js";
 
 export let	socket;
 
@@ -206,4 +207,8 @@ function showWinningScreen(game_state) {
 
 	winnerMessage.textContent = winnerText;
 	winningScreen.style.display = 'flex';
+
+	setTimeout(() => {
+		loadPage('play'); // Custom function to go back to lobby/home
+	}, 5000);
 }
