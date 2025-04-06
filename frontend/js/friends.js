@@ -85,9 +85,11 @@ async function renderFriendList(data) {
 
 		const friendListItem = document.createElement('li');
 		friendListItem.innerHTML = `
-			<div>
+			<div class="d-flex justify-content-between align-items-center">
 				<span>${friendData.username}</span>
-				<button id="unfriend-button" class="btn btn-danger unfriend-button" data-user-id="${friend}">Unfriend</button>
+				<div class="d-flex justify-content-end">
+					<button id="unfriend-button" class="btn btn-danger unfriend-button" data-user-id="${friend}">Unfriend</button>
+				</div>
 			</div>
 		`;
 		friendsListElement.appendChild(friendListItem);
@@ -95,6 +97,7 @@ async function renderFriendList(data) {
 		const unfriendButton = friendListItem.querySelector('#unfriend-button');
 		unfriendButton.addEventListener('click', () => {
 			unfriend(friend);
+			friendListItem.remove();
 		});
 	});
 }
@@ -148,10 +151,12 @@ async function renderFriendRequests(data) {
 
 		acceptButton.addEventListener('click', () => {
 			acceptRequest(request.id);
+			requestListItem.remove();
 		});
 
 		declineButton.addEventListener('click', () => {
 			declineRequest(request.id);
+			requestListItem.remove();
 		});
 	});
 }
@@ -208,6 +213,24 @@ document.addEventListener('DOMContentLoaded', () => {
 	const friendsTabElement = document.getElementById('friends-tab');
 	const requestsTabElement = document.getElementById('requests-tab');
 	const addFriendForm = document.getElementById('addFriendForm');
+	const friendsTrigger = document.getElementById('friendsTrigger');
+
+	friendsTrigger.addEventListener('click', () => {
+		const activeTab = document.querySelector('#friendsTab .nav-link.active');
+
+		if (!activeTab) return;
+
+		switch (activeTab.id) {
+			case 'friends-tab':
+				friendList(); // Call your function to load/display the friends
+				break;
+			case 'requests-tab':
+				friendRequests(); // Call your function to load/display friend requests
+				break;
+			default:
+				console.log('No action defined for this tab.');
+		}
+	});
 
 	addFriendForm.addEventListener('submit', handleAddFriendFormSubmit);
 	friendsTabElement.addEventListener('click', friendList);
