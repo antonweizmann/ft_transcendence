@@ -1,3 +1,18 @@
+export async function fetchUserData(user_id) {
+	try {
+		if (user_id) {
+			const response = await authenticatedFetch(`https://localhost/api/player/${user_id}/`);
+			return await response.json();
+		}
+		else {
+			const response = await authenticatedFetch(`https://localhost/api/player/${localStorage.getItem("user_id")}`);
+			return await response.json();
+		}
+	} catch (error) {
+		console.error('Error fetching User data:', error);
+	}
+}
+
 export async function refreshAccessToken() {
 	const refreshToken = localStorage.getItem('refresh');
 	if (!refreshToken) {

@@ -1,6 +1,6 @@
 import { setupDropdownValidation, validateLoginForm, updateActive } from './form_validation.js';
 import { logoutUser } from './form_submission.js';
-import { refreshAccessToken } from './authentication.js';
+import { refreshAccessToken, fetchUserData } from './authentication.js';
 
 window.loadPage = loadPage;
 window.signUpInstead = signUpInstead;
@@ -281,6 +281,7 @@ function setImagePreview(inputElement) {
 		};
 		reader.readAsDataURL(file); // Read the file as a Data URL
 	} else {
-		previewImage.src = '../assets/default_profile.png'; // Reset to placeholder if no file is selected
+		data = fetchUserData();
+		previewImage.src = data.profile_picture; // Reset to placeholder if no file is selected
 	}
 }
