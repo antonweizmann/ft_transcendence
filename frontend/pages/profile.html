@@ -1,114 +1,33 @@
 <!DOCTYPE html>
 <div class="container-xxl mt-5">
-    <div class="row justify-content-center">
-        <div id="profile_container" class="loading col-md-8 text-center">
-            <img id="profile_pic" src="../assets/default_profile.png" alt="Profile Picture" class="mt-3">
-            <h1 class="responsive-title" data-translate="profileTitle" id="username">Your Profile</h1>
-        </div>
-    </div>
-    <div class="row justify-content-center mt-4 profile-columns">
-        <article class="card col-md-4 mb-3">
-            <div class="card-body">
-                <h2 class="card-title text-center" data-translate="statsTitle">Stats</h2>
-                <div id="stats_container" class="loading card-text">
-                    <p>
-                        <span data-translate="gamesPlayed">Games Played:</span>
-                        <span id="games_played">0</span>
-                    <p>
-                        <span data-translate="wins">Wins:</span>
-                        <span id="games_won">0</span>
-                    </p>
-                    <p>
-                        <span data-translate="losses">Losses:</span>
-                        <span id="games_lost">0</span>
-                    </p>
-                    <p>
-                        <span data-translate="winRate">Win Rate:</span>
-                        <span id="win_rate">0%</span>
-                    </p>
-                </div>
-            </div>
-        </article>
-        <article class="card col-md-4 mb-3">
-            <div class="card-body">
-                <h2 class="card-title text-center" data-translate="overviewTitle">Overview</h2>
-                <p class="card-text" data-translate="overviewText">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
-            </div>
-        </article>
-        <article class="card col-md-4 mb-3">
-            <div class="card-body">
-                <h2 class="card-title text-center" data-translate="achievementsTitle">Achievements</h2>
-                <ul class="list-group">
-                    <li class="list-group-item" data-translate="achievement1">Achievement 1</li>
-                    <li class="list-group-item" data-translate="achievement2">Achievement 2</li>
-                    <li class="list-group-item" data-translate="achievement3">Achievement 3</li>
-                </ul>
-            </div>
-        </article>
-    </div>
-
-    <!-- Change Info Form -->
-    <form id="changeInfoForm" enctype="multipart/form-data" onsubmit="return validateChangeInfoForm(event)" class="container mt-5">
-        <div class="mb-3 text-center changeInfo-header">
-            <h2>Settings</h2>
-            <h4>Leave empty to keep the old value</h4>
-        </div>
-
-        <!-- Profile Pic -->
-        <div class="mb-3">
-            <div class="row align-items-center file-input-container">
-                <div class="col-md-3 text-center">
-                    <img id="previewImage" src="../assets/default_profile.png" class="profile-pic" alt="Default Profile Picture">
-                </div>
-                <div class="col-md-9">
-                    <label for="formFile" class="form-label">Pick profile picture</label>
-                    <input class="form-control" type="file" id="formFile" onchange="setImagePreview(this)">
-                </div>
-            </div>
-        </div>
-
-        <!-- Username -->
-        <div class="mb-3">
-            <label id="username" for="changeInfoUsername" class="form-label">Username</label>
-            <input type="text" class="form-control" placeholder="Choose a new username" id="changeInfoUsername">
-        </div>
-
-        <!-- Email Address -->
-        <div class="mb-3">
-            <label for="changeInfoEmail" class="form-label">Email address</label>
-            <input class="form-control" placeholder="Enter your new email address" id="changeInfoEmail">
-        </div>
-
-        <!-- Password -->
-        <div class="mb-3">
-            <label for="changeInfoPassword" class="form-label">Password</label>
-            <input type="password" class="form-control" placeholder="Enter your new password" id="changeInfoPassword">
-        </div>
-
-        <!-- Repeat Password -->
-        <div class="mb-3">
-            <label for="changeInfoPassword2" class="form-label">Repeat password</label>
-            <input type="password" class="form-control" placeholder="Repeat your new password" id="changeInfoPassword2">
-        </div>
-
-        <div class="mb-3">
-            <label for="languageSetting" class="form-label">Select default language</label>
-            <select id="languageSetting" class="form-select" data-translate="languageSelector">
-                <option value="en" data-translate="english">English</option>
-                <option value="es" data-translate="spanish">Español</option>
-                <option value="de" data-translate="german">Deutsch</option>
-            </select>
-        </div>
-
-        <!-- Password -->
-        <div class="mb-3">
-            <label for="changeInfoPasswordCurrent" class="form-label">Current password</label>
-            <input type="password" class="form-control" placeholder="Enter your CURRENT password" id="changeInfoPasswordCurrent">
-        </div>
-
-        <!-- Submit Button -->
-        <div class="text-center">
-            <button type="submit" class="btn btn-primary w-100">Change Info</button>
-        </div>
-    </form>
+	<div class="row justify-content-center">
+		<div id="profile_container" class="loading col-md-8 text-center">
+			<img id="profile_pic" src="../assets/default_profile.png" alt="Profile Picture" class="mt-3">
+			<h1 class="responsive-title" data-translate="profileTitle" id="username">Your Profile</h1>
+		</div>
+	</div>
+	<div class="row justify-content-center mt-4 profile-columns">
+		<article class="card col-md-4 mb-3">
+			<div class="card-body">
+				<h2 class="card-title text-center" data-translate="statsTitle">Stats</h2>
+				<div id="stats_container" class="loading card-text">
+					<p>
+						<span data-translate="gamesPlayed">Games Played:</span>
+						<span id="games_played">0</span>
+					<p>
+						<span data-translate="wins">Wins:</span>
+						<span id="games_won">0</span>
+					</p>
+					<p>
+						<span data-translate="losses">Losses:</span>
+						<span id="games_lost">0</span>
+					</p>
+					<p>
+						<span data-translate="winRate">Win Rate:</span>
+						<span id="win_rate">0%</span>
+					</p>
+				</div>
+			</div>
+		</article>
+	</div>
 </div>
