@@ -35,7 +35,7 @@ class TournamentHandlerBase(CoreBaseHandler):
 
 	def join_tournament(self, player: Player, send_func: SendFunc) -> int | None: # type: ignore
 		player_index = super()._join(player, send_func)
-		if player_index is not None:
+		if player_index is not None and player_index < self._required_players:
 			self._state['is_ready_to_start'].update({player.__str__(): False})
 		return player_index
 
