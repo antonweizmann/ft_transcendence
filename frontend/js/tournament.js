@@ -5,6 +5,8 @@ window.setWinningPoints = setWinningPoints;
 window.validateCreateLobby = validateCreateLobby;
 window.addTournament = addTournament;
 window.clearTournamentList = clearTournamentList;
+window.addPlayer = addPlayer;
+window.clearPlayerList = clearPlayerList;
 
 function	addTournament(id, amount, totalAmount) {
 	const list = document.getElementById('tournamentList');
@@ -28,6 +30,22 @@ function	joinTournament(id) {
 
 function	clearTournamentList() {
 	document.getElementById('tournamentList').innerHTML = '';
+}
+
+function	addPlayer(id) {
+	const list = document.getElementById('playerList');
+	var item = document.getElementById('playerExample').cloneNode(true);
+
+	item.id = '';
+	item.style = 'display: block;';
+	item.querySelector('div').textContent = id;
+
+	if (item.textContent != '')
+		list.appendChild(item);
+}
+
+function	clearPlayerList() {
+	document.getElementById('playerList').innerHTML = '';
 }
 
 function	setPlayerCount() {

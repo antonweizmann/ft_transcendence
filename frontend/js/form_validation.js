@@ -1,6 +1,7 @@
 import { loadPage, setupLoginOrProfile } from './main.js';
 import { removeErrorMessage, showErrors, showErrorMessage } from './error_handling.js';
 import { registerUser, loginUser } from './form_submission.js';
+import { changeUserInfo } from './form_submission.js';
 
 window.validateSignUpForm = validateSignUpForm;
 window.validateChangeInfoForm = validateChangeInfoForm;
@@ -130,9 +131,8 @@ async function validateChangeInfoForm(event) {
 		return false;
 	}
 
-	// this needs to be connected to the backend
-	// if (!await changeInfo(fields))
-	// 	return false;
+	if (!await changeUserInfo(fields))
+		return false;
 	return true;
 }
 
