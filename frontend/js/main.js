@@ -151,7 +151,7 @@ async function getPage(pageName)
 					window.ensureInit();
 				}
 			}, 50);
-		} 
+		}
 		else if (pageName === 'profile') {
 			loadScripts(['profile.js']);
 			setTimeout(() => {
@@ -199,7 +199,8 @@ window.onload = function () {
 		loadPageReplace(startPage);
 		return;
 	}
-
+	if (path === 'tournamentwait')
+		path = 'tournament';
 	console.log(`Loading path: ${path}`);
 	getPage(path);
 };
