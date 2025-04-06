@@ -22,7 +22,7 @@ MIN_PLAYER_Y = 0
 MAX_PLAYER_Y = BOARD_HEIGHT - 100
 PLAYER_SPEED = 10
 
-WINNING_SCORE = 3
+WINNING_SCORE = 5
 
 class PongGameHandler(GameHandlerBase):
 	_subtype			= 'Pong'
@@ -68,7 +68,10 @@ class PongGameHandler(GameHandlerBase):
 			self._update_game_state()
 			with self._lock:
 				if self._is_active:
-					self._send_game_state()
+					try:
+						self._send_game_state()
+					except Exception as e:
+						return
 
 			elapsed_time = time.time() - start_time
 			sleep_time = max(0, target_frame_duration - elapsed_time)
@@ -83,9 +86,9 @@ class PongGameHandler(GameHandlerBase):
 	def __score_goal(self):
 		with self._lock:
 			if self._state['ball_position'][X] <= MIN_BALL_X:
-				self._state['score'][self.players[1].username] += 1
+				self._state['score'][self._indexes[1].username] += 1
 			elif self._state['ball_position'][X] >= MAX_BALL_X:
-				self._state['score'][self.players[0].username] += 1
+				self._state['score'][self._indexes[0].username] += 1
 			self._model.scores = self._state['score']
 			self._model.save()
 
@@ -112,13 +115,13 @@ class PongGameHandler(GameHandlerBase):
 		with self._lock:
 			# Paddle 1 collision
 			if (self._state['ball_position'][X] <= 20
-				and self._state['ball_position'][Y] >= self._state['paddle_1_position'] - 100
+				and self._state['ball_position'][Y] + 20 >= self._state['paddle_1_position']
 				and self._state['ball_position'][Y] <= self._state['paddle_1_position'] + 100):
 				self.__bounce_from_paddle(self._state['paddle_1_position'])
 
 			# Paddle 2 collision
 			if (self._state['ball_position'][X] >= 760
-				and self._state['ball_position'][Y] >= self._state['paddle_2_position'] - 100
+				and self._state['ball_position'][Y] + 20 >= self._state['paddle_2_position']
 				and self._state['ball_position'][Y] <= self._state['paddle_2_position'] + 100):
 				self.__bounce_from_paddle(self._state['paddle_2_position'])
 
@@ -133,8 +136,8 @@ class PongGameHandler(GameHandlerBase):
 
 	def __check_win_conditions(self):
 		with self._lock:
-			if (self._state['score'][self.players[1].username] >= WINNING_SCORE
-					or self._state['score'][self.players[0].username] >= WINNING_SCORE):
+			if (self._state['score'][self._indexes[1].username] >= WINNING_SCORE
+					or self._state['score'][self._indexes[0].username] >= WINNING_SCORE):
 				self._send_func({
 					'type': 'game_over',
 					'game_id': self._id,

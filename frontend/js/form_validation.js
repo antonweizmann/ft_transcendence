@@ -106,12 +106,12 @@ async function validateChangeInfoForm(event) {
 		{ key : 'email',			field : document.getElementById('changeInfoEmail') },
 		{ key : 'password',			field : document.getElementById('changeInfoPassword') },
 		{ key : 'password2',		field : document.getElementById('changeInfoPassword2') },
-		{ key : 'passwordCurrent',	field : document.getElementById('changeInfoPasswordCurrent') },
+		// { key : 'passwordCurrent',	field : document.getElementById('changeInfoPasswordCurrent') },
 		{ key : 'profile_picture',	field : document.getElementById('formFile') },
 		{ key: 'language',			field: document.getElementById('languageSetting') }
 	];
 
-	const fields = allFields.filter(({ key, field }) => field && field.value.trim() !== '' || key === 'passwordCurrent');
+	const fields = allFields.filter(({ key, field }) => field && field.value.trim() !== ''); // || key === 'passwordCurrent');
 
 	fields.forEach(({ key, field }) => {
 		removeErrorMessage(field);
@@ -124,8 +124,8 @@ async function validateChangeInfoForm(event) {
 		if (fields.find(({ key }) => key === 'password') || fields.find(({ key }) => key === 'password2'))
 		isPasswordValid(errors, document.getElementById('changeInfoPassword'), document.getElementById('changeInfoPassword2'));
 	}
-	if (fields.find(({ key }) => key === 'passwordCurrent').field.value === '')
-		errors['passwordCurrent'] = 'Please enter your current password';
+	// if (fields.find(({ key }) => key === 'passwordCurrent').field.value === '')
+	// 	errors['passwordCurrent'] = 'Please enter your current password';
 	if (Object.keys(errors).length > 0) {
 		showErrors(fields, errors);
 		return false;
