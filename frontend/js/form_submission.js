@@ -1,4 +1,5 @@
 import { showErrors, removeErrorMessage, showErrorMessage } from './error_handling.js';
+import { authenticatedFetch } from './authentication.js';
 import { setupLoginOrProfile } from './main.js';
 
 window.logoutUser = logoutUser;
@@ -34,6 +35,39 @@ export async function registerUser(fields)
 
 	console.log(`user ${username} registered successfully!`);
 	loginUser(username, password);
+	return true;
+}
+
+export async function changeUserInfo(fields)
+{
+	const form_data = new FormData();
+
+	fields.forEach(({ key, field }) => {
+		if (field.type === 'file' && field.files.length > 0)
+			form_data.append(key, field.files[0]);
+		else
+			form_data.append(key, field.value);
+	});
+
+	try {
+		const response = await authenticatedFetch(`https://localhost/api/player/${localStorage.getItem("user_id")}/`, {
+		method: 'PUT',
+		body: form_data,
+		credentials: 'include',
+		mode: 'cors'
+		});
+
+		if (!response.ok) {
+			const errors = await response.json();
+			showErrors(fields, errors);
+			return false;
+		}
+	} catch (error) {
+		console.error("Failed to update user info:", error);
+		return false;
+	}
+
+	console.log("User info updated successfully!");
 	return true;
 }
 
