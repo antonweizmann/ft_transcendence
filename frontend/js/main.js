@@ -106,30 +106,41 @@ async function loadPageReplace(pageName)
 	getPage(pageName);
 }
 
-async function getPage(pageName)
-{
-	// Closing the mobile hamburger menu when loading new page
-	var collapseElement = document.getElementById('navbarNav');
+export function closeMobileMenu() {
+	const collapseElement = document.getElementById('navbarNav');
 	if (collapseElement.classList.contains('show')) {
-		console.log("TEST");
-		var collapse = new bootstrap.Collapse(collapseElement);
+		const collapse = new bootstrap.Collapse(collapseElement);
 		collapse.hide();
 	}
+}
 
+function cleanupPage()
+{
+	if (window.gameState.cleanup)
+		window.gameState.cleanup();
+	removeAddedScripts();
+}
+
+export async function fetchPageContent(pageName) {
+	const response = await fetch(`/pages/${pageName}.html`)
+	if (response.status === 404)
+	{
+		loadPageReplace(startPage);
+		return null;
+	}
+	if (!response.ok)
+		throw new Error(`HTTP error! Status: ${response.status}`);
+	return response.text();
+}
+
+async function getPage(pageName) {
+	closeMobileMenu();
 	try
 	{
-		if (window.gameState.cleanup)
-			window.gameState.cleanup();
-		removeAddedScripts();
-		const response = await fetch(`/pages/${pageName}.html`)
-		if (response.status === 404)
-		{
-			loadPageReplace(startPage);
-			return;
-		}
-		if (!response.ok)
-			throw new Error(`HTTP error! Status: ${response.status}`);
-		const content = await response.text();
+		cleanupPage();
+		const content = await fetchPageContent(pageName);
+		if (content === null)
+			return ;
 		document.getElementById('main-content').innerHTML = content;
 		updateActive(pageName);
 		if (pageName === 'play')

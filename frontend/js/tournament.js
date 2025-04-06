@@ -1,6 +1,6 @@
 import { removeErrorMessage, showErrorMessage } from "./error_handling.js";
 import { LoadDataFromBackend } from "./profile.js";
-import { joinTournament } from "./tournament/backend_communication.js";
+import { joinTournament, loadTournamentLobby } from "./tournament/backend_communication.js";
 
 console.log("Tournament JS pre-loaded");
 
@@ -13,6 +13,7 @@ window.addTournament = addTournament;
 window.clearTournamentList = clearTournamentList;
 window.addPlayer = addPlayer;
 window.clearPlayerList = clearPlayerList;
+window.refreshTournamentList = refreshTournamentList;
 
 export function initTournament() {
 	if (document.readyState === 'complete') {
@@ -35,6 +36,10 @@ function loadTournament() {
 
 function setTournamentData(data) {
 	// ? create container for tournament list with data from backend
+	clearTournamentList();
+	data.forEach(tournament => {
+		addTournament(tournament.name, tournament.id, tournament.player_count, tournament.size);
+	});
 	console.log("Tournament data received:", data);
 }
 
@@ -103,7 +108,18 @@ async function updateLobby(players) {
 	console.log('Lobby update:', players);
 	const playerAmount = document.getElementById('playerCountDisplay').value;
 	const winningPoints = document.getElementById('winningPointsDisplay').value;
-	loadPage('tournamentwait');
+
+	const inLobby = await loadTournamentLobby();
+	if (!inLobby) {
+		console.error('Error loading tournament lobby');
+		return;
+	}
+	clearPlayerList();
+	players.forEach(player => {
+		const { index, username } = player;
+		console.log(`Player Index: ${index}, Username: ${username}`);
+		addPlayer(username);
+	});
 }
 
 function updateTournament(tournament_state) {
@@ -146,7 +162,7 @@ function	clearTournamentList() {
 }
 
 function	refreshTournamentList() {
-
+	LoadDataFromBackend('/api/pong/tournament/open/', setTournamentData);
 }
 
 function	addPlayer(id) {
