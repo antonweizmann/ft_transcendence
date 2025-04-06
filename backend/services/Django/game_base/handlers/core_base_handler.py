@@ -54,7 +54,7 @@ class CoreBaseHandler:
 	def _get_index(self, player: Player)-> int: # type: ignore
 		player_index = 0
 		while (self._indexes.get(player_index) is not None
-			and player is not self._indexes[player_index]):
+			and player != self._indexes[player_index]):
 			player_index += 1
 		if player_index not in self._indexes:
 			self._indexes[player_index] = player
@@ -139,22 +139,10 @@ class CoreBaseHandler:
 					'message': f'{self._type} has already finished.'
 				}, True)
 				return False
-			if self._is_active:
-				send_func({
-					'type': 'error',
-					'message': f'{self._type} has already started.'
-				}, True)
-				return False
 			if player in self.players:
 				send_func({
 					'type': 'error',
 					'message': 'Player already joined.'
-				}, True)
-				return False
-			if len(self.players) >= self._required_players:
-				send_func({
-					'type': 'error',
-					'message': f'{self._type} lobby is full.'
 				}, True)
 				return False
 			return True
