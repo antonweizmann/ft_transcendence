@@ -22,7 +22,7 @@ MIN_PLAYER_Y = 0
 MAX_PLAYER_Y = BOARD_HEIGHT - 100
 PLAYER_SPEED = 10
 
-WINNING_SCORE = 3
+WINNING_SCORE = 5
 
 class PongGameHandler(GameHandlerBase):
 	_subtype			= 'Pong'
@@ -83,9 +83,9 @@ class PongGameHandler(GameHandlerBase):
 	def __score_goal(self):
 		with self._lock:
 			if self._state['ball_position'][X] <= MIN_BALL_X:
-				self._state['score'][self.players[1].username] += 1
+				self._state['score'][self._indexes[1].username] += 1
 			elif self._state['ball_position'][X] >= MAX_BALL_X:
-				self._state['score'][self.players[0].username] += 1
+				self._state['score'][self._indexes[0].username] += 1
 			self._model.scores = self._state['score']
 			self._model.save()
 
@@ -133,8 +133,8 @@ class PongGameHandler(GameHandlerBase):
 
 	def __check_win_conditions(self):
 		with self._lock:
-			if (self._state['score'][self.players[1].username] >= WINNING_SCORE
-					or self._state['score'][self.players[0].username] >= WINNING_SCORE):
+			if (self._state['score'][self._indexes[1].username] >= WINNING_SCORE
+					or self._state['score'][self._indexes[0].username] >= WINNING_SCORE):
 				self._send_func({
 					'type': 'game_over',
 					'game_id': self._id,
