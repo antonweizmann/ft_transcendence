@@ -226,21 +226,12 @@ export function setGameBoardSize(isInitialSetup = false) {
 }
 
 export async function startGameTimer() {
-	const gameTimer = document.getElementById('scoreGame');
 	const gameButton = document.getElementById('startGame');
-	let time = 3;
 
 	gameButton.removeEventListener('click', startGameTimer);
-	gameButton.addEventListener('click', resetGame, { once: true });
-	gameButton.textContent = 'Reset';
-	while (time >= 0)
-	{
-		await new Promise(r => setTimeout(r, 1000));
-		if (gameButton.textContent === 'Start')
-			return ;
-		gameTimer.textContent = time + ' : ' + time;
-		time--;
-	}
+	// gameButton.addEventListener('click', resetGame, { once: true });
+	// gameButton.textContent = 'Reset';
+
 	if (gameModeSelector.value === "online")
 		startGame();
 	else

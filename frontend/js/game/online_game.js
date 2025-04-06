@@ -1,5 +1,5 @@
 
-import { gameModeSelector, BOARD_HEIGHT, player1, player2, ball, setAnimationId, getAnimationId} from "./init_game.js";
+import { BOARD_HEIGHT, player1, player2, ball, setAnimationId, getAnimationId} from "./init_game.js";
 import { updateElements } from "./draw_game.js";
 import { keysPressed } from "./movement_game.js";
 import { cleanupGame, resetGame } from "./game.js";
@@ -99,6 +99,7 @@ export function resetSocket() {
 
 function parseMessage(data) {
 	let message;
+	const gameTimer = document.getElementById('scoreGame');
 
 	try {
 		message = JSON.parse(data);
@@ -113,11 +114,20 @@ function parseMessage(data) {
 		gameOver(message.game_state);
 	}
 	else if (message.type === 'lobby_update') {
+		console.group('Lobby update');
+		console.log('game_id:', message.game_id);
+		console.log('players:', message.players);
+		console.groupEnd();
 		updateLobby(message.players);
 	} else if (message.type === 'countdown' && getAnimationId() === null) {
 		setAnimationId(requestAnimationFrame(onlineGameLoop));
 	} else {
-		if (message.message)
+		if (message.type === 'countdown' && message.message)
+		{
+			gameTimer.textContent = message.message[17] + ' : ' + message.message[17];
+			console.log('Received message:', message.message);
+		}
+		else if (message.message)
 			console.log('Received message:', message.message);
 		else
 			console.log('Received message:', message);
@@ -129,6 +139,8 @@ function updateGame(game_state) {
 	const Y = 1;
 	const scale = BOARD_HEIGHT / 500;
 
+	if (getAnimationId() === null)
+		setAnimationId(requestAnimationFrame(onlineGameLoop));
 	player1.y = game_state.paddle_1_position * scale;
 	player2.y = game_state.paddle_2_position * scale;
 	ball.x = game_state.ball_position[X] * scale;
@@ -159,12 +171,14 @@ function updateLobby(players) {
 	const player1Container = document.getElementById('player1Name');
 	const player2Container = document.getElementById('player2Name');
 
+	if (getAnimationId() !== null)
+		return;
 	player1Container.textContent = '';
 	player2Container.textContent = '';
 	for (const player of players) {
 		if (player.index === 0) {
 			player1Container.textContent = player.username;
-		} else {
+		} else if (player.index === 1) {
 			player2Container.textContent = player.username;
 		}
 	}
