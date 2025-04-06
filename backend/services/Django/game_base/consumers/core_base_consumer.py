@@ -89,7 +89,7 @@ class CoreBaseConsumer(WebsocketConsumer):
 		self._handler = self._manager._get_object(handler, object_id)
 
 	def _join_lobby(self, object_id, handler: type[CoreBaseHandler]):
-		self._set_handler(object_id, handler)
+		self._set_handler(str(object_id), handler)
 		if self._id is None:
 			return
 		self.player_index = self.__handler_func.join(self.player, self._send_to_group)
