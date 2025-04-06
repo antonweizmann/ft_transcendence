@@ -1,7 +1,6 @@
 import { authenticatedFetch } from './authentication.js';
 
 console.log("Profile JS pre-loaded");
-window.initProfile = initProfile;
 
 let current_user = null;
 
@@ -36,7 +35,7 @@ function setProfileData(data) {
 	profile_container.classList.remove('loading');
 }
 
-async function LoadDataFromBackend(url, setter) {
+export async function LoadDataFromBackend(url, setter) {
 	try {
 		const response = await authenticatedFetch(url, { method: 'GET' });
 

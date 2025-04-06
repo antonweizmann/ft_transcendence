@@ -1,6 +1,8 @@
 import { setupDropdownValidation, validateLoginForm, updateActive } from './form_validation.js';
 import { logoutUser } from './form_submission.js';
 import { refreshAccessToken } from './authentication.js';
+import { initProfile } from './profile.js';
+import { initTournament } from './tournament.js';
 
 window.loadPage = loadPage;
 window.signUpInstead = signUpInstead;
@@ -155,24 +157,15 @@ async function getPage(pageName)
 		else if (pageName === 'profile') {
 			loadScripts(['profile.js']);
 			setTimeout(() => {
-					window.initProfile();
+					initProfile();
 			}, 500);
 		}
-		// else if (pageName === 'tournament')
-		// {
-		// 	window.gameState = {
-		// 	initialized: false,
-		// 	cleanup: null
-		// 	};
-		// 	loadScripts(['tournament.js']);
-		// 	setTimeout(() => {
-		// 		if (window.ensureInit) {
-		// 			window.ensureInit();
-		// 		}
-		// 	}, 50);
-		// }
-		// const scripts = document.getElementById('main-content').getElementsByTagName('script');
-		// loadScripts(scripts);
+		else if (pageName === 'tournament') {
+			loadScripts(['tournament.js']);
+			setTimeout(() => {
+					initTournament();
+			}, 500);
+		}
 		changeLanguage();
 	}
 	catch (error)
