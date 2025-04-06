@@ -61,9 +61,10 @@ class CoreBaseHandler:
 		return player_index
 
 	def _add_player(self, player: Player) -> int: # type: ignore
-		self._model.players.add(player)
-		self.players.append(player)
 		player_index = self._get_index(player)
+		if (player_index < self._required_players):
+			self._model.players.add(player)
+			self.players.append(player)
 		return player_index
 
 	def _join(self, player: Player, send_func: SendFunc) -> int | None: # type: ignore
@@ -158,7 +159,7 @@ class CoreBaseHandler:
 			}, True)
 			return False
 		with self._lock:
-			if self._required_players != len(self.players):
+			if self._required_players > len(self.players):
 				self._send_func({
 					'type': 'error',
 					'message': 'Waiting for other players to join.'
