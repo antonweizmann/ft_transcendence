@@ -92,7 +92,7 @@ function gameOver(game_state) {
 	resetTournamentSocket();
 }
 
-// Lobby update: 
+// Lobby update:
 // Array [ {…} ]
 // ​
 // 0: Object { index: 0, username: "default" }
@@ -205,4 +205,10 @@ function	validateCreateLobby() {
 		return false;
 	}
 	joinTournament(lobbyId.value);
+}
+
+function	setPlayerCount(amount, total) {
+	const playerCount = document.getElementById('playerCount');
+
+	playerCountDisplay.innerText = amount + "/" + total;
 }
