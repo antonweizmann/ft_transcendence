@@ -169,18 +169,34 @@ function	addPlayer(id) {
 	const list = document.getElementById('playerList');
 	var item = document.getElementById('playerExample').cloneNode(true);
 
-	item.id = '';
+	item.id = `${id}`;
 	item.style = 'display: block;';
 	item.querySelector('div').textContent = id;
 
 	if (item.textContent != '')
 		list.appendChild(item);
+
+	setReady(id);
 }
 
 function	clearPlayerList() {
 	document.getElementById('playerList').innerHTML = '';
 }
 
+
+function setReady(id) {
+	const player = document.getElementById(`${id}`);
+	if (!player) return;
+
+	let checkmark = player.querySelector('.ready-check');
+
+	if (!checkmark) {
+		checkmark = document.createElement('span');
+		checkmark.className = 'ready-check';
+		checkmark.textContent = ' ✅';
+		player.appendChild(checkmark);
+	}
+}
 function	setPlayerCount() {
 	const playerCount = document.getElementById('playerCount');
 	const playerCountDisplay = document.getElementById('playerCountDisplay');
