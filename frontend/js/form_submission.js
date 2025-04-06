@@ -1,4 +1,4 @@
-import { showErrors } from './error_handling.js';
+import { showErrors, removeErrorMessage, showErrorMessage } from './error_handling.js';
 import { setupLoginOrProfile } from './main.js';
 
 window.logoutUser = logoutUser;
@@ -39,6 +39,14 @@ export async function registerUser(fields)
 
 export async function loginUser(username, password)
 {
+	const loginFields = [
+        { key: 'username', field: document.getElementById('loginUsername') },
+        { key: 'password', field: document.getElementById('loginPassword') }
+    ];
+
+    loginFields.forEach(({ field }) => removeErrorMessage(field));
+
+
 	const form_data = new FormData();
 	form_data.append('username', username);
 	form_data.append('password', password);
@@ -57,18 +65,45 @@ export async function loginUser(username, password)
 			localStorage.setItem('user_id', data.user_id);
 			localStorage.setItem('isLoggedIn', true);
 			console.log(`user ${username} logged in successfully!`);
-		}
-		else {
-			console.error("Error:", await response.json());
-			return false
-		}
-		setupLoginOrProfile();
-	} catch (error) {
-		console.error(error);
-	}
-	if (window.location.pathname === '/play')
-		document.getElementById('onlineOption').style.display = "block";
-	return true;
+
+            setupLoginOrProfile();
+
+            if (window.location.pathname === '/play')
+                document.getElementById('onlineOption').style.display = "block";
+
+            return true;
+        }
+        else {
+            const errors = await response.json();
+
+            // Handle non-field errors (like invalid credentials)
+            if (errors.non_field_errors || errors.detail) {
+                const errorMessage = errors.non_field_errors || [errors.detail];
+
+                // Display error on both fields
+                loginFields.forEach(({ field }) => {
+                    field.classList.add('is-invalid');
+                    showErrorMessage(field, errorMessage);
+                });
+            } else {
+                // Handle field-specific errors
+                showErrors(loginFields, errors);
+            }
+
+            console.error("Login failed:", errors);
+            return false;
+        }
+    } catch (error) {
+        console.error("Login request failed:", error);
+
+        // Show a general error message on both fields
+        loginFields.forEach(({ field }) => {
+            field.classList.add('is-invalid');
+            showErrorMessage(field, ["Connection failed. Please try again."]);
+        });
+
+        return false;
+    }
 }
 
 export function logoutUser()

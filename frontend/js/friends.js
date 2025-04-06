@@ -1,19 +1,5 @@
-// import {showErrorMessage, removeErrorMessage} from "./form_validation.js"
-
-function showErrorMessage(input, message)
-{
-	const errorMessage = document.createElement('div');
-	errorMessage.classList.add('invalid-feedback', 'd-block');
-	errorMessage.textContent = message;
-	input.parentNode.appendChild(errorMessage);
-}
-
-function removeErrorMessage(input)
-{
-	input.classList.remove('is-invalid');
-	const existingErrors = input.parentNode.querySelectorAll('.invalid-feedback');
-	existingErrors.forEach(error => error.remove());
-}
+import {showErrorMessage, removeErrorMessage} from "./error_handling.js"
+import { authenticatedFetch } from './authentication.js';
 
 async function sendRequest(user_id) {
 	try {
@@ -172,30 +158,85 @@ async function friendRequests() {
 }
 
 async function addFriend(username, inputUsername) {
-	try {
-		const currentUsername = localStorage.getItem("username"); // Make sure username is stored in localStorage when logging in
+// 	try {
+// 		const currentUsername = localStorage.getItem("username"); // Make sure username is stored in localStorage when logging in
 
-		if (username === currentUsername) {
+// 		if (username === currentUsername) {
+// 			inputUsername.classList.add('is-invalid');
+// 			showErrorMessage(inputUsername, "You can't add yourself as a friend");
+// 			return;
+// 		}
+// const existingUserElements = document.querySelectorAll('#add-friends .fs-5');
+// 		for (const el of existingUserElements) {
+// 			if (el.textContent === username) {
+// 				inputUsername.classList.add('is-invalid');
+// 				showErrorMessage(inputUsername, 'User already added or pending');
+// 				return;
+// 			}
+// 		}
+// 		const response = await fetch(`https://localhost/api/player/list?username=${username}`, { method: 'GET' });
+// 		const data = await response.json();
+
+// 		if (!data.length || !data[0]) {
+// 			inputUsername.classList.add('is-invalid');
+// 			showErrorMessage(inputUsername, 'User does not exist');
+// 			console.log('Player not found');
+// 			return;
+// 		}
+try {
+	const currentUsername = localStorage.getItem("username"); // Make sure username is stored in localStorage when logging in
+
+	if (username === currentUsername) {
+		inputUsername.classList.add('is-invalid');
+		showErrorMessage(inputUsername, "You can't add yourself as a friend");
+		return;
+	}
+
+	const existingUserElements = document.querySelectorAll('#add-friends .fs-5');
+	for (const el of existingUserElements) {
+		if (el.textContent === username) {
 			inputUsername.classList.add('is-invalid');
-			showErrorMessage(inputUsername, "You can't add yourself as a friend");
+			showErrorMessage(inputUsername, 'User already added or pending');
 			return;
 		}
+	}
 
-		const response = await fetch(`https://localhost/api/player/list?username=${username}`, { method: 'GET' });
-		const data = await response.json();
+	// Fetch friend data to check for already existing or pending friends
+	const response = await authenticatedFetch(`https://localhost/api/player/${localStorage.getItem('user_id')}`);
+	const data = await response.json();
 
-		if (!data.length || !data[0]) {
-			inputUsername.classList.add('is-invalid');
-			showErrorMessage(inputUsername, 'User does not exist');
-			console.log('Player not found');
-			return;
-		}
+	if (!data) {
+		inputUsername.classList.add('is-invalid');
+		showErrorMessage(inputUsername, 'Unable to fetch friend data');
+		return;
+	}
+
+	// Check if the username is in friends or pending requests
+	const isFriend = data.friends.some(friend => friend.username === username);
+	// const isPendingRequest = data.friend_requests_sent.some(request => request.username === username) ||
+	// 						 data.friend_requests_received.some(request => request.username === username);
+
+	if (isFriend) {
+		inputUsername.classList.add('is-invalid');
+		showErrorMessage(inputUsername, 'User already added or pending');
+		return;
+	}
+
+	// Fetch user by username
+	const userResponse = await fetch(`https://localhost/api/player/list?username=${username}`, { method: 'GET' });
+	const userData = await userResponse.json();
+
+	if (!userData.length || !userData[0]) {
+		inputUsername.classList.add('is-invalid');
+		showErrorMessage(inputUsername, 'User does not exist');
+		return;
+	}
 
 		const playerHTML = `
 			<div class="d-flex justify-content-between align-items-center mb-3 p-3 border border-purple rounded shadow-sm">
-				<span class="fs-5 fw-semibold">${data[0].username}</span>
+				<span class="fs-5 fw-semibold">${userData[0].username}</span>
 				<div class="d-flex">
-					<button class="btn btn-purple btn-sm" id="sendRequestButton" data-player-id="${data[0].id}">Send Request</button>
+					<button class="btn btn-purple btn-sm" id="sendRequestButton" data-player-id="${userData[0].id}">Send Request</button>
 				</div>
 			</div>
 		`;
