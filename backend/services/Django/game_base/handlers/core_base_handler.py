@@ -91,6 +91,10 @@ class CoreBaseHandler:
 						break
 				if player_index is not None:
 					del self._indexes[player_index]
+			if len(self.players) == 0:
+				self._send_func = None
+				self._is_active = False
+				return
 
 	def _leave(self, player: Player): # type: ignore
 		self._rm_player(player)
@@ -100,6 +104,8 @@ class CoreBaseHandler:
 
 	def _send_lobby_update(self):
 		with self._lock:
+			if self._send_func is None:
+				return
 			self._send_func({
 				'type': 'lobby_update',
 				f'{self._type.lower()}_id': self._id,

@@ -68,7 +68,10 @@ class PongGameHandler(GameHandlerBase):
 			self._update_game_state()
 			with self._lock:
 				if self._is_active:
-					self._send_game_state()
+					try:
+						self._send_game_state()
+					except Exception as e:
+						return
 
 			elapsed_time = time.time() - start_time
 			sleep_time = max(0, target_frame_duration - elapsed_time)

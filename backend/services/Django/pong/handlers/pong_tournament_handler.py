@@ -103,6 +103,8 @@ class PongTournamentHandler(TournamentHandlerBase):
 				if match[1] is None:
 					break
 				self._start_match(match)
+				if self._send_func is None:
+					return
 				self._send_state()
 				with self._lock:
 					match_id = list(self._state['current_match'].keys())[0]
@@ -118,9 +120,11 @@ class PongTournamentHandler(TournamentHandlerBase):
 					sleep(3)
 			self._set_next_matches(match)
 		with self._lock:
-			self._model.status = 'finished'
-			self._model.save()
-		self._send_state()
+			if self._model:
+				self._model.status = 'finished'
+				self._model.save()
+		if self._send_func != None:
+			self._send_state()
 
 	def _generate_match_id(self):
 		letters = string.ascii_letters + string.digits
