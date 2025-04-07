@@ -25,6 +25,15 @@ class TournamentBaseConsumer(CoreBaseConsumer):
 		if action == 'change_size':
 			size = text_data_json.get('size')
 			try:
+				if (isinstance(size, int) == False and
+					isinstance(size, str) == False):
+					raise ValueError('Tournament size is not an integer.')
+				if (isinstance(size, str) == True):
+					if (size.isdigit() == False):
+						raise ValueError('Tournament size is not a number.')
+					size = int(size)
+				if (size is None or size < 3 or size > 8):
+					raise ValueError('Tournament size must be between 3 and 8.')
 				size = int(size)
 				self._handler.set_tournament_size(size)
 				self.send(json.dumps({

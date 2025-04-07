@@ -1,7 +1,7 @@
 import { setupDropdownValidation, validateLoginForm, updateActive } from './form_validation.js';
 import { logoutUser } from './form_submission.js';
 import { initProfile } from './profile.js';
-import { initTournament } from './tournament.js';
+import { initTournament } from './tournament/tournament.js';
 import { getCookie } from './cookies.js';
 
 window.loadPage = loadPage;
@@ -155,7 +155,7 @@ async function getPage(pageName) {
 			}, 500);
 		}
 		else if (pageName === 'tournament') {
-			loadScripts(['tournament.js']);
+			loadScripts(['tournament/tournament.js']);
 			setTimeout(() => {
 					initTournament();
 			}, 500);

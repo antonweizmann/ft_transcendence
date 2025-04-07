@@ -1,34 +1,67 @@
+import { getCookie } from "../cookies.js";
 import { updateActive } from "../form_validation.js";
 import { closeMobileMenu, fetchPageContent } from "../main.js";
-import { tournamentSocket } from "../tournament.js";
+import { sendToTournamentSocket, initTournamentSocket } from "./socket_management.js";
+import { updateTournament, setTournamentData } from "./tournament.js";
+import { LoadDataFromBackend } from "../profile.js";
+import { updateLobby } from "./tournament.js";
 
-export function joinTournament(lobbyId) {
+export {
+	loadTournament,
+	parseTournamentMessage,
+	joinTournament,
+	loadTournamentLobby,
+	requestTournamentLobbySize
+};
+
+function loadTournament() {
+	console.log("Tournament JS loaded");
+	LoadDataFromBackend('/api/pong/tournament/open/', setTournamentData);
+	initTournamentSocket();
+}
+
+function parseTournamentMessage(data) {
+	let message;
+
+	try {
+		message = JSON.parse(data);
+	} catch (error) {
+		console.error('Error parsing message:', error);
+		return;
+	}
+	console.log('Parsed message:', message);
+	if (message.type === 'tournament_update') {
+		updateTournament(message.tournament_state);
+	} else if (message.type === 'lobby_update') {
+		updateLobby(message.players, message.size);
+	} else {
+		if (message.message)
+			console.log('Received message:', message.message);
+		else if (message.error)
+			console.error('Received error:', message.error);
+		else
+			console.log('Received message:', message);
+	}
+}
+
+function joinTournament(lobbyId) {
 	console.log('Joining tournament:', lobbyId);
 	const message = {
 		action: 'join_lobby',
 		tournament_id: lobbyId,
-		player_pk: localStorage.getItem('user_id'),
+		player_pk: getCookie('user_id'),
 	};
 	sendToTournamentSocket(message);
 }
 
-function sendToTournamentSocket(message) {
-	if (tournamentSocket && tournamentSocket.readyState === WebSocket.OPEN) {
-		console.log("Sending message to tournament socket:", message);
-		tournamentSocket.send(JSON.stringify(message));
-	} else {
-		console.error('Error: Tournament WebSocket connection is not open');
-	}
-}
-
-export async function loadTournamentLobby() {
+async function loadTournamentLobby() {
 	closeMobileMenu();
 	try {
-		const content = await fetchPageContent('tournamentwait');
+		const content = await fetchPageContent('tournament_lobby');
 		if (content === null)
 			return ;
 		document.getElementById('main-content').innerHTML = content;
-		updateActive('tournamentwait');
+		updateActive('tournament_lobby');
 		changeLanguage();
 		return true;
 	}
@@ -37,4 +70,12 @@ export async function loadTournamentLobby() {
 		document.getElementById('main-content').innerHTML = `<p>Error loading tournament lobby. Please try again later.</p>`;
 	}
 	return false;
+}
+
+function requestTournamentLobbySize(Size) {
+	const message = {
+		action: 'change_size',
+		size: Size,
+	};
+	sendToTournamentSocket(message);
 }

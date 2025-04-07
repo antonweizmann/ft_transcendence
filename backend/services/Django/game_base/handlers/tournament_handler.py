@@ -110,3 +110,15 @@ class TournamentHandlerBase(CoreBaseHandler):
 
 	def _start_matches(self):
 		raise NotImplementedError
+
+	def _send_lobby_update(self):
+		with self._lock:
+			if self._send_func is None:
+				return
+			self._send_func({
+				'type': 'lobby_update',
+				f'{self._type.lower()}_id': self._id,
+				'players': [{'index': index, 'username': player.username} for\
+					index, player in self._indexes.items() if player in self.players],
+				'size': self._required_players
+			})
