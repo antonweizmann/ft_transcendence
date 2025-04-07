@@ -1,4 +1,4 @@
-import { showErrors, removeErrorMessage, showErrorMessage } from './error_handling.js';
+import { showErrors, removeErrorMessage, showErrorMessage, showErrorInAllFields } from './error_handling.js';
 import { authenticatedFetch } from './authentication.js';
 import { setupLoginOrProfile } from './main.js';
 import { getCookie } from './cookies.js';
@@ -74,67 +74,44 @@ export async function changeUserInfo(fields)
 
 export async function loginUser(username, password)
 {
+	const form_data = new FormData();
 	const loginFields = [
 		{ key: 'username', field: document.getElementById('loginUsername') },
 		{ key: 'password', field: document.getElementById('loginPassword') }
 	];
 
 	loginFields.forEach(({ field }) => removeErrorMessage(field));
-
-
-	const form_data = new FormData();
 	form_data.append('username', username);
 	form_data.append('password', password);
-
 	try {
 		const response = await fetch('https://localhost/api/token/', {
 			method: 'POST',
 			body: form_data,
 		});
-		if (response.ok)
-		{
-			localStorage.setItem('username', username);
-			localStorage.setItem('isLoggedIn', true);
-			console.log(`user ${username} logged in successfully!`);
-
-			setupLoginOrProfile();
-
-			if (window.location.pathname === '/play')
-				document.getElementById('onlineOption').style.display = "block";
-
-			return true;
-		}
-		else {
-			const errors = await response.json();
-
-			// Handle non-field errors (like invalid credentials)
-			if (errors.non_field_errors || errors.detail) {
-				const errorMessage = errors.non_field_errors || [errors.detail];
-
-				// Display error on both fields
-				loginFields.forEach(({ field }) => {
-					field.classList.add('is-invalid');
-					showErrorMessage(field, errorMessage);
-				});
-			} else {
-				// Handle field-specific errors
-				showErrors(loginFields, errors);
-			}
-
-			console.error("Login failed:", errors);
-			return false;
-		}
-	} catch (error) {
+		if (!response.ok)
+			return handleLoginError(await response.json(), loginFields);
+	}
+	catch (error) {
 		console.error("Login request failed:", error);
-
-		// Show a general error message on both fields
-		loginFields.forEach(({ field }) => {
-			field.classList.add('is-invalid');
-			showErrorMessage(field, ["Connection failed. Please try again."]);
-		});
-
+		showErrorInAllFields(loginFields, "Network error. Please try again.");
 		return false;
 	}
+	localStorage.setItem('username', username);
+	localStorage.setItem('isLoggedIn', true);
+	setupLoginOrProfile();
+	if (window.location.pathname === '/play')
+		document.getElementById('onlineOption').style.display = "block";
+	return true;
+}
+
+function handleLoginError(errors, loginFields)
+{
+	if (errors.non_field_errors || errors.detail)
+		showErrorInAllFields(loginFields, errors.non_field_errors || [errors.detail]);
+	else
+		showErrors(loginFields, errors);
+	console.error("Login failed:", errors);
+	return false;
 }
 
 export function logoutUser()

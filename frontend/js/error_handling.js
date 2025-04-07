@@ -29,3 +29,11 @@ export function showErrors(fields, errors)
 		}
 	});
 }
+
+export function showErrorInAllFields(fields, error)
+{
+	fields.forEach(({ field }) => {
+		field.classList.add('is-invalid');
+		showErrorMessage(field, error);
+	});
+}
