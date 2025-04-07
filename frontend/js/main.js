@@ -1,8 +1,8 @@
 import { setupDropdownValidation, validateLoginForm, updateActive } from './form_validation.js';
 import { logoutUser } from './form_submission.js';
-import { refreshAccessToken } from './authentication.js';
 import { initProfile } from './profile.js';
 import { initTournament } from './tournament.js';
+import { getCookie } from './cookies.js';
 
 window.loadPage = loadPage;
 window.signUpInstead = signUpInstead;
@@ -22,23 +22,6 @@ document.addEventListener('DOMContentLoaded', function() {
 	setupDropdownValidation('.login-drop', validateLoginForm);
 
 	setupLoginOrProfile();
-});
-
-document.addEventListener('DOMContentLoaded', async () => {
-	const token = localStorage.getItem('token');
-	if (!token)
-		return;
-	const tokenPayload = JSON.parse(atob(token.split('.')[1])); // Decode JWT payload
-	const isTokenExpired = tokenPayload.exp * 1000 < Date.now();
-
-	if (isTokenExpired) {
-		console.warn('Access token expired, refreshing...');
-		const tokenRefreshed = await refreshAccessToken();
-		if (!tokenRefreshed) {
-			console.error('Failed to refresh token, logging out...');
-			logoutUser();
-		}
-	}
 });
 
 export function setupLoginOrProfile() {
@@ -198,7 +181,7 @@ window.onload = function () {
 		loadPageReplace(startPage);
 		return;
 	}
-	if (path === 'profile' && !localStorage.getItem('user_id')) {
+	if (path === 'profile' && !getCookie('user_id')) {
 		logoutUser();
 		loadPageReplace(startPage);
 		return;

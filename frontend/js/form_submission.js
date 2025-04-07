@@ -1,6 +1,7 @@
 import { showErrors, removeErrorMessage, showErrorMessage } from './error_handling.js';
 import { authenticatedFetch } from './authentication.js';
 import { setupLoginOrProfile } from './main.js';
+import { getCookie } from './cookies.js';
 
 window.logoutUser = logoutUser;
 
@@ -50,7 +51,7 @@ export async function changeUserInfo(fields)
 	});
 
 	try {
-		const response = await authenticatedFetch(`https://localhost/api/player/${localStorage.getItem("user_id")}/`, {
+		const response = await authenticatedFetch(`https://localhost/api/player/${getCookie('user_id')}/`, {
 		method: 'PUT',
 		body: form_data,
 		credentials: 'include',
@@ -92,11 +93,7 @@ export async function loginUser(username, password)
 		});
 		if (response.ok)
 		{
-			const data = await response.json();
-			localStorage.setItem('token', data.access);
-			localStorage.setItem('refresh', data.refresh);
 			localStorage.setItem('username', username);
-			localStorage.setItem('user_id', data.user_id);
 			localStorage.setItem('isLoggedIn', true);
 			console.log(`user ${username} logged in successfully!`);
 
@@ -142,11 +139,11 @@ export async function loginUser(username, password)
 
 export function logoutUser()
 {
+	fetch('https://localhost/api/token/logout/', {
+		method: 'POST',
+	})
 	localStorage.removeItem('isLoggedIn');
-	localStorage.removeItem('token');
-	localStorage.removeItem('refresh');
 	localStorage.removeItem('username');
-	localStorage.removeItem('user_id');
 	setupLoginOrProfile();
 	console.log('User logged out successfully!');
 	loadPage('home')

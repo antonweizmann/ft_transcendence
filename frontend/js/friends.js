@@ -47,7 +47,7 @@ async function unfriend(user_id) {
 
 async function fetchFriendData() {
 	try {
-		const response = await authenticatedFetch(`https://localhost/api/player/${localStorage.getItem("user_id")}`);
+		const response = await authenticatedFetch(`https://localhost/api/player/${getCookie('user_id')}`);
 		return await response.json();
 	} catch (error) {
 		console.error('Error fetching friend data:', error);
@@ -149,7 +149,7 @@ async function renderFriendRequests(data) {
 
 async function friendRequests() {
 	try {
-		const response = await authenticatedFetch(`https://localhost/api/player/${localStorage.getItem("user_id")}`);
+		const response = await authenticatedFetch(`https://localhost/api/player/${getCookie('user_id')}`);
 		const data = await response.json();
 		await renderFriendRequests(data);
 	} catch (error) {

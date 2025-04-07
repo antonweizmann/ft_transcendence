@@ -2,7 +2,8 @@ from rest_framework_simplejwt.views import TokenRefreshView # type: ignore
 from django.urls import path # type: ignore
 from .views import (
 	PlayerDetailView, PlayerListView, PlayerRegisterView, accept_friend_request,
-	reject_friend_request, send_friend_request, unfriend, PlayerTokenObtainPairView
+	reject_friend_request, send_friend_request, unfriend, PlayerTokenObtainPairView,
+	PlayerTokenRefreshView, PlayerLogOutView
 	)
 
 player_patterns = [
@@ -17,7 +18,8 @@ player_patterns = [
 
 token_patterns = [
 	path('', PlayerTokenObtainPairView.as_view(), name='obtain_pair'),
-	path('refresh/', TokenRefreshView.as_view(), name='refresh')
+	path('refresh/', PlayerTokenRefreshView.as_view(), name='refresh'),
+	path('logout/', PlayerLogOutView.as_view(), name='logout'),
 ]
 
 urlpatterns = player_patterns + token_patterns

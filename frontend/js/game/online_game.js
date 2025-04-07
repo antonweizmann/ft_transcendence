@@ -3,6 +3,7 @@ import { BOARD_HEIGHT, player1, player2, ball, setAnimationId, getAnimationId} f
 import { updateElements } from "./draw_game.js";
 import { keysPressed } from "./movement_game.js";
 import { cleanupGame, resetGame } from "./game.js";
+import { getCookie } from "../cookies.js";
 
 export let	socket;
 
@@ -50,7 +51,7 @@ export function joinGame() {
 		console.error('Error: WebSocket connection is not open');
 		return;
 	}
-	const player_pk = localStorage.getItem('user_id');
+	const player_pk = getCookie('user_id');
 	const lobby = document.getElementById('lobbyId').value;
 	const lobbyContainer = document.getElementById('lobbyInput');
 
