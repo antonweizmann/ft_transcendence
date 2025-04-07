@@ -68,6 +68,10 @@ export function joinGame() {
 
 function sendToSocket(message) {
 	console.log("Sending message:", message);
+	if (!socket) {
+		console.warn('Warning: WebSocket connection is not established');
+		return;
+	}
 	socket.send(message);
 }
 
