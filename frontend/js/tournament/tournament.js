@@ -127,5 +127,6 @@ function	setPlayerCount() {
 
 // function for the refresh button
 function	refreshTournamentList() {
+	clearTournamentList();
 	LoadDataFromBackend('/api/pong/tournament/open/', setTournamentData);
 }
