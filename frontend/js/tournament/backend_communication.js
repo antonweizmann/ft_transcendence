@@ -5,6 +5,7 @@ import { sendToTournamentSocket, initTournamentSocket } from "./socket_managemen
 import { updateTournament, setTournamentData } from "./tournament.js";
 import { LoadDataFromBackend } from "../profile.js";
 import { updateTournamentLobby } from "./tournament.js";
+import { showErrorInAllFields } from "../error_handling.js";
 
 export {
 	loadTournament,
@@ -34,14 +35,13 @@ function parseTournamentMessage(data) {
 		updateTournament(message.tournament_state);
 	} else if (message.type === 'lobby_update') {
 		updateTournamentLobby(message.players, message.size);
-	} else {
-		if (message.message)
-			console.log('Received message:', message.message);
-		else if (message.error)
-			console.error('Received error:', message.error);
-		else
-			console.log('Received message:', message);
-	}
+	} else if (message.error) {
+		showErrorInAllFields([{field: document.getElementById('createLobbyId')}], "Lobby ID must be under 100 characters and contain only alphanumerics, hyphens, underscores, or periods.");
+		console.error('Received error:', message.error);
+	} else if (message.message)
+		console.log('Received message:', message.message);
+	else
+		console.log('Received message:', message);
 }
 
 function joinTournament(lobbyId) {
