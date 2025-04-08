@@ -55,7 +55,6 @@ export function cleanAi() {
 function calculateBallMovement(ball, paddle) {
 	let distanceToBall = paddle.x - ball.x;
 	if (gameMode === "ai" && distanceToBall > fov) return paddle.y;
-	console.log('fov breached');
 	const magnitude = Math.sqrt(ball.dirX * ball.dirX + ball.dirY * ball.dirY);
 	const normalizedX = ball.dirX / magnitude;
 	const normalizedY = ball.dirY / magnitude;

@@ -2,6 +2,7 @@ import { setupDropdownValidation, validateLoginForm, updateActive } from './form
 import { initProfile } from './profile.js';
 import { initTournament } from './tournament/tournament.js';
 import { getCookie } from './cookies.js';
+import { ensureInit } from './game/init_game.js';
 
 window.loadPage = loadPage;
 window.signUpInstead = signUpInstead;
@@ -135,33 +136,13 @@ async function getPage(pageName) {
 				initialized: false,
 				cleanup: null
 			};
-			loadScripts([
-				'game/ai.js',
-				'game/draw_game.js',
-				'game/element.js',
-				'game/game.js',
-				'game/init_game.js',
-				'game/listeners_game.js',
-				'game/movement_game.js',
-				'game/online_game.js'
-			]);
-			setTimeout(() => {
-				if (window.ensureInit) {
-					window.ensureInit();
-				}
-			}, 50);
+			setTimeout(ensureInit, 50);
 		} 
 		else if (pageName === 'profile') {
-			loadScripts(['profile.js']);
-			setTimeout(() => {
-					initProfile();
-			}, 500);
+			setTimeout(initProfile , 500);
 		}
 		else if (pageName === 'tournament') {
-			loadScripts(['tournament/tournament.js']);
-			setTimeout(() => {
-					initTournament();
-			}, 500);
+			setTimeout(initTournament, 500);
 		}
 		changeLanguage();
 	}

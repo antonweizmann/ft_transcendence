@@ -5,26 +5,40 @@ import { gameLoop, cleanupGame, resetGame } from "./game.js"
 import { startGame, joinGame, initSocket, resetSocket } from "./online_game.js"
 import { getCookie } from "../cookies.js";
 
+export {
+	ensureInit,
+	setAnimationId,
+	getAnimationId,
+	setGameBoardSize,
+	startGameTimer,
+	gameModeSelector,
+	gameMode,
+	BOARD_HEIGHT,
+	BOARD_WIDTH,
+	player1,
+	player2,
+	ball
+}
+
 const PINK = '#8A4FFF';
 const PURPLE = '#9932CC';
-export let gameModeSelector, gameMode;
-export let BOARD_HEIGHT = 500;
-export let BOARD_WIDTH = 800;
-export let OBJ_WIDTH = BOARD_WIDTH / 40;
-export let OBJ_HEIGHT = BOARD_HEIGHT / 5;
-export let player1, player2, ball;
-
+let BOARD_HEIGHT = 500;
+let BOARD_WIDTH = 800;
+let OBJ_WIDTH = BOARD_WIDTH / 40;
+let OBJ_HEIGHT = BOARD_HEIGHT / 5;
+let gameModeSelector, gameMode;
+let player1, player2, ball;
 let animationId;
 
-export function setAnimationId(id) {
+function setAnimationId(id) {
 	animationId = id;
 }
 
-export function getAnimationId() {
+function getAnimationId() {
 	return animationId;
 }
 
-export function ensureInit() {
+function ensureInit() {
 	if (window.gameState.initialized === true) return;
 
 	console.log('Ensuring initialization...');
@@ -199,7 +213,7 @@ function setNames() {
 	player2Name.textContent = opponent_name;
 }
 
-export function setGameBoardSize(isInitialSetup = false) {
+function setGameBoardSize(isInitialSetup = false) {
 
 	const smallerDimension = Math.min(window.innerWidth, window.innerHeight);
 	BOARD_WIDTH = Math.floor(smallerDimension * 1);
@@ -226,7 +240,7 @@ export function setGameBoardSize(isInitialSetup = false) {
 	}
 }
 
-export async function startGameTimer() {
+async function startGameTimer() {
 	const gameButton = document.getElementById('startGame');
 
 	gameButton.removeEventListener('click', startGameTimer);
@@ -238,6 +252,3 @@ export async function startGameTimer() {
 	else
 		gameLoop();
 }
-
-ensureInit();
-window.ensureInit = ensureInit;
