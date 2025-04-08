@@ -6,6 +6,8 @@ export {
 	tournamentSocket
 };
 
+window.resetTournamentSocket = resetTournamentSocket;
+
 let	tournamentSocket;
 
 function initTournamentSocket() {

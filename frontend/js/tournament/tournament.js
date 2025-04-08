@@ -11,7 +11,6 @@ import { addPlayer, setPlayerInLobby, clearPlayerList } from "./tournament_lobby
 // window.setWinningPoints = setWinningPoints;
 window.setPlayerCount = setPlayerCount;
 window.validateCreateLobby = validateCreateLobby;
-window.clearTournamentList = clearTournamentList;
 window.refreshTournamentList = refreshTournamentList;
 
 export {

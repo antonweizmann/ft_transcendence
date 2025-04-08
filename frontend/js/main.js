@@ -102,6 +102,8 @@ function cleanupPage()
 {
 	if (window.gameState.cleanup)
 		window.gameState.cleanup();
+	if (window.resetTournamentSocket)
+		window.resetTournamentSocket();
 	removeAddedScripts();
 }
 
