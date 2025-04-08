@@ -17,6 +17,9 @@ class GameListView(generics.ListAPIView):
 	def get_queryset(self):
 		if self.game_model is None:
 			raise ValueError('game_model is required')
+
+		self.game_model.objects.filter(players__isnull=True).delete()
+
 		queryset = self.game_model.objects.filter(status=self.status_filter)
 		username = self.request.query_params.get('username', None)
 		if username is not None:
