@@ -36,12 +36,10 @@ class TournamentBaseConsumer(CoreBaseConsumer):
 					raise ValueError('Tournament size must be between 3 and 8.')
 				size = int(size)
 				self._handler.set_tournament_size(size)
-				self.send(json.dumps({
-					'message': f'Tournament size changed to {size}.'
-				}))
 			except ValueError as e:
 				self.send(json.dumps({
-					'error': f'Tournament size error: {e}'
+					'type': 'error',
+					'details': f'Tournament size error: {e}'
 				}))
 
 		elif action == 'change_description':

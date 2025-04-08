@@ -6,13 +6,15 @@ import { updateTournament, setTournamentData } from "./tournament.js";
 import { LoadDataFromBackend } from "../profile.js";
 import { updateTournamentLobby } from "./tournament_actions.js";
 import { showErrorInAllFields } from "../error_handling.js";
+import { setPlayerInLobby, markPlayerAsReady, showToast } from "./tournament_lobby.js";
 
 export {
 	loadTournament,
 	parseTournamentMessage,
 	joinTournament,
 	loadTournamentLobby,
-	requestTournamentLobbySize
+	requestTournamentLobbySize,
+	setPlayerReady,
 };
 
 function loadTournament() {
@@ -35,11 +37,23 @@ function parseTournamentMessage(data) {
 		updateTournament(message.tournament_state);
 	} else if (message.type === 'lobby_update') {
 		updateTournamentLobby(message.players, message.size);
+	} else if (message.type === 'size_update') {
+		console.log(message.details);
+		setPlayerInLobby(message.player_count, message.size);
+	} else if (message.type === 'ready_update') {
+		console.log(message.details);
+		console.log('Player ready:', message.players_ready);
+		markPlayerAsReady(message.player);
+	} else if (message.type === 'error') {
+		console.log('Error:', message.details);
+		showToast('Error', message.details);
 	} else if (message.error) {
 		showErrorInAllFields([{field: document.getElementById('createLobbyId')}], "Lobby ID must be under 100 characters and contain only alphanumerics, hyphens, underscores, or periods.");
 		console.error('Received error:', message.error);
-	} else if (message.message)
+	} else if (message.message) {
+		showToast('Message', message.message);
 		console.log('Received message:', message.message);
+	}
 	else
 		console.log('Received message:', message);
 }
@@ -76,6 +90,14 @@ function requestTournamentLobbySize(Size) {
 	const message = {
 		action: 'change_size',
 		size: Size,
+	};
+	sendToTournamentSocket(message);
+}
+
+function setPlayerReady() {
+	const message = {
+		action: 'start_tournament',
+		player_pk: getCookie('user_id'),
 	};
 	sendToTournamentSocket(message);
 }

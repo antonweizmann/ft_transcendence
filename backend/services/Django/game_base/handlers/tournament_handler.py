@@ -36,14 +36,14 @@ class TournamentHandlerBase(CoreBaseHandler):
 	def join_tournament(self, player: Player, send_func: SendFunc) -> int | None: # type: ignore
 		player_index = super()._join(player, send_func)
 		if player_index is not None and player_index < self._required_players:
-			self._state['is_ready_to_start'].update({player.__str__(): False})
+			self._state['is_ready_to_start'].update({player.username: False})
 		return player_index
 
 	def leave_tournament(self, player: Player): # type: ignore
 		super()._leave(player)
 		with self._lock:
-			if player.__str__() in self._state['is_ready_to_start']:
-				del self._state['is_ready_to_start'][player.__str__()]
+			if player.username in self._state['is_ready_to_start']:
+				del self._state['is_ready_to_start'][player.username]
 
 	def _start_tournament(self, player_index: int):
 		tournament_thread = threading.Thread(target=self._start_matches)
@@ -56,10 +56,12 @@ class TournamentHandlerBase(CoreBaseHandler):
 	def mark_ready_and_start(self, player_index: int):
 		if not self._allowed_to_start(player_index):
 			return
-		player_str = self._indexes[player_index].__str__()
+		player_str = self._indexes[player_index].username
 		self._state['is_ready_to_start'][player_str] = True
 		self._send_func({
-			'ready': f'Player #{player_index} {player_str} is ready to start.',
+			'type': 'ready_update',
+			'details': f'Player #{player_index} {player_str} is ready to start.',
+			'player': f'{player_str}',
 			'players_ready': f'{self._state['is_ready_to_start']}'
 		})
 		if self.__ready_to_start():
@@ -79,11 +81,18 @@ class TournamentHandlerBase(CoreBaseHandler):
 		self._model.save()
 		for index in self._indexes:
 			if index >= size:
-				self.leave_tournament(self._indexes[index])
+				# self.leave_tournament(self._indexes[index])
 				self._send_func({
-					'kicked': f'Player #{index} removed from tournament.',
+					'type': 'player_is_spectator',
+					'message': f'Player #{index} is an spectator now.',
 					'index': f'{index}'
 				})
+		self._send_func({
+				'type': 'size_update',
+				'details': f'Tournament size changed to {size}.',
+				'size': f'{size}',
+				'player_count': f'{len(self.players)}'
+			})
 
 	def __can_change_model_values(self, new_value: str):
 		with self._lock:

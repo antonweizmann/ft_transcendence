@@ -1,5 +1,5 @@
 import { addPlayer, setPlayerInLobby, clearPlayerList } from "./tournament_lobby.js";
-import { loadTournamentLobby, requestTournamentLobbySize, joinTournament } from "./backend_communication.js";
+import { loadTournamentLobby, requestTournamentLobbySize, joinTournament, setPlayerReady } from "./backend_communication.js";
 import { removeErrorMessage } from "../error_handling.js";
 import { clearTournamentList, setTournamentData } from "./tournament.js";
 import { LoadDataFromBackend } from "../profile.js";
@@ -12,6 +12,7 @@ export {
 window.refreshTournamentList = refreshTournamentList;
 window.setPlayerCount = setPlayerCount;
 window.validateCreateLobby = validateCreateLobby;
+window.readyUp = setPlayerReady;
 
 let newLobbySize = null;
 
@@ -31,6 +32,7 @@ async function updateTournamentLobby(players, size) {
 		console.log('Lobby size:', newLobbySize);
 		requestTournamentLobbySize(newLobbySize);
 		size = newLobbySize;
+		newLobbySize = null;
 	}
 	setPlayerInLobby(players.length, size);
 }

@@ -161,20 +161,20 @@ class CoreBaseHandler:
 		if self.get_status() == 'finished':
 			self._send_func({
 				'type': 'error',
-				'message': f'{self._type} has already finished.'
+				'details': f'{self._type} has already finished.'
 			}, True)
 			return False
 		with self._lock:
 			if self._required_players > len(self.players):
 				self._send_func({
 					'type': 'error',
-					'message': 'Waiting for other players to join.'
+					'details': 'Waiting for other players to join.'
 				})
 				return False
 			if self._is_active:
 				self._send_func({
 					'type': 'error',
-					'message': f'{self._type} has already started.'
+					'details': f'{self._type} has already started.'
 				}, True)
 				return False
 		return True
