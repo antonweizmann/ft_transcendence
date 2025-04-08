@@ -17,7 +17,7 @@ export {
 	initTournament,
 	updateTournament,
 	setTournamentData,
-	updateLobby
+	updateTournamentLobby
 }
 
 function initTournament() {
@@ -42,7 +42,7 @@ function updateTournament(tournament_state) {
 	}
 }
 
-async function updateLobby(players, size) {
+async function updateTournamentLobby(players, size) {
 	console.log('Lobby update:', players);
 	const lobbySize = document.getElementById('playerCount').value;
 	// const winningPoints = document.getElementById('winningPoints').value;

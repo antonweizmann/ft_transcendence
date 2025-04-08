@@ -4,7 +4,7 @@ import { closeMobileMenu, fetchPageContent } from "../main.js";
 import { sendToTournamentSocket, initTournamentSocket } from "./socket_management.js";
 import { updateTournament, setTournamentData } from "./tournament.js";
 import { LoadDataFromBackend } from "../profile.js";
-import { updateLobby } from "./tournament.js";
+import { updateTournamentLobby } from "./tournament.js";
 
 export {
 	loadTournament,
@@ -33,7 +33,7 @@ function parseTournamentMessage(data) {
 	if (message.type === 'tournament_update') {
 		updateTournament(message.tournament_state);
 	} else if (message.type === 'lobby_update') {
-		updateLobby(message.players, message.size);
+		updateTournamentLobby(message.players, message.size);
 	} else {
 		if (message.message)
 			console.log('Received message:', message.message);
