@@ -13,6 +13,8 @@ window.setPlayerCount = setPlayerCount;
 window.validateCreateLobby = validateCreateLobby;
 window.refreshTournamentList = refreshTournamentList;
 
+let newLobbySize = null;
+
 export {
 	initTournament,
 	updateTournament,
@@ -44,7 +46,6 @@ function updateTournament(tournament_state) {
 
 async function updateTournamentLobby(players, size) {
 	console.log('Lobby update:', players);
-	const lobbySize = document.getElementById('playerCount').value;
 	// const winningPoints = document.getElementById('winningPoints').value;
 
 	const inLobby = await loadTournamentLobby();
@@ -58,16 +59,18 @@ async function updateTournamentLobby(players, size) {
 		console.log(`Player Index: ${index}, Username: ${username}`);
 		addPlayer(username);
 	});
-	console.log('Lobby size:', lobbySize);
-	requestTournamentLobbySize(lobbySize);
-	console.log('size:', size);
-	setPlayerInLobby(players.length, lobbySize);
+	if (newLobbySize && newLobbySize !== size) {
+		console.log('Lobby size:', newLobbySize);
+		requestTournamentLobbySize(newLobbySize);
+		size = newLobbySize;
+	}
+	setPlayerInLobby(players.length, size);
 }
 
 function setTournamentData(data) {
 	clearTournamentList();
 	data.forEach(tournament => {
-		addTournament(tournament.name, tournament.id, tournament.player_count, tournament.size);
+		addTournament(tournament.name, tournament.lobby_id, tournament.player_count, tournament.size);
 	});
 	console.log("Tournament data received:", data);
 }
@@ -95,7 +98,7 @@ function	clearTournamentList() {
 
 function	validateCreateLobby() {
 	const lobbyId = document.getElementById('createLobbyId');
-	
+
 	removeErrorMessage(lobbyId);
 	if (!lobbyId.value.trim()) {
 		lobbyId.classList.add('is-invalid');
@@ -103,6 +106,7 @@ function	validateCreateLobby() {
 		return false;
 	}
 	joinTournament(lobbyId.value);
+	newLobbySize = document.getElementById('playerCount').value;
 }
 
 
