@@ -1,5 +1,4 @@
 import { setupDropdownValidation, validateLoginForm, updateActive } from './form_validation.js';
-import { logoutUser } from './form_submission.js';
 import { initProfile } from './profile.js';
 import { initTournament } from './tournament/tournament.js';
 import { getCookie } from './cookies.js';
@@ -17,6 +16,12 @@ window.gameState = {
 };
 
 let addedScripts = []; // Array to store references to added scripts
+
+const restrictedPages = [
+	'profile',
+	'tournament',
+	'tournament_lobby',
+]
 
 document.addEventListener('DOMContentLoaded', function() {
 	setupDropdownValidation('.login-drop', validateLoginForm);
@@ -177,12 +182,10 @@ window.onload = function () {
 		loadPageReplace(startPage);
 		return;
 	}
-	if (path === 'profile' && !getCookie('user_id')) {
-		logoutUser();
+	if ((restrictedPages.includes(path) && !getCookie('user_id')) || path === 'tournament_lobby') {
 		loadPageReplace(startPage);
 		return;
 	}
-
 	console.log(`Loading path: ${path}`);
 	getPage(path);
 };
