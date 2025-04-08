@@ -4,6 +4,7 @@ import { setAiReaction } from "./ai.js"
 import { gameLoop, cleanupGame, resetGame } from "./game.js"
 import { startGame, joinGame, initSocket, resetSocket } from "./online_game.js"
 import { getCookie } from "../cookies.js";
+import { addGameListeners } from "./listeners_game.js";
 
 export {
 	ensureInit,
@@ -11,7 +12,7 @@ export {
 	getAnimationId,
 	setGameBoardSize,
 	startGameTimer,
-	gameModeSelector,
+	changeGameMode,
 	gameMode,
 	BOARD_HEIGHT,
 	BOARD_WIDTH,
@@ -26,7 +27,7 @@ let BOARD_HEIGHT = 500;
 let BOARD_WIDTH = 800;
 let OBJ_WIDTH = BOARD_WIDTH / 40;
 let OBJ_HEIGHT = BOARD_HEIGHT / 5;
-let gameModeSelector, gameMode;
+let gameMode;
 let player1, player2, ball;
 let animationId;
 
@@ -129,11 +130,9 @@ function initGame() {
 		player2.y = startPlayer2.y();
 	}
 	console.log('Starting game loop with dimensions:', BOARD_WIDTH, BOARD_HEIGHT);
+	addGameListeners();
 	setGameBoardSize();
-	document.getElementById('startGame').addEventListener('click', startGameTimer);
 	document.getElementById('lobbyInput').style.display = "none";
-	gameModeSelector = document.getElementById('gameMode');
-	gameModeSelector.addEventListener('change', changeGameMode);
 	if (getCookie('user_id'))
 		document.getElementById('onlineOption').style.display = "block";
 }
@@ -141,6 +140,7 @@ function initGame() {
 function changeGameMode() {
 	const difficulty = document.getElementById("difficulty");
 	const difficultyCol = document.getElementById("difficultyCol");
+	const gameModeSelector = document.getElementById('gameMode');
 
 	gameMode = gameModeSelector.value;
 	console.log('Selected game mode:', gameMode);
@@ -163,7 +163,6 @@ function changeGameMode() {
 	setNames();
 	setButtonListeners();
 }
-window.changeGameMode = changeGameMode;
 
 function setButtonListeners() {
 	const	startButton = document.getElementById("startGame");
@@ -234,7 +233,6 @@ function setGameBoardSize(isInitialSetup = false) {
 		gameBoard.width = BOARD_WIDTH;
 		gameBoard.height = BOARD_HEIGHT;
 		// updateElements(); // Redraw after resize
-		console.log('Canvas resized to:', BOARD_WIDTH, BOARD_HEIGHT);
 		if (!isInitialSetup)
 			updateElements();
 	}
@@ -242,6 +240,7 @@ function setGameBoardSize(isInitialSetup = false) {
 
 async function startGameTimer() {
 	const gameButton = document.getElementById('startGame');
+	const gameModeSelector = document.getElementById('gameMode');
 
 	gameButton.removeEventListener('click', startGameTimer);
 	// gameButton.addEventListener('click', resetGame, { once: true });

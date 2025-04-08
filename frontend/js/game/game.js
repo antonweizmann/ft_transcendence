@@ -1,27 +1,27 @@
 import { aiLoop, cleanAi } from "./ai.js";
-import { gameModeSelector, startGameTimer, BOARD_WIDTH, player1, player2, ball, getAnimationId, setAnimationId } from "./init_game.js";
 import { updateElements } from "./draw_game.js";
-import { handleMovement , addMovement, stopMovement, resetScore } from "./movement_game.js";
-import { errorHandler, listenerResize } from "./listeners_game.js";
+import { handleMovement , resetScore } from "./movement_game.js";
 import { resetSocket } from "./online_game.js";
+import {
+	startGameTimer,
+	BOARD_WIDTH,
+	player1,
+	player2,
+	ball,
+	getAnimationId,
+	setAnimationId
+} from "./init_game.js";
 
 let	gameButton;
 let	eventListeners = [];
 
-window.addEventListener('error', errorHandler);
-eventListeners.push({element: window, type: 'error', listener: errorHandler});
-
-window.addEventListener('resize', listenerResize);
-eventListeners.push({element: window, type: 'resize', listener: listenerResize});
-
-document.addEventListener('keydown', addMovement);
-eventListeners.push({element: document, type: 'keydown', listener: addMovement});
-
-document.addEventListener('keyup', stopMovement);
-eventListeners.push({element: document, type: 'keyup', listener: stopMovement});
+export {
+	eventListeners
+}
 
 //Main Loop
 export function gameLoop() {
+	const gameModeSelector = document.getElementById('gameMode');
 	const gameMode = gameModeSelector.value;
 	const gameBoard = document.getElementById('gameBoard');
 	if (!gameBoard) {

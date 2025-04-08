@@ -2,6 +2,7 @@ import { showErrors, removeErrorMessage, showErrorMessage, showErrorInAllFields 
 import { authenticatedFetch } from './authentication.js';
 import { setupLoginOrProfile } from './main.js';
 import { getCookie } from './cookies.js';
+import { changeGameMode } from './game/init_game.js';
 
 window.logoutUser = logoutUser;
 
@@ -121,6 +122,8 @@ function handleLoginError(errors, loginFields)
 
 function logoutUser()
 {
+	const gameModeSelector = document.getElementById('gameMode');
+
 	fetch('https://localhost/api/token/logout/', {
 		method: 'POST',
 	})
@@ -129,10 +132,10 @@ function logoutUser()
 	if (window.location.pathname === '/play')
 	{
 		document.getElementById('onlineOption').style.display = "none";
-		if (document.getElementById('gameMode').value === 'online')
+		if (gameModeSelector.value === 'online')
 		{
-			document.getElementById('gameMode').value = 'human';
-			window.changeGameMode();
+			gameModeSelector.value = 'human';
+			changeGameMode();
 		}
 	}
 	console.log('User logged out successfully!');
