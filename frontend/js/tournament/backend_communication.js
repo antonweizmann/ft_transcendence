@@ -6,7 +6,8 @@ import { updateTournament, setTournamentData } from "./tournament.js";
 import { LoadDataFromBackend } from "../profile.js";
 import { updateTournamentLobby } from "./tournament_actions.js";
 import { showErrorInAllFields } from "../error_handling.js";
-import { setPlayerInLobby, markPlayerAsReady, showToast } from "./tournament_lobby.js";
+import { setPlayerInLobby, markPlayerAsReady, showToast, tournamentOver } from "./tournament_lobby.js";
+import { initTournamentMatch } from "./tournament_loop.js";
 
 export {
 	loadTournament,
@@ -44,6 +45,16 @@ function parseTournamentMessage(data) {
 		console.log(message.details);
 		console.log('Player ready:', message.players_ready);
 		markPlayerAsReady(message.player);
+	} else if (message.type === 'pong_tournament_update') {
+		console.log(message.tournament_state);
+		const currentMatch = message.tournament_state.current_match;
+		if (!currentMatch) {
+			tournamentOver(message.tournament_state.leaderboard);
+			return;
+		}
+		const match_id = Object.keys(currentMatch)[0]; // Get the first key as match_id
+		const players = currentMatch[match_id];
+		initTournamentMatch(match_id, players);
 	} else if (message.type === 'error') {
 		console.log('Error:', message.details);
 		showToast('Error', message.details);

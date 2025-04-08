@@ -5,9 +5,17 @@ import { keysPressed } from "./movement_game.js";
 import { cleanupGame, resetGame } from "./game.js";
 import { getCookie } from "../cookies.js";
 
-export let	socket;
+export {
+	socket,
+	startGame,
+	joinGame,
+	initSocket,
+	resetSocket,
+}
 
-export function startGame() {
+let	socket;
+
+function startGame() {
 	console.log('Starting game');
 	const message = {
 		action: 'start_game',
@@ -46,8 +54,8 @@ function handleMovement() {
 	socket.send(messageJSON);
 };
 
-export function joinGame() {
-	if (socket.readyState !== WebSocket.OPEN) {
+function joinGame() {
+	if (!socket || socket.readyState !== WebSocket.OPEN) {
 		console.error('Error: WebSocket connection is not open');
 		return;
 	}
@@ -75,7 +83,7 @@ function sendToSocket(message) {
 	socket.send(message);
 }
 
-export function initSocket() {
+function initSocket() {
 	if (socket) {
 		console.error('Socket already exists');
 		return;
@@ -95,7 +103,7 @@ export function initSocket() {
 	};
 }
 
-export function resetSocket() {
+function resetSocket() {
 	if (socket && socket.readyState === WebSocket.OPEN) {
 		socket.close();
 	}
