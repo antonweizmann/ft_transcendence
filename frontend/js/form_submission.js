@@ -5,7 +5,13 @@ import { getCookie } from './cookies.js';
 
 window.logoutUser = logoutUser;
 
-export async function registerUser(fields)
+export {
+	registerUser,
+	loginUser,
+	changeUserInfo,
+};
+
+async function registerUser(fields)
 {
 	const form_data = new FormData();
 
@@ -39,7 +45,7 @@ export async function registerUser(fields)
 	return true;
 }
 
-export async function changeUserInfo(fields)
+async function changeUserInfo(fields)
 {
 	const form_data = new FormData();
 
@@ -72,7 +78,7 @@ export async function changeUserInfo(fields)
 	return true;
 }
 
-export async function loginUser(username, password)
+async function loginUser(username, password)
 {
 	const form_data = new FormData();
 	const loginFields = [
@@ -97,7 +103,6 @@ export async function loginUser(username, password)
 		return false;
 	}
 	localStorage.setItem('username', username);
-	localStorage.setItem('isLoggedIn', true);
 	setupLoginOrProfile();
 	if (window.location.pathname === '/play')
 		document.getElementById('onlineOption').style.display = "block";
@@ -114,15 +119,12 @@ function handleLoginError(errors, loginFields)
 	return false;
 }
 
-export function logoutUser()
+function logoutUser()
 {
 	fetch('https://localhost/api/token/logout/', {
 		method: 'POST',
 	})
-	localStorage.removeItem('isLoggedIn');
 	localStorage.removeItem('username');
-	setupLoginOrProfile();
-	console.log('User logged out successfully!');
 	loadPage('home')
 	if (window.location.pathname === '/play')
 	{
@@ -133,4 +135,6 @@ export function logoutUser()
 			window.changeGameMode();
 		}
 	}
+	console.log('User logged out successfully!');
+	setTimeout(setupLoginOrProfile, 50);
 }

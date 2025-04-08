@@ -3,6 +3,7 @@ import { updateElements } from "./draw_game.js";
 import { setAiReaction } from "./ai.js"
 import { gameLoop, cleanupGame, resetGame } from "./game.js"
 import { startGame, joinGame, initSocket, resetSocket } from "./online_game.js"
+import { getCookie } from "../cookies.js";
 
 const PINK = '#8A4FFF';
 const PURPLE = '#9932CC';
@@ -119,7 +120,7 @@ function initGame() {
 	document.getElementById('lobbyInput').style.display = "none";
 	gameModeSelector = document.getElementById('gameMode');
 	gameModeSelector.addEventListener('change', changeGameMode);
-	if (localStorage.getItem('isLoggedIn'))
+	if (getCookie('user_id'))
 		document.getElementById('onlineOption').style.display = "block";
 }
 
@@ -130,7 +131,7 @@ function changeGameMode() {
 	gameMode = gameModeSelector.value;
 	console.log('Selected game mode:', gameMode);
 	resetGame();
-	if (localStorage.getItem('isLoggedIn'))
+	if (getCookie('user_id'))
 		document.getElementById('onlineOption').style.display = "block";
 	else
 		document.getElementById('onlineOption').style.display = "none";

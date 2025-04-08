@@ -25,21 +25,17 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 export function setupLoginOrProfile() {
-	//replace by validation of choice
-	const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-
+	const isLoggedIn = getCookie('user_id') || false;
 	const loginButton = document.getElementById('loginDropdownButton');
 	const profileButton = document.getElementById('profileButton');
+	const tournamentNav = document.getElementById('tournamentNav');
 
 	if (isLoggedIn) {
+		tournamentNav.style.display = 'block';
 		loginButton.style.display = 'none';
 		profileButton.style.display = 'block';
-		// To display the username in the profile button uncomment the following
-		// and remove the data-translate attribute from the button in the HTML
-		// if (localStorage.getItem('username')) {
-		// 	profileButton.textContent = localStorage.getItem('username');
-		// }
 	} else {
+		tournamentNav.style.display = 'none';
 		loginButton.style.display = 'block';
 		profileButton.style.display = 'none';
 	}
