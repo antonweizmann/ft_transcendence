@@ -49,6 +49,61 @@ async function unfriend(user_id) {
 	}
 }
 
+class Player {
+	constructor(id, username) {
+		this.id = id;
+		this.username = username;
+	}
+
+	createElement() {
+		const playerElement = document.createElement('il');
+		const usernameSpan = document.createElement('span');
+
+		playerElement.classList.add('possible-friend-container');
+		usernameSpan.classList.add('friend-name');
+		usernameSpan.textContent = this.username;
+		playerElement.appendChild(usernameSpan);
+		return playerElement;
+	}
+
+	createRequestElement() {
+		const playerElement = this.createElement();
+		const requestButton = document.createElement('button');
+
+		requestButton.classList.add('request-button', 'button');
+		requestButton.textContent = 'Send Request';
+		requestButton.addEventListener('click', () => {
+			this.sendRequest();
+			playerElement.remove();
+		});
+
+		playerElement.appendChild(requestButton);
+		return playerElement;
+	}
+
+	sendRequest() {
+		sendRequest(this.id);
+	}
+
+	createFriendElement() {
+		const playerElement = this.createElement();
+		const unfriendButton = document.createElement('button');
+
+		unfriendButton.classList.add('unfriend-button', 'btn', 'btn-danger', 'unfriend-button');
+		unfriendButton.textContent = 'Unfriend';
+		unfriendButton.addEventListener('click', () => {
+			this.unfriend();
+			playerElement.remove();
+		});
+		playerElement.appendChild(unfriendButton);
+		return playerElement;
+	}
+
+	unfriend() {
+		unfriend(this.id);
+	}
+}
+
 async function renderFriendList(data) {
 	const friendsListElement = document.getElementById('friendsList');
 
@@ -59,25 +114,10 @@ async function renderFriendList(data) {
 		return;
 	data.friends.forEach(async (friend) => {
 		LoadDataFromBackend(`https://localhost/api/player/${friend}/`, (friendData) => {
-			if (!friendData)
+			const friendElement = new Player(friendData.id, friendData.username).createFriendElement();
+			if (!friendsListElement)
 				return;
-
-			const friendListItem = document.createElement('li');
-			friendListItem.innerHTML = `
-				<div class="d-flex justify-content-between align-items-center">
-					<span>${friendData.username}</span>
-					<div class="d-flex justify-content-end">
-						<button id="unfriend-button" class="btn btn-danger unfriend-button" data-user-id="${friend}">Unfriend</button>
-					</div>
-				</div>
-			`;
-			friendsListElement.appendChild(friendListItem);
-
-			const unfriendButton = friendListItem.querySelector('#unfriend-button');
-			unfriendButton.addEventListener('click', () => {
-				unfriend(friend);
-				friendListItem.remove();
-			});
+			friendsListElement.appendChild(friendElement);
 		});
 	});
 }
@@ -124,40 +164,6 @@ async function renderFriendRequests(data) {
 	});
 }
 
-class Player {
-	constructor(id, username) {
-		this.id = id;
-		this.username = username;
-	}
-
-	createElement() {
-		const playerElement = document.createElement('il');
-		const usernameSpan = document.createElement('span');
-		const sendRequestButton = document.createElement('button');
-
-		playerElement.classList.add('possible-friend-container');
-		usernameSpan.classList.add('friend-name');
-		sendRequestButton.classList.add('request-button', 'button');
-
-		usernameSpan.textContent = this.username;
-		sendRequestButton.textContent = 'Send Request';
-
-		sendRequestButton.addEventListener('click', () => {
-			this.sendRequest();
-			playerElement.remove();
-		});
-
-		playerElement.appendChild(usernameSpan);
-		playerElement.appendChild(sendRequestButton);
-
-		return playerElement;
-	}
-
-	sendRequest() {
-		sendRequest(this.id);
-	}
-}
-
 async function findUsername(username, inputUsername) {
 	const UserData = await LoadDataFromBackend(userDetailURL);
 	const parentElement = document.getElementById('addFriendsList');
@@ -180,7 +186,7 @@ async function findUsername(username, inputUsername) {
 				return;
 			}
 			const player = new Player(result.id, result.username);
-			const playerElement = player.createElement();
+			const playerElement = player.createRequestElement();
 			if (!parentElement) {
 				return;
 			}
