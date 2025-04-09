@@ -76,3 +76,12 @@ export function cleanupGame() {
 	eventListeners = [];
 	resetSocket();
 }
+
+window.resetGameAndLobby = function () {
+	const winningScreen = document.getElementById('winningScreen');
+	winningScreen.style.display = 'none';
+	// You can also redirect or reset here
+	const lobbyInput = document.getElementById('lobbyInput');
+	if (lobbyInput)
+		lobbyInput.style.display = 'block';
+}

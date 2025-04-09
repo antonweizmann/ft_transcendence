@@ -1,5 +1,5 @@
 import {showErrorMessage, removeErrorMessage} from "./error_handling.js"
-import { authenticatedFetch } from './authentication.js';
+import { authenticatedFetch, fetchUserData } from './authentication.js';
 
 async function sendRequest(user_id) {
 	try {
@@ -65,7 +65,7 @@ async function renderFriendList(data) {
 		return;
 
 	data.friends.forEach(async (friend) => {
-		const friendData = await fetchFriendDetails(friend);
+		const friendData = await fetchUserData(friend);
 		if (!friendData)
 			return;
 
@@ -88,17 +88,8 @@ async function renderFriendList(data) {
 	});
 }
 
-async function fetchFriendDetails(friendId) {
-	try {
-		const response = await authenticatedFetch(`https://localhost/api/player/${friendId}`);
-		return await response.json();
-	} catch (error) {
-		console.error('Error fetching friend details:', error);
-	}
-}
-
 async function friendList() {
-	const data = await fetchFriendData();
+	const data = await fetchUserData();
 	if (!data)
 		return;
 

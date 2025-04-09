@@ -242,12 +242,14 @@ async function startGameTimer() {
 	const gameButton = document.getElementById('startGame');
 	const gameModeSelector = document.getElementById('gameMode');
 
-	gameButton.removeEventListener('click', startGameTimer);
-	// gameButton.addEventListener('click', resetGame, { once: true });
-	// gameButton.textContent = 'Reset';
 
 	if (gameModeSelector.value === "online")
 		startGame();
 	else
+	{
+		gameButton.removeEventListener('click', startGameTimer);
+		gameButton.addEventListener('click', resetGame, { once: true });
+		gameButton.textContent = 'Reset';
 		gameLoop();
+	}
 }

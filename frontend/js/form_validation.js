@@ -204,3 +204,4 @@ export function updateActive(pageName)
 		newActiveNavLink.setAttribute('aria-current', 'page');
 	}
 }
+

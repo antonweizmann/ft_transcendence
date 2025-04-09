@@ -3,6 +3,7 @@ import { initProfile } from './profile.js';
 import { initTournament } from './tournament/tournament.js';
 import { getCookie } from './cookies.js';
 import { ensureInit } from './game/init_game.js';
+import { fetchUserData } from './authentication.js';
 
 window.loadPage = loadPage;
 window.signUpInstead = signUpInstead;
@@ -250,6 +251,7 @@ function setImagePreview(inputElement) {
 		};
 		reader.readAsDataURL(file); // Read the file as a Data URL
 	} else {
-		previewImage.src = '../assets/default_profile.png'; // Reset to placeholder if no file is selected
+		data = fetchUserData();
+		previewImage.src = data.profile_picture; // Reset to placeholder if no file is selected
 	}
 }

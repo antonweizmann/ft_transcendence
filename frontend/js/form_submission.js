@@ -1,8 +1,8 @@
 import { showErrors, removeErrorMessage, showErrorMessage, showErrorInAllFields } from './error_handling.js';
 import { authenticatedFetch } from './authentication.js';
-import { setupLoginOrProfile } from './main.js';
 import { getCookie } from './cookies.js';
 import { changeGameMode } from './game/init_game.js';
+import { loadPage, setupLoginOrProfile } from './main.js';
 
 window.logoutUser = logoutUser;
 
@@ -76,6 +76,7 @@ async function changeUserInfo(fields)
 	}
 
 	console.log("User info updated successfully!");
+	loadPage('profile');
 	return true;
 }
 

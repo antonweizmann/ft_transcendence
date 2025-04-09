@@ -4,6 +4,7 @@ import { updateElements } from "./draw_game.js";
 import { keysPressed } from "./movement_game.js";
 import { cleanupGame, resetGame } from "./game.js";
 import { getCookie } from "../cookies.js";
+import { loadPage } from "../main.js";
 
 export {
 	socket,
@@ -178,6 +179,7 @@ function gameOver(game_state) {
 	resetSocket();
 	resetGame();
 	updateScore(game_state.score);
+	showWinningScreen(game_state);
 }
 
 function updateLobby(players) {
@@ -198,4 +200,28 @@ function updateLobby(players) {
 	if (player2Container.textContent === '') {
 		player2Container.textContent = 'Waiting for player 2...';
 	}
+}
+
+function showWinningScreen(game_state) {
+	const player1Container = document.getElementById('player1Name');
+	const player2Container = document.getElementById('player2Name');
+	const winnerMessage = document.getElementById('winnerMessage');
+	const winningScreen = document.getElementById('winningScreen');
+
+	const player1Score = game_state.score[player1Container.textContent];
+	const player2Score = game_state.score[player2Container.textContent];
+
+	let winnerText = 'Draw!';
+	if (player1Score > player2Score) {
+		winnerText = `${player1Container.textContent} wins!`;
+	} else if (player2Score > player1Score) {
+		winnerText = `${player2Container.textContent} wins!`;
+	}
+
+	winnerMessage.textContent = winnerText;
+	winningScreen.style.display = 'flex';
+
+	setTimeout(() => {
+		loadPage('play'); // Custom function to go back to lobby/home
+	}, 5000);
 }
