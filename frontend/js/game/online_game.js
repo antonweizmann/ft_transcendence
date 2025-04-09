@@ -5,6 +5,7 @@ import { keysPressed } from "./movement_game.js";
 import { cleanupGame, resetGame } from "./game.js";
 import { getCookie } from "../cookies.js";
 import { loadPage } from "../main.js";
+import { showToast } from "../tournament/tournament_lobby.js";
 
 export {
 	socket,
@@ -135,6 +136,9 @@ function parseMessage(data) {
 		updateLobby(message.players);
 	} else if (message.type === 'countdown' && getAnimationId() === null) {
 		setAnimationId(requestAnimationFrame(onlineGameLoop));
+	} else if (message.type === 'error') {
+		console.log('Error:', message.details);
+		showToast('Error', message.details);
 	} else {
 		if (message.type === 'countdown' && message.message)
 		{
