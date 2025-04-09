@@ -1,11 +1,19 @@
 
-import { BOARD_HEIGHT, player1, player2, ball, setAnimationId, getAnimationId} from "./init_game.js";
 import { updateElements } from "./draw_game.js";
 import { keysPressed } from "./movement_game.js";
 import { cleanupGame, resetGame } from "./game.js";
 import { getCookie } from "../cookies.js";
 import { loadPage } from "../main.js";
 import { showToast } from "../tournament/tournament_lobby.js";
+import {
+	BOARD_HEIGHT,
+	player1,
+	player2,
+	ball,
+	setAnimationId,
+	getAnimationId,
+	startGameTimer
+} from "./init_game.js";
 
 export {
 	socket,
@@ -53,7 +61,8 @@ function handleMovement() {
 		move: direction,
 	};
 	const messageJSON = JSON.stringify(message);
-	socket.send(messageJSON);
+	if (socket && socket.readyState === WebSocket.OPEN)
+		socket.send(messageJSON);
 };
 
 function joinGame() {
@@ -124,31 +133,34 @@ function parseMessage(data) {
 	}
 	if (message.type === 'pong_game_update') {
 		updateGame(message.game_state);
-	}
-	else if (message.type === 'game_over') {
+		deactivateStartButton();
+	} else if (message.type === 'game_over') {
 		gameOver(message.game_state);
-	}
-	else if (message.type === 'lobby_update') {
-		console.group('Lobby update');
-		console.log('game_id:', message.game_id);
-		console.log('players:', message.players);
-		console.groupEnd();
+	} else if (message.type === 'lobby_update') {
 		updateLobby(message.players);
-	} else if (message.type === 'countdown' && getAnimationId() === null) {
-		setAnimationId(requestAnimationFrame(onlineGameLoop));
+	} else if (message.type === 'countdown' && message.message) {
+		if (getAnimationId() === null) 
+			setAnimationId(requestAnimationFrame(onlineGameLoop));
+		deactivateStartButton();
+		gameTimer.textContent = message.message[17] + ' : ' + message.message[17];
+		console.log('Received message:', message.message);
 	} else if (message.type === 'error') {
 		console.log('Error:', message.details);
 		showToast('Error', message.details);
-	} else {
-		if (message.type === 'countdown' && message.message)
-		{
-			gameTimer.textContent = message.message[17] + ' : ' + message.message[17];
-			console.log('Received message:', message.message);
-		}
-		else if (message.message)
-			console.log('Received message:', message.message);
-		else
-			console.log('Received message:', message);
+	} else if (message.message)
+		console.log('Received message:', message.message);
+	else
+		console.log('Received message:', message);
+}
+
+function deactivateStartButton() {
+	const startButton = document.getElementById('startGame');
+
+	if (startButton) {
+		startButton.removeEventListener('click', startGameTimer);
+		startButton.classList.add('button-pressed');
+		startButton.disabled = true;
+		startButton.classList.remove('button-hover');
 	}
 }
 
@@ -167,15 +179,23 @@ function updateGame(game_state) {
 }
 
 function updateScore(score) {
-	const	player1Container = document.getElementById('player1Name');
-	const	player2Container = document.getElementById('player2Name');
-	const	scoreContainer = document.getElementById('scoreGame');
-	let		player1Score = 0;
-	let		player2Score = 0;
+	const scoreContainer = document.getElementById('scoreGame');
+	const player1Container = document.getElementById('player1Name');
+	const player2Container = document.getElementById('player2Name');
 
-	player1Score = score[player1Container.textContent];
-	player2Score = score[player2Container.textContent];
-	scoreContainer.textContent = `${player1Score} - ${player2Score}`;
+	// Extract player names from the score object
+	const players = Object.keys(score);
+	const player1Name = players[0];
+	const player2Name = players[1];
+
+	// Extract scores
+	const player1Score = score[player1Name];
+	const player2Score = score[player2Name];
+
+	// Update the frontend
+	player1Container.textContent = player1Name;
+	player2Container.textContent = player2Name;
+	scoreContainer.textContent = `${player1Score} : ${player2Score}`;
 }
 
 function gameOver(game_state) {
@@ -204,6 +224,9 @@ function updateLobby(players) {
 	if (player2Container.textContent === '') {
 		player2Container.textContent = 'Waiting for player 2...';
 	}
+	if (player1Container.textContent === '') {
+		player1Container.textContent = 'Waiting for player 1...';
+	}
 }
 
 function showWinningScreen(game_state) {
@@ -226,6 +249,6 @@ function showWinningScreen(game_state) {
 	winningScreen.style.display = 'flex';
 
 	setTimeout(() => {
-		loadPage('play'); // Custom function to go back to lobby/home
+		loadPage('play');
 	}, 5000);
 }

@@ -16,10 +16,10 @@
 
 	<div class="g-2 playRow row mt-2">
 		<div class="col-md">
-			<button id="startGame" class="w-100 button">Start</button>
+			<button id="startGame" class="w-100 button button-hover">Start</button>
 		</div>
 		<div class="col-sm">
-			<select id="gameMode" class="w-100 h-100 button">
+			<select id="gameMode" class="w-100 h-100 button button-hover">
 				<option value="human">Local</option>
 				<option id="onlineOption" style="display:none;" value="online">Online</option>
 				<option value="ai">Single Player</option>
@@ -27,7 +27,7 @@
 			</select>
 		</div>
 		<div id="difficultyCol" class="col-sm" style="display: none;">
-			<select id="difficulty" class="w-100 h-100 button">
+			<select id="difficulty" class="w-100 h-100 button button-hover">
 				<option value="easy">Easy</option>
 				<option value="medium">Medium</option>
 				<option value="hard">Hard</option>
@@ -42,9 +42,9 @@
 	</div>
 	<div id="winningScreen" style="display: none;" class="winning-screen">
 		<div class="winning-content">
-		  <h1 id="winnerMessage"></h1>
-		  <button class="w-100 h-100 button" onclick="loadPage('play')">Back to Lobby</button>
+			<h1 id="winnerMessage"></h1>
+			<button class="w-100 h-100 button button-hover" onclick="loadPage('play')">Back to Lobby</button>
 		</div>
-	  </div>
+	</div>
 
 </div>

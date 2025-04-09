@@ -145,6 +145,12 @@ html {
     cursor: pointer; /* Changes cursor to pointer */
 }
 
+.button-pressed {
+    color: darkgrey;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Reduces shadow when pressed */
+    transform: scale(0.95); /* Slightly shrinks the button */
+}
+
 .responsive-title {
     font-size: clamp(1.5rem, 4vw, 2.5rem);
 }
