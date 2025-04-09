@@ -2,7 +2,7 @@ import { showErrors, removeErrorMessage, showErrorMessage, showErrorInAllFields 
 import { authenticatedFetch } from './authentication.js';
 import { getCookie } from './cookies.js';
 import { changeGameMode } from './game/init_game.js';
-import { loadPage, setupLoginOrProfile } from './main.js';
+import { loadPage, updateUIBasedOnAuth } from './main.js';
 
 window.logoutUser = logoutUser;
 
@@ -105,7 +105,7 @@ async function loginUser(username, password)
 		return false;
 	}
 	localStorage.setItem('username', username);
-	setupLoginOrProfile();
+	updateUIBasedOnAuth();
 	if (window.location.pathname === '/play')
 		document.getElementById('onlineOption').style.display = "block";
 	return true;
@@ -140,5 +140,5 @@ function logoutUser()
 		}
 	}
 	console.log('User logged out successfully!');
-	setTimeout(setupLoginOrProfile, 50);
+	setTimeout(updateUIBasedOnAuth, 50);
 }

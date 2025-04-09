@@ -34,8 +34,8 @@
 					<!--Login and Sign up ms-auto used for aligning right-->
 					<!-- ONclick login change to log out button and reverse-->
 					<ul class="navbar-nav ms-auto">
-						<li class="nav-item">
-							<a class="nav-link" data-bs-toggle="offcanvas" data-bs-target="#friendsSidebar" aria-controls="friendsSidebar" id="friendsTrigger" data-translate="friends">Friends</a>
+						<li class="nav-item" id="friendsTrigger" style="display: none;">
+							<a class="nav-link" data-bs-toggle="offcanvas" data-bs-target="#friendsSidebar" aria-controls="friendsSidebar" data-translate="friends">Friends</a>
 						</li>
 						<li class="nav-item dropdown">
 							<button class="btn btn-outline-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="loginDropdownButton" data-translate="login">Login</button>
@@ -118,7 +118,7 @@
 					<div class="tab-pane fade" id="add-friends" role="tabpanel" aria-labelledby="add-friends-tab">
 						<form id="addFriendForm" class="input-group">
 							<input type="text" id="newFriendName" class="form-control" placeholder="Enter friend's username" data-translate="newFriendPlaceholder">
-							<button type="submit" class="btn btn-purple" data-translate="addFriendButton">Add Friend</button>
+							<button type="submit" class="btn btn-purple" data-translate="addFriendButton">Search User</button>
 						</form>
 						<div id="addFriendFeedback" class="mt-2"></div>
 					</div>

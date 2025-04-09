@@ -28,20 +28,23 @@ const restrictedPages = [
 document.addEventListener('DOMContentLoaded', function() {
 	setupDropdownValidation('.login-drop', validateLoginForm);
 
-	setupLoginOrProfile();
+	updateUIBasedOnAuth();
 });
 
-export function setupLoginOrProfile() {
+export function updateUIBasedOnAuth() {
 	const isLoggedIn = getCookie('user_id') || false;
 	const loginButton = document.getElementById('loginDropdownButton');
 	const profileButton = document.getElementById('profileButton');
 	const tournamentNav = document.getElementById('tournamentNav');
+	const friendButton = document.getElementById('friendsTrigger');
 
 	if (isLoggedIn) {
+		friendButton.style.display = 'block';
 		tournamentNav.style.display = 'block';
 		loginButton.style.display = 'none';
 		profileButton.style.display = 'block';
 	} else {
+		friendButton.style.display = 'none';
 		tournamentNav.style.display = 'none';
 		loginButton.style.display = 'block';
 		profileButton.style.display = 'none';
