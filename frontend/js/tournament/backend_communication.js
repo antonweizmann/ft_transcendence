@@ -1,4 +1,4 @@
-import { getCookie } from "../cookies.js";
+import { getCookie } from "../utils.js";
 import { updateActive } from "../form_validation.js";
 import { closeMobileMenu, fetchPageContent } from "../main.js";
 import { sendToTournamentSocket, initTournamentSocket } from "./socket_management.js";
@@ -6,8 +6,9 @@ import { updateTournament, setTournamentData } from "./tournament.js";
 import { LoadDataFromBackend } from "../profile.js";
 import { updateTournamentLobby } from "./tournament_actions.js";
 import { showErrorInAllFields } from "../error_handling.js";
-import { setPlayerInLobby, markPlayerAsReady, showToast, tournamentOver } from "./tournament_lobby.js";
+import { setPlayerInLobby, markPlayerAsReady, tournamentOver } from "./tournament_lobby.js";
 import { initTournamentMatch } from "./tournament_loop.js";
+import { showToast } from "../utils.js";
 
 export {
 	loadTournament,

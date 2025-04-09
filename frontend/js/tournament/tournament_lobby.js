@@ -3,7 +3,6 @@ export {
 	clearPlayerList,
 	setPlayerInLobby,
 	markPlayerAsReady,
-	showToast,
 	tournamentOver,
 };
 
@@ -44,50 +43,34 @@ function	addPlayer(username) {
 		list.appendChild(item);
 }
 
-function showToast(title, message) {
-	const toastTitle = document.getElementById('toastTitle');
-	const toastMessage = document.getElementById('toastMessage');
-	const toastTime = document.getElementById('toastTime');
-	const toastElement = document.getElementById('liveToast');
-
-	// Set the title and message
-	toastTitle.textContent = title;
-	toastMessage.textContent = message;
-	toastTime.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
-
-	// Initialize and show the toast
-	const toast = new bootstrap.Toast(toastElement);
-	toast.show();
-}
-
 function tournamentOver(Leaderboard) {
-    // Convert the Leaderboard object into an array of [username, points] pairs and sort it by points in descending order
-    const sortedLeaderboard = Object.entries(Leaderboard).sort(([, pointsA], [, pointsB]) => pointsB - pointsA);
+	// Convert the Leaderboard object into an array of [username, points] pairs and sort it by points in descending order
+	const sortedLeaderboard = Object.entries(Leaderboard).sort(([, pointsA], [, pointsB]) => pointsB - pointsA);
 
-    // Iterate over the sorted leaderboard and update the DOM
-    sortedLeaderboard.forEach(([username, points], index) => {
-        const playerElement = document.getElementById(username);
-        if (playerElement) {
-            // Remove the ready-check element if it exists
-            const readyCheck = playerElement.querySelector('.ready-check');
-            if (readyCheck) {
-                readyCheck.remove();
-            }
+	// Iterate over the sorted leaderboard and update the DOM
+	sortedLeaderboard.forEach(([username, points], index) => {
+		const playerElement = document.getElementById(username);
+		if (playerElement) {
+			// Remove the ready-check element if it exists
+			const readyCheck = playerElement.querySelector('.ready-check');
+			if (readyCheck) {
+				readyCheck.remove();
+			}
 
-            // Determine the rank (e.g., "First place", "Second place", etc.)
-            let rank;
-            if (index === 0) {
-                rank = "First place";
-            } else if (index === 1) {
-                rank = "Second place";
-            } else if (index === 2) {
-                rank = "Third place";
-            } else {
-                rank = `${index + 1}th place`;
-            }
+			// Determine the rank (e.g., "First place", "Second place", etc.)
+			let rank;
+			if (index === 0) {
+				rank = "First place";
+			} else if (index === 1) {
+				rank = "Second place";
+			} else if (index === 2) {
+				rank = "Third place";
+			} else {
+				rank = `${index + 1}th place`;
+			}
 
-            // Update the player's display with their rank, username, and score
-            playerElement.querySelector('div').textContent = `${rank}: ${username} - ${points} points`;
-        }
-    });
+			// Update the player's display with their rank, username, and score
+			playerElement.querySelector('div').textContent = `${rank}: ${username} - ${points} points`;
+		}
+	});
 }

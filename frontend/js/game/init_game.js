@@ -3,7 +3,7 @@ import { updateElements } from "./draw_game.js";
 import { setAiReaction } from "./ai.js"
 import { gameLoop, cleanupGame, resetGame } from "./game.js"
 import { startGame, joinGame, initSocket, resetSocket } from "./online_game.js"
-import { getCookie } from "../cookies.js";
+import { getCookie } from "../utils.js";
 import { addGameListeners } from "./listeners_game.js";
 
 export {

@@ -1,5 +1,5 @@
 import { authenticatedFetch } from './authentication.js';
-import { getCookie } from './cookies.js';
+import { getCookie } from './utils.js';
 
 console.log("Profile JS pre-loaded");
 

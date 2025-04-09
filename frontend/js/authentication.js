@@ -1,21 +1,4 @@
-import { getCookie } from './cookies.js';
-
-export async function fetchUserData(user_id) {
-	try {
-		if (user_id) {
-			const response = await authenticatedFetch(`https://localhost/api/player/${user_id}/`);
-			return await response.json();
-		}
-		else {
-			const response = await authenticatedFetch(`https://localhost/api/player/${getCookie("user_id")}`);
-			return await response.json();
-		}
-	} catch (error) {
-		console.error('Error fetching User data:', error);
-	}
-}
-
-export async function refreshAccessToken() {
+async function refreshAccessToken() {
 	try {
 		const response = await fetch('https://localhost/api/token/refresh/', {
 			method: 'POST',

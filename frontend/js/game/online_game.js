@@ -2,9 +2,9 @@
 import { updateElements } from "./draw_game.js";
 import { keysPressed } from "./movement_game.js";
 import { cleanupGame, resetGame } from "./game.js";
-import { getCookie } from "../cookies.js";
+import { getCookie } from "../utils.js";
 import { loadPage } from "../main.js";
-import { showToast } from "../tournament/tournament_lobby.js";
+import { showToast, deactivateButton } from "../utils.js";
 import {
 	BOARD_HEIGHT,
 	player1,
@@ -12,7 +12,6 @@ import {
 	ball,
 	setAnimationId,
 	getAnimationId,
-	startGameTimer
 } from "./init_game.js";
 
 export {
@@ -133,7 +132,7 @@ function parseMessage(data) {
 	}
 	if (message.type === 'pong_game_update') {
 		updateGame(message.game_state);
-		deactivateStartButton();
+		deactivateButton('startGame');
 	} else if (message.type === 'game_over') {
 		gameOver(message.game_state);
 	} else if (message.type === 'lobby_update') {
@@ -141,7 +140,7 @@ function parseMessage(data) {
 	} else if (message.type === 'countdown' && message.message) {
 		if (getAnimationId() === null) 
 			setAnimationId(requestAnimationFrame(onlineGameLoop));
-		deactivateStartButton();
+		deactivateButton('startGame');
 		gameTimer.textContent = message.message[17] + ' : ' + message.message[17];
 		console.log('Received message:', message.message);
 	} else if (message.type === 'error') {
@@ -151,17 +150,6 @@ function parseMessage(data) {
 		console.log('Received message:', message.message);
 	else
 		console.log('Received message:', message);
-}
-
-function deactivateStartButton() {
-	const startButton = document.getElementById('startGame');
-
-	if (startButton) {
-		startButton.removeEventListener('click', startGameTimer);
-		startButton.classList.add('button-pressed');
-		startButton.disabled = true;
-		startButton.classList.remove('button-hover');
-	}
 }
 
 function updateGame(game_state) {

@@ -1,5 +1,6 @@
 import {showErrorMessage, removeErrorMessage} from "./error_handling.js"
 import { authenticatedFetch, fetchUserData } from './authentication.js';
+import { getCookie, fetchUserData } from './utils.js';
 
 async function sendRequest(user_id) {
 	try {

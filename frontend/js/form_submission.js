@@ -1,6 +1,6 @@
 import { showErrors, removeErrorMessage, showErrorMessage, showErrorInAllFields } from './error_handling.js';
 import { authenticatedFetch } from './authentication.js';
-import { getCookie } from './cookies.js';
+import { getCookie } from './utils.js';
 import { changeGameMode } from './game/init_game.js';
 import { loadPage, updateUIBasedOnAuth } from './main.js';
 
