@@ -51,22 +51,6 @@ export function updateUIBasedOnAuth() {
 	}
 }
 
-function loadScripts(scripts) {
-	for (let script of scripts) {
-		if (script) {
-			// Load external scripts
-			const newScript = document.createElement('script');
-			newScript.src = `js/${script}`;
-			newScript.type = 'module';
-			document.body.appendChild(newScript);
-			addedScripts.push(newScript); // Store reference to the added script
-		} else {
-			// Execute inline scripts
-			eval(script.innerHTML);
-		}
-	}
-}
-
 function removeAddedScripts() {
 	addedScripts.forEach(script => {
 		if (script.parentNode) {
