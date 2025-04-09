@@ -45,15 +45,6 @@ async function unfriend(user_id) {
 	}
 }
 
-async function fetchFriendData() {
-	try {
-		const response = await authenticatedFetch(`https://localhost/api/player/${getCookie('user_id')}`);
-		return await response.json();
-	} catch (error) {
-		console.error('Error fetching friend data:', error);
-	}
-}
-
 async function renderFriendList(data) {
 	const friendsListElement = document.getElementById('friendsList');
 	if (!friendsListElement)
@@ -140,8 +131,7 @@ async function renderFriendRequests(data) {
 
 async function friendRequests() {
 	try {
-		const response = await authenticatedFetch(`https://localhost/api/player/${getCookie('user_id')}`);
-		const data = await response.json();
+		const data = await fetchUserData();
 		await renderFriendRequests(data);
 	} catch (error) {
 		console.error('Error fetching friend requests:', error);
@@ -149,79 +139,52 @@ async function friendRequests() {
 }
 
 async function addFriend(username, inputUsername) {
-// 	try {
-// 		const currentUsername = localStorage.getItem("username"); // Make sure username is stored in localStorage when logging in
+	try {
+		const currentUsername = localStorage.getItem("username"); // Make sure username is stored in localStorage when logging in
 
-// 		if (username === currentUsername) {
-// 			inputUsername.classList.add('is-invalid');
-// 			showErrorMessage(inputUsername, "You can't add yourself as a friend");
-// 			return;
-// 		}
-// const existingUserElements = document.querySelectorAll('#add-friends .fs-5');
-// 		for (const el of existingUserElements) {
-// 			if (el.textContent === username) {
-// 				inputUsername.classList.add('is-invalid');
-// 				showErrorMessage(inputUsername, 'User already added or pending');
-// 				return;
-// 			}
-// 		}
-// 		const response = await fetch(`https://localhost/api/player/list?username=${username}`, { method: 'GET' });
-// 		const data = await response.json();
+		if (username === currentUsername) {
+			inputUsername.classList.add('is-invalid');
+			showErrorMessage(inputUsername, "You can't add yourself as a friend");
+			return;
+		}
 
-// 		if (!data.length || !data[0]) {
-// 			inputUsername.classList.add('is-invalid');
-// 			showErrorMessage(inputUsername, 'User does not exist');
-// 			console.log('Player not found');
-// 			return;
-// 		}
-try {
-	const currentUsername = localStorage.getItem("username"); // Make sure username is stored in localStorage when logging in
+		const existingUserElements = document.querySelectorAll('#add-friends .fs-5');
+		for (const el of existingUserElements) {
+			if (el.textContent === username) {
+				inputUsername.classList.add('is-invalid');
+				showErrorMessage(inputUsername, 'User already added or pending');
+				return;
+			}
+		}
 
-	if (username === currentUsername) {
-		inputUsername.classList.add('is-invalid');
-		showErrorMessage(inputUsername, "You can't add yourself as a friend");
-		return;
-	}
+		const data = await fetchUserData();
 
-	const existingUserElements = document.querySelectorAll('#add-friends .fs-5');
-	for (const el of existingUserElements) {
-		if (el.textContent === username) {
+		if (!data) {
+			inputUsername.classList.add('is-invalid');
+			showErrorMessage(inputUsername, 'Unable to fetch friend data');
+			return;
+		}
+
+		// Check if the username is in friends or pending requests
+		const isFriend = data.friends.some(friend => friend.username === username);
+		// const isPendingRequest = data.friend_requests_sent.some(request => request.username === username) ||
+		// 						 data.friend_requests_received.some(request => request.username === username);
+
+		if (isFriend) {
 			inputUsername.classList.add('is-invalid');
 			showErrorMessage(inputUsername, 'User already added or pending');
 			return;
 		}
-	}
 
-	// Fetch friend data to check for already existing or pending friends
-	const response = await authenticatedFetch(`https://localhost/api/player/${localStorage.getItem('user_id')}`);
-	const data = await response.json();
+		// Fetch user by username
+		const userResponse = await fetch(`https://localhost/api/player/list?username=${username}`, { method: 'GET' });
+		const userData = await userResponse.json();
 
-	if (!data) {
-		inputUsername.classList.add('is-invalid');
-		showErrorMessage(inputUsername, 'Unable to fetch friend data');
-		return;
-	}
-
-	// Check if the username is in friends or pending requests
-	const isFriend = data.friends.some(friend => friend.username === username);
-	// const isPendingRequest = data.friend_requests_sent.some(request => request.username === username) ||
-	// 						 data.friend_requests_received.some(request => request.username === username);
-
-	if (isFriend) {
-		inputUsername.classList.add('is-invalid');
-		showErrorMessage(inputUsername, 'User already added or pending');
-		return;
-	}
-
-	// Fetch user by username
-	const userResponse = await fetch(`https://localhost/api/player/list?username=${username}`, { method: 'GET' });
-	const userData = await userResponse.json();
-
-	if (!userData.length || !userData[0]) {
-		inputUsername.classList.add('is-invalid');
-		showErrorMessage(inputUsername, 'User does not exist');
-		return;
-	}
+		if (!userData.length || !userData[0]) {
+			inputUsername.classList.add('is-invalid');
+			showErrorMessage(inputUsername, 'User does not exist');
+			return;
+		}
 
 		const playerHTML = `
 			<div class="d-flex justify-content-between align-items-center mb-3 p-3 border border-purple rounded shadow-sm">

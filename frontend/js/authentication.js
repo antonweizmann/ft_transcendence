@@ -1,3 +1,5 @@
+import { getCookie } from './cookies.js';
+
 export async function fetchUserData(user_id) {
 	try {
 		if (user_id) {
@@ -5,7 +7,7 @@ export async function fetchUserData(user_id) {
 			return await response.json();
 		}
 		else {
-			const response = await authenticatedFetch(`https://localhost/api/player/${localStorage.getItem("user_id")}`);
+			const response = await authenticatedFetch(`https://localhost/api/player/${getCookie("user_id")}`);
 			return await response.json();
 		}
 	} catch (error) {
