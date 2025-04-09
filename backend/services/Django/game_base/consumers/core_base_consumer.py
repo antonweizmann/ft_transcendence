@@ -55,28 +55,25 @@ class CoreBaseConsumer(WebsocketConsumer):
 			'message': f'Connected to {self._subtype} {self._type} server.'
 		}))
 
-	def _send_to_group(self, message, error: bool = False) -> None:
+	def _send_to_group(self, message, player_index: int | None = -1) -> None:
 		try:
-			if error:
-				self.send(json.dumps(message))
+			if player_index is None:
+				self.send(text_data=json.dumps(message))
 				return
 			async_to_sync(self.channel_layer.group_send)(self._id, {
 				'type': 'group.message',
-				'message': message
+				'message': message,
+				'index': player_index,
 			})
-			if isinstance(message, dict):
-				message = json.dumps(message)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
-			message_dict = json.loads(message)
-			if message_dict.get('kicked') is not None:
-				if self.player_index == message_dict['index']:
-					self.disconnect(1000)
 		except Exception as e:
 			print("Error sending message to group:", e)
 			raise StopConsumer()
 
 	def group_message(self, event):
 		message = event['message']
-		self.send(text_data=json.dumps(message))
+		index = event['index']
+		if index == self.player_index or index == -1:
+			self.send(text_data=json.dumps(message))
 
 	def _set_handler(self, object_id, handler: type[CoreBaseHandler]):
 		object_id += f'_{handler._type.lower()}_{self._subtype.lower()}'
@@ -96,7 +93,8 @@ class CoreBaseConsumer(WebsocketConsumer):
 		if self.player_index is None:
 			self.player = None
 			self.send(json.dumps({
-				'message': f'Failed to join {self._subtype} {self._type} lobby.'
+				'type': 'error',
+				'details': f'Failed to join {self._subtype} {self._type} lobby.'
 			}))
 			async_to_sync(self.channel_layer.group_discard)(self._id, self.channel_name)
 			return
@@ -109,7 +107,8 @@ class CoreBaseConsumer(WebsocketConsumer):
 		if action == 'join_lobby':
 			if self._already_in:
 				self.send(json.dumps({
-					'message': f'You are already in a {self._subtype} {self._type}.'
+					'type': 'error',
+					'details': f'You are already in a {self._subtype} {self._type}.'
 				}))
 				return None, None
 			player_pk = text_data_json.get('player_pk')
@@ -134,7 +133,8 @@ class CoreBaseConsumer(WebsocketConsumer):
 		elif action == f'start_{self._type.lower()}':
 			if not self._handler:
 				self.send(json.dumps({
-					'message': f'You are not in a {self._subtype} {self._type}.'
+					'type': 'error',
+					'details': f'You are not in a {self._subtype} {self._type}.'
 				}))
 				return None, None
 			try:
