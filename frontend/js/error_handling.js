@@ -1,6 +1,7 @@
 export function showErrorMessage(input, message)
 {
 	const errorMessage = document.createElement('div');
+
 	errorMessage.classList.add('invalid-feedback', 'd-block');
 	if (Array.isArray(message)) {
 		errorMessage.innerHTML = message.join('<br>'); // Join messages with line breaks

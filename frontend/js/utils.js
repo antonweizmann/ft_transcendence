@@ -1,10 +1,7 @@
-import { LoadDataFromBackend } from "./profile";
-
 export {
 	deactivateButton,
 	showToast,
 	getCookie,
-	fetchUserData,
 }
 
 function deactivateButton(id) {
@@ -44,11 +41,4 @@ function getCookie(name) {
 		}
 	}
 	return null;
-}
-
-async function fetchUserData(user_id) {
-	const userId = user_id || getCookie("user_id");
-	const url = `https://localhost/api/player/${userId}/`;
-
-	return await LoadDataFromBackend(url);
 }
