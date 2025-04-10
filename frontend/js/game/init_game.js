@@ -70,7 +70,6 @@ function initGame() {
 	}
 
 	setGameBoardSize(true);
-	const ctx = gameBoard.getContext('2d');
 
 	let startPlayer1 = {
 		x: () => BOARD_WIDTH / 80,

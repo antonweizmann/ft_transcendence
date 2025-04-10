@@ -1,6 +1,6 @@
 import { addPlayer, setPlayerInLobby, clearPlayerList } from "./tournament_lobby.js";
 import { loadTournamentLobby, requestTournamentLobbySize, joinTournament, setPlayerReady } from "./backend_communication.js";
-import { removeErrorMessage } from "../error_handling.js";
+import { removeErrorMessage, showErrorMessage } from "../error_handling.js";
 import { clearTournamentList, setTournamentData } from "./tournament.js";
 import { LoadDataFromBackend } from "../profile.js";
 

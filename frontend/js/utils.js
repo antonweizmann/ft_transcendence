@@ -2,6 +2,18 @@ export {
 	deactivateButton,
 	showToast,
 	getCookie,
+	reactivateButton
+}
+
+function reactivateButton(id, clickHandler) {
+	const button = document.getElementById(id);
+
+	if (button) {
+		button.classList.remove('button-pressed');
+		button.disabled = false;
+		button.classList.add('button-hover');
+		button.addEventListener('click', clickHandler);
+	}
 }
 
 function deactivateButton(id) {

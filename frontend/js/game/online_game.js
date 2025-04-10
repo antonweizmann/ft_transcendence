@@ -227,6 +227,8 @@ function showWinningScreen(game_state) {
 	const player2Score = game_state.score[player2Container.textContent];
 
 	let winnerText = 'Draw!';
+	if (winnerMessage === null)
+		return;
 	if (player1Score > player2Score) {
 		winnerText = `${player1Container.textContent} wins!`;
 	} else if (player2Score > player1Score) {
