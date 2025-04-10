@@ -87,7 +87,7 @@ CORS_ALLOW_HEADERS = ['*']
 
 REST_FRAMEWORK = {
 	'DEFAULT_AUTHENTICATION_CLASSES': (
-		'player.middleware.jwt_cookie_auth.CookieJWTAuthentication',  # Path to your custom class
+		'player.middleware.jwt_cookie_auth.CookieJWTAuthentication',
 	),
 }
 
