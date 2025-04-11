@@ -70,7 +70,7 @@ function tournamentOver(Leaderboard) {
 			}
 
 			// Update the player's display with their rank, username, and score
-			playerElement.querySelector('div').textContent = `${rank}: ${username} - ${points} points`;
+			playerElement.querySelector('div').textContent = `${rank}: ${username} - ${points} Match won`;
 		}
 	});
 }

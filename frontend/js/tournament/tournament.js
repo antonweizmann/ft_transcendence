@@ -19,8 +19,8 @@ function	initTournament() {
 
 function	updateTournament(tournament_state) {
 	const tournamentList = document.getElementById('tournamentList');
-	tournamentList.innerHTML = '';
 
+	tournamentList.innerHTML = '';
 	for (const tournament of tournament_state) {
 		const item = document.createElement('div');
 		item.className = 'list-group-item';

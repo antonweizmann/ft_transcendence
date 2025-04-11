@@ -17,11 +17,12 @@ window.readyUp = setPlayerReady;
 let newLobbySize = null;
 
 async function updateTournamentLobby(players, size) {
-	const inLobby = await loadTournamentLobby();
-
-	if (!inLobby) {
-		console.error('Error loading tournament lobby');
-		return;
+	if (document.getElementById('tournamentLobby') === null) {
+		const inLobby = await loadTournamentLobby();
+		if (!inLobby) {
+			console.error('Error loading tournament lobby');
+			return;
+		}
 	}
 	clearPlayerList();
 	players.forEach(player => {
