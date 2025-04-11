@@ -8,13 +8,13 @@ let stopDoubleCollision;
 
 export function handleMovement() {
 	if (keysPressed['w']) {
-		player1.y -=player1.speed;
+		player1.y -= player1.speed;
 	}
 	else if (keysPressed['s']) {
-		player1.y +=player1.speed;
+		player1.y += player1.speed;
 	}
 	if (keysPressed['ArrowUp']) {
-		player2.y -=player2.speed;
+		player2.y -= player2.speed;
 	}
 	else if(keysPressed['ArrowDown']) {
 		player2.y += player2.speed;

@@ -1,5 +1,9 @@
-import {showErrorMessage, removeErrorMessage} from "./error_handling.js"
-import { authenticatedFetch, fetchUserData } from './authentication.js';
+import { showErrorMessage, removeErrorMessage } from "./error_handling.js"
+import { authenticatedFetch } from './authentication.js';
+import { getCookie } from './utils.js';
+import { LoadDataFromBackend } from "./profile.js";
+
+const userDetailURL = `https://localhost/api/player/${getCookie('user_id')}/`;
 
 async function sendRequest(user_id) {
 	try {
@@ -45,46 +49,77 @@ async function unfriend(user_id) {
 	}
 }
 
-async function renderFriendList(data) {
-	const friendsListElement = document.getElementById('friendsList');
-	if (!friendsListElement)
-		return;
+class Player {
+	constructor(id, username) {
+		this.id = id;
+		this.username = username;
+	}
 
-	friendsListElement.innerHTML = '';
+	createElement() {
+		const playerElement = document.createElement('il');
+		const usernameSpan = document.createElement('span');
 
-	if (!data.friends)
-		return;
+		playerElement.classList.add('possible-friend-container');
+		usernameSpan.classList.add('friend-name');
+		usernameSpan.textContent = this.username;
+		playerElement.appendChild(usernameSpan);
+		return playerElement;
+	}
 
-	data.friends.forEach(async (friend) => {
-		const friendData = await fetchUserData(friend);
-		if (!friendData)
-			return;
+	createRequestElement() {
+		const playerElement = this.createElement();
+		const requestButton = document.createElement('button');
 
-		const friendListItem = document.createElement('li');
-		friendListItem.innerHTML = `
-			<div class="d-flex justify-content-between align-items-center">
-				<span>${friendData.username}</span>
-				<div class="d-flex justify-content-end">
-					<button id="unfriend-button" class="btn btn-danger unfriend-button" data-user-id="${friend}">Unfriend</button>
-				</div>
-			</div>
-		`;
-		friendsListElement.appendChild(friendListItem);
-
-		const unfriendButton = friendListItem.querySelector('#unfriend-button');
-		unfriendButton.addEventListener('click', () => {
-			unfriend(friend);
-			friendListItem.remove();
+		requestButton.classList.add('request-button', 'button');
+		requestButton.textContent = 'Send Request';
+		requestButton.addEventListener('click', () => {
+			this.sendRequest();
+			playerElement.remove();
 		});
-	});
+
+		playerElement.appendChild(requestButton);
+		return playerElement;
+	}
+
+	sendRequest() {
+		sendRequest(this.id);
+	}
+
+	createFriendElement() {
+		const playerElement = this.createElement();
+		const unfriendButton = document.createElement('button');
+
+		unfriendButton.classList.add('unfriend-button', 'btn', 'btn-danger', 'unfriend-button');
+		unfriendButton.textContent = 'Unfriend';
+		unfriendButton.addEventListener('click', () => {
+			this.unfriend();
+			playerElement.remove();
+		});
+		playerElement.appendChild(unfriendButton);
+		return playerElement;
+	}
+
+	unfriend() {
+		unfriend(this.id);
+	}
 }
 
-async function friendList() {
-	const data = await fetchUserData();
-	if (!data)
-		return;
+async function renderFriendList(data) {
+	const friendsListElement = document.getElementById('friendsList');
 
-	await renderFriendList(data);
+	if (!friendsListElement)
+		return;
+	friendsListElement.innerHTML = '';
+	if (!data || !data.friends)
+		return;
+	data.friends.forEach(async (friend) => {
+		LoadDataFromBackend(`https://localhost/api/player/${friend}/`, (friendData) => {
+			const friendElement = new Player(friendData.id, friendData.username).createFriendElement();
+			if (!friendsListElement)
+				return;
+			friendsListElement.appendChild(friendElement);
+		});
+	});
 }
 
 async function renderFriendRequests(data) {
@@ -129,153 +164,74 @@ async function renderFriendRequests(data) {
 	});
 }
 
-async function friendRequests() {
-	try {
-		const response = await authenticatedFetch(`https://localhost/api/player/${localStorage.getItem("user_id")}`);
-		const data = await response.json();
-		await renderFriendRequests(data);
-	} catch (error) {
-		console.error('Error fetching friend requests:', error);
-	}
-}
+async function findUsername(username, inputUsername) {
+	const UserData = await LoadDataFromBackend(userDetailURL);
+	const parentElement = document.getElementById('addFriendsList');
 
-async function addFriend(username, inputUsername) {
-// 	try {
-// 		const currentUsername = localStorage.getItem("username"); // Make sure username is stored in localStorage when logging in
-
-// 		if (username === currentUsername) {
-// 			inputUsername.classList.add('is-invalid');
-// 			showErrorMessage(inputUsername, "You can't add yourself as a friend");
-// 			return;
-// 		}
-// const existingUserElements = document.querySelectorAll('#add-friends .fs-5');
-// 		for (const el of existingUserElements) {
-// 			if (el.textContent === username) {
-// 				inputUsername.classList.add('is-invalid');
-// 				showErrorMessage(inputUsername, 'User already added or pending');
-// 				return;
-// 			}
-// 		}
-// 		const response = await fetch(`https://localhost/api/player/list?username=${username}`, { method: 'GET' });
-// 		const data = await response.json();
-
-// 		if (!data.length || !data[0]) {
-// 			inputUsername.classList.add('is-invalid');
-// 			showErrorMessage(inputUsername, 'User does not exist');
-// 			console.log('Player not found');
-// 			return;
-// 		}
-try {
-	const currentUsername = localStorage.getItem("username"); // Make sure username is stored in localStorage when logging in
-
-	if (username === currentUsername) {
-		inputUsername.classList.add('is-invalid');
-		showErrorMessage(inputUsername, "You can't add yourself as a friend");
-		return;
-	}
-
-	const existingUserElements = document.querySelectorAll('#add-friends .fs-5');
-	for (const el of existingUserElements) {
-		if (el.textContent === username) {
-			inputUsername.classList.add('is-invalid');
-			showErrorMessage(inputUsername, 'User already added or pending');
+	LoadDataFromBackend(`https://localhost/api/player/list?username=${username}`, (results) => {
+		if (!UserData) {
 			return;
 		}
-	}
-
-	// Fetch friend data to check for already existing or pending friends
-	const response = await authenticatedFetch(`https://localhost/api/player/${localStorage.getItem('user_id')}`);
-	const data = await response.json();
-
-	if (!data) {
-		inputUsername.classList.add('is-invalid');
-		showErrorMessage(inputUsername, 'Unable to fetch friend data');
-		return;
-	}
-
-	// Check if the username is in friends or pending requests
-	const isFriend = data.friends.some(friend => friend.username === username);
-	// const isPendingRequest = data.friend_requests_sent.some(request => request.username === username) ||
-	// 						 data.friend_requests_received.some(request => request.username === username);
-
-	if (isFriend) {
-		inputUsername.classList.add('is-invalid');
-		showErrorMessage(inputUsername, 'User already added or pending');
-		return;
-	}
-
-	// Fetch user by username
-	const userResponse = await fetch(`https://localhost/api/player/list?username=${username}`, { method: 'GET' });
-	const userData = await userResponse.json();
-
-	if (!userData.length || !userData[0]) {
-		inputUsername.classList.add('is-invalid');
-		showErrorMessage(inputUsername, 'User does not exist');
-		return;
-	}
-
-		const playerHTML = `
-			<div class="d-flex justify-content-between align-items-center mb-3 p-3 border border-purple rounded shadow-sm">
-				<span class="fs-5 fw-semibold">${userData[0].username}</span>
-				<div class="d-flex">
-					<button class="btn btn-purple btn-sm" id="sendRequestButton" data-player-id="${userData[0].id}">Send Request</button>
-				</div>
-			</div>
-		`;
-
-		const playerElement = document.createElement('div');
-		playerElement.innerHTML = playerHTML;
-
-		const parentElement = document.getElementById('add-friends');
-		parentElement.appendChild(playerElement);
-
-		const sendRequestButton = playerElement.querySelector('#sendRequestButton');
-		sendRequestButton.addEventListener('click', () => {
-			const user_id = sendRequestButton.dataset.playerId;
-			sendRequest(user_id);
-			playerElement.remove();
+		console.table(UserData);
+		if (!results.length) {
+			showErrorMessage(inputUsername, "Username doesn't match any user");
+			return;
+		}
+		parentElement.innerHTML = '';
+		console.table(results);
+		results.forEach((result) => {
+			if (result.id === UserData.id
+				|| UserData.friends.includes(result.id)
+				|| UserData.friend_requests.includes(result.id)) {
+				return;
+			}
+			const player = new Player(result.id, result.username);
+			const playerElement = player.createRequestElement();
+			if (!parentElement) {
+				return;
+			}
+			parentElement.appendChild(playerElement);
 		});
-	} catch (error) {
-		console.error('Error adding friend:', error);
-	}
+	});
 }
 
 document.addEventListener('DOMContentLoaded', () => {
 	const friendsTabElement = document.getElementById('friends-tab');
 	const requestsTabElement = document.getElementById('requests-tab');
-	const addFriendForm = document.getElementById('addFriendForm');
+	const searchFriendButton = document.getElementById('searchFriendButton');
 	const friendsTrigger = document.getElementById('friendsTrigger');
+	const loadFriendList = () => LoadDataFromBackend(userDetailURL, renderFriendList);
+	const loadFriendRequests = () => LoadDataFromBackend(userDetailURL, renderFriendRequests);
 
 	friendsTrigger.addEventListener('click', () => {
 		const activeTab = document.querySelector('#friendsTab .nav-link.active');
 
 		if (!activeTab) return;
-
 		switch (activeTab.id) {
 			case 'friends-tab':
-				friendList(); // Call your function to load/display the friends
+				loadFriendList(); // Call your function to load/display the friends
 				break;
 			case 'requests-tab':
-				friendRequests(); // Call your function to load/display friend requests
+				loadFriendRequests(); // Call your function to load/display friend requests
 				break;
 			default:
 				console.log('No action defined for this tab.');
 		}
 	});
-
-	addFriendForm.addEventListener('submit', handleAddFriendFormSubmit);
-	friendsTabElement.addEventListener('click', friendList);
-	requestsTabElement.addEventListener('click', friendRequests);
+	searchFriendButton.addEventListener('click', handleAddFriendFormSubmit);
+	friendsTabElement.addEventListener('click', loadFriendList);
+	requestsTabElement.addEventListener('click', loadFriendRequests);
 });
 
-function handleAddFriendFormSubmit(e) {
-	e.preventDefault();
+function handleAddFriendFormSubmit(event) {
 	const inputUsername = document.getElementById('newFriendName');
-	removeErrorMessage(inputUsername);
 	const username = inputUsername.value.trim();
+
+	event.preventDefault();
+	removeErrorMessage(inputUsername);
 	if (username) {
-		addFriend(username, inputUsername);
+		findUsername(username, inputUsername);
 	} else {
-		document.getElementById('addFriendFeedback').innerHTML = 'Please enter a username';
+		showErrorMessage(inputUsername, 'Please enter a username');
 	}
 }

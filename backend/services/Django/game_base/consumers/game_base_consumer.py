@@ -25,7 +25,9 @@ class GameBaseConsumer(CoreBaseConsumer):
 		if action == 'move':
 			move = text_data_json.get('move')
 			if not self._handler:
-				self.send(json.dumps({'message': 'You are not in a game.'}))
+				self.send(json.dumps({
+					'type': 'error',
+					'details': 'You are not in a game.'}))
 				return
 			try:
 				self._handler.move(self.player_index, move)

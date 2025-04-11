@@ -1,6 +1,8 @@
 import { setupDropdownValidation, validateLoginForm, updateActive } from './form_validation.js';
-import { logoutUser } from './form_submission.js';
-import { refreshAccessToken, fetchUserData } from './authentication.js';
+import { initProfile, LoadDataFromBackend } from './profile.js';
+import { initTournament } from './tournament/tournament.js';
+import { getCookie } from './utils.js';
+import { ensureInit } from './game/init_game.js';
 
 window.loadPage = loadPage;
 window.signUpInstead = signUpInstead;
@@ -16,63 +18,35 @@ window.gameState = {
 
 let addedScripts = []; // Array to store references to added scripts
 
+const restrictedPages = [
+	'profile',
+	'tournament',
+	'tournament_lobby',
+]
+
 document.addEventListener('DOMContentLoaded', function() {
 	setupDropdownValidation('.login-drop', validateLoginForm);
 
-	setupLoginOrProfile();
+	updateUIBasedOnAuth();
 });
 
-document.addEventListener('DOMContentLoaded', async () => {
-	const token = localStorage.getItem('token');
-	if (!token)
-		return;
-	const tokenPayload = JSON.parse(atob(token.split('.')[1])); // Decode JWT payload
-	const isTokenExpired = tokenPayload.exp * 1000 < Date.now();
-
-	if (isTokenExpired) {
-		console.warn('Access token expired, refreshing...');
-		const tokenRefreshed = await refreshAccessToken();
-		if (!tokenRefreshed) {
-			console.error('Failed to refresh token, logging out...');
-			logoutUser();
-		}
-	}
-});
-
-export function setupLoginOrProfile() {
-	//replace by validation of choice
-	const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-
+export function updateUIBasedOnAuth() {
+	const isLoggedIn = getCookie('user_id') || false;
 	const loginButton = document.getElementById('loginDropdownButton');
 	const profileButton = document.getElementById('profileButton');
+	const tournamentNav = document.getElementById('tournamentNav');
+	const friendButton = document.getElementById('friendsTrigger');
 
 	if (isLoggedIn) {
+		friendButton.style.display = 'block';
+		tournamentNav.style.display = 'block';
 		loginButton.style.display = 'none';
 		profileButton.style.display = 'block';
-		// To display the username in the profile button uncomment the following
-		// and remove the data-translate attribute from the button in the HTML
-		// if (localStorage.getItem('username')) {
-		// 	profileButton.textContent = localStorage.getItem('username');
-		// }
 	} else {
+		friendButton.style.display = 'none';
+		tournamentNav.style.display = 'none';
 		loginButton.style.display = 'block';
 		profileButton.style.display = 'none';
-	}
-}
-
-function loadScripts(scripts) {
-	for (let script of scripts) {
-		if (script) {
-			// Load external scripts
-			const newScript = document.createElement('script');
-			newScript.src = `js/${script}`;
-			newScript.type = 'module';
-			document.body.appendChild(newScript);
-			addedScripts.push(newScript); // Store reference to the added script
-		} else {
-			// Execute inline scripts
-			eval(script.innerHTML);
-		}
 	}
 }
 
@@ -104,30 +78,43 @@ async function loadPageReplace(pageName)
 	getPage(pageName);
 }
 
-async function getPage(pageName)
-{
-	// Closing the mobile hamburger menu when loading new page
-	var collapseElement = document.getElementById('navbarNav');
+export function closeMobileMenu() {
+	const collapseElement = document.getElementById('navbarNav');
 	if (collapseElement.classList.contains('show')) {
-		console.log("TEST");
-		var collapse = new bootstrap.Collapse(collapseElement);
+		const collapse = new bootstrap.Collapse(collapseElement);
 		collapse.hide();
 	}
+}
 
+function cleanupPage()
+{
+	if (window.gameState.cleanup)
+		window.gameState.cleanup();
+	if (window.resetTournamentSocket)
+		window.resetTournamentSocket();
+	removeAddedScripts();
+}
+
+export async function fetchPageContent(pageName) {
+	const response = await fetch(`/pages/${pageName}.html`)
+	if (response.status === 404)
+	{
+		loadPageReplace(startPage);
+		return null;
+	}
+	if (!response.ok)
+		throw new Error(`HTTP error! Status: ${response.status}`);
+	return response.text();
+}
+
+async function getPage(pageName) {
+	closeMobileMenu();
 	try
 	{
-		if (window.gameState.cleanup)
-			window.gameState.cleanup();
-		removeAddedScripts();
-		const response = await fetch(`/pages/${pageName}.html`)
-		if (response.status === 404)
-		{
-			loadPageReplace(startPage);
-			return;
-		}
-		if (!response.ok)
-			throw new Error(`HTTP error! Status: ${response.status}`);
-		const content = await response.text();
+		cleanupPage();
+		const content = await fetchPageContent(pageName);
+		if (content === null)
+			return ;
 		document.getElementById('main-content').innerHTML = content;
 		updateActive(pageName);
 		if (pageName === 'play')
@@ -136,43 +123,14 @@ async function getPage(pageName)
 				initialized: false,
 				cleanup: null
 			};
-			loadScripts([
-				'game/ai.js',
-				'game/draw_game.js',
-				'game/element.js',
-				'game/game.js',
-				'game/init_game.js',
-				'game/listeners_game.js',
-				'game/movement_game.js',
-				'game/online_game.js'
-			]);
-			setTimeout(() => {
-				if (window.ensureInit) {
-					window.ensureInit();
-				}
-			}, 50);
-		}
+			setTimeout(ensureInit, 50);
+		} 
 		else if (pageName === 'profile') {
-			loadScripts(['profile.js']);
-			setTimeout(() => {
-					window.initProfile();
-			}, 500);
+			setTimeout(initProfile , 500);
 		}
-		// else if (pageName === 'tournament')
-		// {
-		// 	window.gameState = {
-		// 	initialized: false,
-		// 	cleanup: null
-		// 	};
-		// 	loadScripts(['tournament.js']);
-		// 	setTimeout(() => {
-		// 		if (window.ensureInit) {
-		// 			window.ensureInit();
-		// 		}
-		// 	}, 50);
-		// }
-		// const scripts = document.getElementById('main-content').getElementsByTagName('script');
-		// loadScripts(scripts);
+		else if (pageName === 'tournament') {
+			setTimeout(initTournament, 500);
+		}
 		changeLanguage();
 	}
 	catch (error)
@@ -194,13 +152,10 @@ window.onload = function () {
 		loadPageReplace(startPage);
 		return;
 	}
-	if (path === 'profile' && !localStorage.getItem('user_id')) {
-		logoutUser();
+	if ((restrictedPages.includes(path) && !getCookie('user_id')) || path === 'tournament_lobby') {
 		loadPageReplace(startPage);
 		return;
 	}
-	if (path === 'tournamentwait')
-		path = 'tournament';
 	console.log(`Loading path: ${path}`);
 	getPage(path);
 };
@@ -282,7 +237,8 @@ function setImagePreview(inputElement) {
 		};
 		reader.readAsDataURL(file); // Read the file as a Data URL
 	} else {
-		data = fetchUserData();
-		previewImage.src = data.profile_picture; // Reset to placeholder if no file is selected
+		LoadDataFromBackend(`/api/player/${getCookie('user_id')}/`, (data) => {
+			previewImage.src = data.profile_picture;
+		});
 	}
 }

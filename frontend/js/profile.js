@@ -1,7 +1,7 @@
 import { authenticatedFetch } from './authentication.js';
+import { getCookie } from './utils.js';
 
 console.log("Profile JS pre-loaded");
-window.initProfile = initProfile;
 
 let current_user = null;
 
@@ -17,7 +17,7 @@ export function initProfile() {
 
 function loadProfile() {
 	console.log("Profile JS loaded");
-	const userId = localStorage.getItem('user_id');
+	const userId = getCookie('user_id');
 	const username = localStorage.getItem('username');
 
 	LoadDataFromBackend(`/api/player/${userId}/`, setProfileData);
@@ -36,7 +36,7 @@ function setProfileData(data) {
 	profile_container.classList.remove('loading');
 }
 
-async function LoadDataFromBackend(url, setter) {
+export async function LoadDataFromBackend(url, setter) {
 	try {
 		const response = await authenticatedFetch(url, { method: 'GET' });
 

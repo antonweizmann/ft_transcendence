@@ -17,6 +17,9 @@ class TournamentListView(generics.ListAPIView):
 	def get_queryset(self):
 		if self.tournament_model is None:
 			raise ValueError('tournament_model is required')
+
+		self.tournament_model.objects.filter(players__isnull=True).delete()
+
 		queryset = self.tournament_model.objects.filter(status=self.status_filter)
 		username = self.request.query_params.get('username', None)
 		if username is not None:

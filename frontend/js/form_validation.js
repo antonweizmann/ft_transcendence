@@ -1,4 +1,4 @@
-import { loadPage, setupLoginOrProfile } from './main.js';
+import { loadPage, updateUIBasedOnAuth } from './main.js';
 import { removeErrorMessage, showErrors, showErrorMessage } from './error_handling.js';
 import { registerUser, loginUser } from './form_submission.js';
 import { changeUserInfo } from './form_submission.js';
@@ -93,7 +93,7 @@ async function validateSignUpForm(event)
 	if (!await registerUser(fields))
 		return false;
 	loadPage('home');
-	setupLoginOrProfile();
+	updateUIBasedOnAuth();
 	return true;
 }
 

@@ -1,13 +1,30 @@
 
-import { BOARD_HEIGHT, player1, player2, ball, setAnimationId, getAnimationId} from "./init_game.js";
 import { updateElements } from "./draw_game.js";
 import { keysPressed } from "./movement_game.js";
 import { cleanupGame, resetGame } from "./game.js";
+import { getCookie } from "../utils.js";
 import { loadPage } from "../main.js";
+import { showToast, deactivateButton } from "../utils.js";
+import {
+	BOARD_HEIGHT,
+	player1,
+	player2,
+	ball,
+	setAnimationId,
+	getAnimationId,
+} from "./init_game.js";
 
-export let	socket;
+export {
+	socket,
+	startGame,
+	joinGame,
+	initSocket,
+	resetSocket,
+}
 
-export function startGame() {
+let	socket;
+
+function startGame() {
 	console.log('Starting game');
 	const message = {
 		action: 'start_game',
@@ -43,15 +60,16 @@ function handleMovement() {
 		move: direction,
 	};
 	const messageJSON = JSON.stringify(message);
-	socket.send(messageJSON);
+	if (socket && socket.readyState === WebSocket.OPEN)
+		socket.send(messageJSON);
 };
 
-export function joinGame() {
-	if (socket.readyState !== WebSocket.OPEN) {
+function joinGame() {
+	if (!socket || socket.readyState !== WebSocket.OPEN) {
 		console.error('Error: WebSocket connection is not open');
 		return;
 	}
-	const player_pk = localStorage.getItem('user_id');
+	const player_pk = getCookie('user_id');
 	const lobby = document.getElementById('lobbyId').value;
 	const lobbyContainer = document.getElementById('lobbyInput');
 
@@ -68,10 +86,14 @@ export function joinGame() {
 
 function sendToSocket(message) {
 	console.log("Sending message:", message);
+	if (!socket) {
+		console.warn('Warning: WebSocket connection is not established');
+		return;
+	}
 	socket.send(message);
 }
 
-export function initSocket() {
+function initSocket() {
 	if (socket) {
 		console.error('Socket already exists');
 		return;
@@ -91,7 +113,7 @@ export function initSocket() {
 	};
 }
 
-export function resetSocket() {
+function resetSocket() {
 	if (socket && socket.readyState === WebSocket.OPEN) {
 		socket.close();
 	}
@@ -110,29 +132,24 @@ function parseMessage(data) {
 	}
 	if (message.type === 'pong_game_update') {
 		updateGame(message.game_state);
-	}
-	else if (message.type === 'game_over') {
+		deactivateButton('startGame');
+	} else if (message.type === 'game_over') {
 		gameOver(message.game_state);
-	}
-	else if (message.type === 'lobby_update') {
-		console.group('Lobby update');
-		console.log('game_id:', message.game_id);
-		console.log('players:', message.players);
-		console.groupEnd();
+	} else if (message.type === 'lobby_update') {
 		updateLobby(message.players);
-	} else if (message.type === 'countdown' && getAnimationId() === null) {
-		setAnimationId(requestAnimationFrame(onlineGameLoop));
-	} else {
-		if (message.type === 'countdown' && message.message)
-		{
-			gameTimer.textContent = message.message[17] + ' : ' + message.message[17];
-			console.log('Received message:', message.message);
-		}
-		else if (message.message)
-			console.log('Received message:', message.message);
-		else
-			console.log('Received message:', message);
-	}
+	} else if (message.type === 'countdown' && message.message) {
+		if (getAnimationId() === null) 
+			setAnimationId(requestAnimationFrame(onlineGameLoop));
+		deactivateButton('startGame');
+		gameTimer.textContent = message.message[17] + ' : ' + message.message[17];
+		console.log('Received message:', message.message);
+	} else if (message.type === 'error') {
+		console.log('Error:', message.details);
+		showToast('Error', message.details);
+	} else if (message.message)
+		console.log('Received message:', message.message);
+	else
+		console.log('Received message:', message);
 }
 
 function updateGame(game_state) {
@@ -150,15 +167,23 @@ function updateGame(game_state) {
 }
 
 function updateScore(score) {
-	const	player1Container = document.getElementById('player1Name');
-	const	player2Container = document.getElementById('player2Name');
-	const	scoreContainer = document.getElementById('scoreGame');
-	let		player1Score = 0;
-	let		player2Score = 0;
+	const scoreContainer = document.getElementById('scoreGame');
+	const player1Container = document.getElementById('player1Name');
+	const player2Container = document.getElementById('player2Name');
 
-	player1Score = score[player1Container.textContent];
-	player2Score = score[player2Container.textContent];
-	scoreContainer.textContent = `${player1Score} - ${player2Score}`;
+	// Extract player names from the score object
+	const players = Object.keys(score);
+	const player1Name = players[0];
+	const player2Name = players[1];
+
+	// Extract scores
+	const player1Score = score[player1Name];
+	const player2Score = score[player2Name];
+
+	// Update the frontend
+	player1Container.textContent = player1Name;
+	player2Container.textContent = player2Name;
+	scoreContainer.textContent = `${player1Score} : ${player2Score}`;
 }
 
 function gameOver(game_state) {
@@ -187,6 +212,9 @@ function updateLobby(players) {
 	if (player2Container.textContent === '') {
 		player2Container.textContent = 'Waiting for player 2...';
 	}
+	if (player1Container.textContent === '') {
+		player1Container.textContent = 'Waiting for player 1...';
+	}
 }
 
 function showWinningScreen(game_state) {
@@ -199,6 +227,8 @@ function showWinningScreen(game_state) {
 	const player2Score = game_state.score[player2Container.textContent];
 
 	let winnerText = 'Draw!';
+	if (winnerMessage === null)
+		return;
 	if (player1Score > player2Score) {
 		winnerText = `${player1Container.textContent} wins!`;
 	} else if (player2Score > player1Score) {
@@ -209,6 +239,6 @@ function showWinningScreen(game_state) {
 	winningScreen.style.display = 'flex';
 
 	setTimeout(() => {
-		loadPage('play'); // Custom function to go back to lobby/home
+		loadPage('play');
 	}, 5000);
 }

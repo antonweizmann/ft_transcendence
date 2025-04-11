@@ -1,10 +1,18 @@
-import { showErrors, removeErrorMessage, showErrorMessage } from './error_handling.js';
+import { showErrors, removeErrorMessage, showErrorMessage, showErrorInAllFields } from './error_handling.js';
 import { authenticatedFetch } from './authentication.js';
-import { loadPage, setupLoginOrProfile } from './main.js';
+import { getCookie } from './utils.js';
+import { changeGameMode } from './game/init_game.js';
+import { loadPage, updateUIBasedOnAuth } from './main.js';
 
 window.logoutUser = logoutUser;
 
-export async function registerUser(fields)
+export {
+	registerUser,
+	loginUser,
+	changeUserInfo,
+};
+
+async function registerUser(fields)
 {
 	const form_data = new FormData();
 
@@ -38,7 +46,7 @@ export async function registerUser(fields)
 	return true;
 }
 
-export async function changeUserInfo(fields)
+async function changeUserInfo(fields)
 {
 	const form_data = new FormData();
 
@@ -50,7 +58,7 @@ export async function changeUserInfo(fields)
 	});
 
 	try {
-		const response = await authenticatedFetch(`https://localhost/api/player/${localStorage.getItem("user_id")}/`, {
+		const response = await authenticatedFetch(`https://localhost/api/player/${getCookie('user_id')}/`, {
 		method: 'PUT',
 		body: form_data,
 		credentials: 'include',
@@ -72,92 +80,65 @@ export async function changeUserInfo(fields)
 	return true;
 }
 
-export async function loginUser(username, password)
+async function loginUser(username, password)
 {
+	const form_data = new FormData();
 	const loginFields = [
 		{ key: 'username', field: document.getElementById('loginUsername') },
 		{ key: 'password', field: document.getElementById('loginPassword') }
 	];
 
 	loginFields.forEach(({ field }) => removeErrorMessage(field));
-
-
-	const form_data = new FormData();
 	form_data.append('username', username);
 	form_data.append('password', password);
-
 	try {
 		const response = await fetch('https://localhost/api/token/', {
 			method: 'POST',
 			body: form_data,
 		});
-		if (response.ok)
-		{
-			const data = await response.json();
-			localStorage.setItem('token', data.access);
-			localStorage.setItem('refresh', data.refresh);
-			localStorage.setItem('username', username);
-			localStorage.setItem('user_id', data.user_id);
-			localStorage.setItem('isLoggedIn', true);
-			console.log(`user ${username} logged in successfully!`);
-
-			setupLoginOrProfile();
-
-			if (window.location.pathname === '/play')
-				document.getElementById('onlineOption').style.display = "block";
-
-			return true;
-		}
-		else {
-			const errors = await response.json();
-
-			// Handle non-field errors (like invalid credentials)
-			if (errors.non_field_errors || errors.detail) {
-				const errorMessage = errors.non_field_errors || [errors.detail];
-
-				// Display error on both fields
-				loginFields.forEach(({ field }) => {
-					field.classList.add('is-invalid');
-					showErrorMessage(field, errorMessage);
-				});
-			} else {
-				// Handle field-specific errors
-				showErrors(loginFields, errors);
-			}
-
-			console.error("Login failed:", errors);
-			return false;
-		}
-	} catch (error) {
+		if (!response.ok)
+			return handleLoginError(await response.json(), loginFields);
+	}
+	catch (error) {
 		console.error("Login request failed:", error);
-
-		// Show a general error message on both fields
-		loginFields.forEach(({ field }) => {
-			field.classList.add('is-invalid');
-			showErrorMessage(field, ["Connection failed. Please try again."]);
-		});
-
+		showErrorInAllFields(loginFields, "Network error. Please try again.");
 		return false;
 	}
+	localStorage.setItem('username', username);
+	updateUIBasedOnAuth();
+	if (window.location.pathname === '/play')
+		document.getElementById('onlineOption').style.display = "block";
+	return true;
 }
 
-export function logoutUser()
+function handleLoginError(errors, loginFields)
 {
-	localStorage.removeItem('isLoggedIn');
-	localStorage.removeItem('token');
-	localStorage.removeItem('refresh');
+	if (errors.non_field_errors || errors.detail)
+		showErrorInAllFields(loginFields, errors.non_field_errors || [errors.detail]);
+	else
+		showErrors(loginFields, errors);
+	console.error("Login failed:", errors);
+	return false;
+}
+
+function logoutUser()
+{
+	const gameModeSelector = document.getElementById('gameMode');
+
+	fetch('https://localhost/api/token/logout/', {
+		method: 'POST',
+	})
 	localStorage.removeItem('username');
-	localStorage.removeItem('user_id');
-	setupLoginOrProfile();
-	console.log('User logged out successfully!');
 	loadPage('home')
 	if (window.location.pathname === '/play')
 	{
 		document.getElementById('onlineOption').style.display = "none";
-		if (document.getElementById('gameMode').value === 'online')
+		if (gameModeSelector.value === 'online')
 		{
-			document.getElementById('gameMode').value = 'human';
-			window.changeGameMode();
+			gameModeSelector.value = 'human';
+			changeGameMode();
 		}
 	}
+	console.log('User logged out successfully!');
+	setTimeout(updateUIBasedOnAuth, 50);
 }

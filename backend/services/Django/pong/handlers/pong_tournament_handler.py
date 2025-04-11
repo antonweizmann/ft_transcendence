@@ -81,7 +81,13 @@ class PongTournamentHandler(TournamentHandlerBase):
 				self._is_active = False
 
 	def _update_game_state(self, match_id: str):
-		match_results = game_manager.get_game(PongGameHandler, match_id).get_results()
+		latest_match = self._model.matches.order_by('-created_at').first()
+
+		if latest_match:
+			latest_match.refresh_from_db()
+			match_results = latest_match.result
+		else:
+			return
 		with self._lock:
 			self._state['current_match'] = None
 			self._state['finished_matches'].append(match_results['player_scores'])

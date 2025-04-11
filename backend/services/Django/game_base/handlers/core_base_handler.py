@@ -143,14 +143,14 @@ class CoreBaseHandler:
 			if self._model.status == 'finished':
 				send_func({
 					'type': 'error',
-					'message': f'{self._type} has already finished.'
-				}, True)
+					'details': f'{self._type} has already finished.'
+				}, None)
 				return False
 			if player in self.players:
 				send_func({
 					'type': 'error',
-					'message': 'Player already joined.'
-				}, True)
+					'details': 'Player already joined.'
+				}, None)
 				return False
 			return True
 
@@ -161,21 +161,27 @@ class CoreBaseHandler:
 		if self.get_status() == 'finished':
 			self._send_func({
 				'type': 'error',
-				'message': f'{self._type} has already finished.'
-			}, True)
+				'details': f'{self._type} has already finished.'
+			}, player_index)
 			return False
 		with self._lock:
+			if player_index >= self._required_players:
+				self._send_func({
+					'type': 'error',
+					'details': f'You are spectating the {self._type}, relax and enjoy the show.'
+				}, player_index)
+				return False
 			if self._required_players > len(self.players):
 				self._send_func({
 					'type': 'error',
-					'message': 'Waiting for other players to join.'
-				})
+					'details': 'Waiting for other players to join.'
+				}, player_index)
 				return False
 			if self._is_active:
 				self._send_func({
 					'type': 'error',
-					'message': f'{self._type} has already started.'
-				}, True)
+					'details': f'{self._type} has already started.'
+				}, player_index)
 				return False
 		return True
 

@@ -3,27 +3,43 @@ import { updateElements } from "./draw_game.js";
 import { setAiReaction } from "./ai.js"
 import { gameLoop, cleanupGame, resetGame } from "./game.js"
 import { startGame, joinGame, initSocket, resetSocket } from "./online_game.js"
+import { getCookie } from "../utils.js";
+import { addGameListeners } from "./listeners_game.js";
+
+export {
+	ensureInit,
+	setAnimationId,
+	getAnimationId,
+	setGameBoardSize,
+	startGameTimer,
+	changeGameMode,
+	gameMode,
+	BOARD_HEIGHT,
+	BOARD_WIDTH,
+	player1,
+	player2,
+	ball
+}
 
 const PINK = '#8A4FFF';
 const PURPLE = '#9932CC';
-export let gameModeSelector, gameMode;
-export let BOARD_HEIGHT = 500;
-export let BOARD_WIDTH = 800;
-export let OBJ_WIDTH = BOARD_WIDTH / 40;
-export let OBJ_HEIGHT = BOARD_HEIGHT / 5;
-export let player1, player2, ball;
-
+let BOARD_HEIGHT = 500;
+let BOARD_WIDTH = 800;
+let OBJ_WIDTH = BOARD_WIDTH / 40;
+let OBJ_HEIGHT = BOARD_HEIGHT / 5;
+let gameMode;
+let player1, player2, ball;
 let animationId;
 
-export function setAnimationId(id) {
+function setAnimationId(id) {
 	animationId = id;
 }
 
-export function getAnimationId() {
+function getAnimationId() {
 	return animationId;
 }
 
-export function ensureInit() {
+function ensureInit() {
 	if (window.gameState.initialized === true) return;
 
 	console.log('Ensuring initialization...');
@@ -54,7 +70,6 @@ function initGame() {
 	}
 
 	setGameBoardSize(true);
-	const ctx = gameBoard.getContext('2d');
 
 	let startPlayer1 = {
 		x: () => BOARD_WIDTH / 80,
@@ -114,23 +129,22 @@ function initGame() {
 		player2.y = startPlayer2.y();
 	}
 	console.log('Starting game loop with dimensions:', BOARD_WIDTH, BOARD_HEIGHT);
+	addGameListeners();
 	setGameBoardSize();
-	document.getElementById('startGame').addEventListener('click', startGameTimer);
 	document.getElementById('lobbyInput').style.display = "none";
-	gameModeSelector = document.getElementById('gameMode');
-	gameModeSelector.addEventListener('change', changeGameMode);
-	if (localStorage.getItem('isLoggedIn'))
+	if (getCookie('user_id'))
 		document.getElementById('onlineOption').style.display = "block";
 }
 
 function changeGameMode() {
 	const difficulty = document.getElementById("difficulty");
 	const difficultyCol = document.getElementById("difficultyCol");
+	const gameModeSelector = document.getElementById('gameMode');
 
 	gameMode = gameModeSelector.value;
 	console.log('Selected game mode:', gameMode);
 	resetGame();
-	if (localStorage.getItem('isLoggedIn'))
+	if (getCookie('user_id'))
 		document.getElementById('onlineOption').style.display = "block";
 	else
 		document.getElementById('onlineOption').style.display = "none";
@@ -148,7 +162,6 @@ function changeGameMode() {
 	setNames();
 	setButtonListeners();
 }
-window.changeGameMode = changeGameMode;
 
 function setButtonListeners() {
 	const	startButton = document.getElementById("startGame");
@@ -198,7 +211,7 @@ function setNames() {
 	player2Name.textContent = opponent_name;
 }
 
-export function setGameBoardSize(isInitialSetup = false) {
+function setGameBoardSize(isInitialSetup = false) {
 
 	const smallerDimension = Math.min(window.innerWidth, window.innerHeight);
 	BOARD_WIDTH = Math.floor(smallerDimension * 1);
@@ -219,14 +232,14 @@ export function setGameBoardSize(isInitialSetup = false) {
 		gameBoard.width = BOARD_WIDTH;
 		gameBoard.height = BOARD_HEIGHT;
 		// updateElements(); // Redraw after resize
-		console.log('Canvas resized to:', BOARD_WIDTH, BOARD_HEIGHT);
 		if (!isInitialSetup)
 			updateElements();
 	}
 }
 
-export async function startGameTimer() {
+async function startGameTimer() {
 	const gameButton = document.getElementById('startGame');
+	const gameModeSelector = document.getElementById('gameMode');
 
 
 	if (gameModeSelector.value === "online")
@@ -239,6 +252,3 @@ export async function startGameTimer() {
 		gameLoop();
 	}
 }
-
-ensureInit();
-window.ensureInit = ensureInit;
