@@ -30,6 +30,7 @@ function setBoardForTournament(match_id, players) {
 	const lobbyId = document.getElementById('lobbyId');
 	const winningScreen = document.getElementById('winningScreen');
 	const lobbyInput = document.getElementById("lobbyInput");
+	const startButtonContainer = document.getElementById('startButtonContainer');
 
 	lobbyId.value = match_id;
 	gameModeSelector.value = 'online';
@@ -38,6 +39,7 @@ function setBoardForTournament(match_id, players) {
 	changeGameMode();
 	winningScreen.innerHTML = '';
 	reactivateButton('startGame', startGameTimer);
+	startButtonContainer.classList.remove('col-md');
 	setTimeout(() => {
 		if (players.includes(localStorage.getItem('username'))) {
 			joinGame();
