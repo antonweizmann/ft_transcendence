@@ -95,7 +95,7 @@ function sendToSocket(message) {
 
 function initSocket() {
 	if (socket) {
-		console.error('Socket already exists');
+		console.warn('Socket already exists');
 		return;
 	}
 	socket = new WebSocket('wss://localhost/ws/pong/');

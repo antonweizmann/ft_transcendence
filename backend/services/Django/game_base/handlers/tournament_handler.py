@@ -42,7 +42,8 @@ class TournamentHandlerBase(CoreBaseHandler):
 	def leave_tournament(self, player: Player): # type: ignore
 		super()._leave(player)
 		with self._lock:
-			if player.username in self._state['is_ready_to_start']:
+			if (player.username in self._state['is_ready_to_start'] and
+				self.get_status() == 'waiting'):
 				del self._state['is_ready_to_start'][player.username]
 
 	def _start_tournament(self, player_index: int):
@@ -121,13 +122,10 @@ class TournamentHandlerBase(CoreBaseHandler):
 		raise NotImplementedError
 
 	def _send_lobby_update(self):
-		with self._lock:
-			if self._send_func is None:
-				return
-			self._send_func({
-				'type': 'lobby_update',
-				f'{self._type.lower()}_id': self._id,
-				'players': [{'index': index, 'username': player.username} for\
-					index, player in self._indexes.items() if player in self.players],
-				'size': self._required_players
-			})
+		status = self.get_status()
+		extra_fields = {
+			'size': self._required_players,
+		}
+		super()._send_lobby_update(extra_fields)
+		if status == 'in_progress':
+			self._send_state()

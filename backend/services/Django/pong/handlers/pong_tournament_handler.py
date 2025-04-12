@@ -37,11 +37,6 @@ class PongTournamentHandler(TournamentHandlerBase):
 			with self._lock:
 				self._state['pending_matches'].append([extra_player, None])
 
-	def leave_tournament(self, player: Player): # type: ignore
-		super().leave_tournament(player)
-		with self._lock:
-			self._state['pending_matches'] = []
-
 	def _start_tournament(self, player_index: int):
 		if not self._allowed_to_start(player_index):
 			return
