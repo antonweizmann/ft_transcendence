@@ -55,7 +55,7 @@ class TournamentHandlerBase(CoreBaseHandler):
 
 	def __ready_to_start(self)-> bool:
 		return (all(self._state['is_ready_to_start'].values())
-			and len(self.players) == self._required_players)
+			and len(self.players) >= self._required_players)
 
 	def mark_ready_and_start(self, player_index: int):
 		if not self._allowed_to_start(player_index):
