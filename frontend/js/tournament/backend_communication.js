@@ -1,4 +1,4 @@
-import { deactivateButton, getCookie } from "../utils.js";
+import { deactivateButton, getCookie, reactivateButton } from "../utils.js";
 import { updateActive } from "../form_validation.js";
 import { closeMobileMenu, fetchPageContent } from "../main.js";
 import { sendToTournamentSocket, initTournamentSocket } from "./socket_management.js";
@@ -75,6 +75,8 @@ function setPlayersReady(playersReady) {
 			markPlayerAsReady(player);
 			if (player === localStorage.getItem('username'))
 				deactivateButton('readyButton');
+		} else if (player === localStorage.getItem('username')) {
+			reactivateButton('readyButton', setPlayerReady);
 		}
 	}
 }

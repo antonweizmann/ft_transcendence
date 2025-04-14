@@ -56,7 +56,7 @@ class Player {
 	}
 
 	createElement() {
-		const playerElement = document.createElement('il');
+		const playerElement = document.createElement('li');
 		const usernameSpan = document.createElement('span');
 
 		playerElement.classList.add('possible-friend-container');
@@ -172,13 +172,11 @@ async function findUsername(username, inputUsername) {
 		if (!UserData) {
 			return;
 		}
-		console.table(UserData);
 		if (!results.length) {
 			showErrorMessage(inputUsername, "Username doesn't match any user");
 			return;
 		}
 		parentElement.innerHTML = '';
-		console.table(results);
 		results.forEach((result) => {
 			if (result.id === UserData.id
 				|| UserData.friends.includes(result.id)

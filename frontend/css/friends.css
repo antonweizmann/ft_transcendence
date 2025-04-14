@@ -1,14 +1,16 @@
+@import url(./styles.css);
+
 #newFriendName {
-    background-color: white; /* White background */
-    border: 1px solid white; /* White border */
-    border-top-right-radius: 0; /* Straight top-left corner */
-    border-bottom-right-radius: 0; /* Straight bottom-left corner */
-    color: black; /* Regular text color */
+	background-color: white; /* White background */
+	border: 1px solid white; /* White border */
+	border-top-right-radius: 0; /* Straight top-left corner */
+	border-bottom-right-radius: 0; /* Straight bottom-left corner */
+	color: black; /* Regular text color */
 }
 
 #newFriendName::placeholder {
-    color: darkgray; /* Dark gray placeholder text */
-    opacity: 1; /* Ensure the placeholder is fully visible */
+	color: darkgray; /* Dark gray placeholder text */
+	opacity: 1; /* Ensure the placeholder is fully visible */
 }
 
 #searchFriendButton {
@@ -20,17 +22,18 @@
 
 .possible-friend-container {
 	display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem; /* mb-3 */
-    padding: 1rem; /* p-3 */
-    border: 1px solid var(--purple, #6f42c1); /* border-purple */
-    border-radius: 0.5rem; /* rounded */
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 1rem;
+	padding: 1rem;
+	/* border:.5px solid var(--purple, #6f42c1); */
+	background-color: var(--deep-blue);
+	border-radius: 0.5rem;
+	box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
 }
 
 .possible-friend-container:hover {
-	background-color: var(--purple, #6f42c1); /* bg-purple */
+	background-color: #5439c0;
 	color: white; /* text-white */
 }
 
@@ -39,26 +42,36 @@
 } */
 
 .friend-name {
-	font-size: 1.25rem;
-	font-weight: bold;
+	font-size: 1rem;
+	/* font-weight: bold; */
+	flex: 1;
 	color: white;
 }
 
 .request-button {
-    background-color: var(--purple, #6f42c1); /* btn-purple */
-    color: #fff; /* White text */
-    border: none;
-    border-radius: 0.25rem; /* Rounded corners */
-    padding: 0.5rem 1rem; /* Button padding */
-    font-size: 0.875rem; /* btn-sm */
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+	background-color: var(--purple, #6f42c1); /* btn-purple */
+	color: #fff; /* White text */
+	border: none;
+	border-radius: 0.25rem; /* Rounded corners */
+	padding: 0.5rem 1rem; /* Button padding */
+	font-size: 0.875rem; /* btn-sm */
+	cursor: pointer;
+	transition: background-color 0.3s ease;
 }
 
 .request-button:hover {
-    background-color: #5a359e; /* Darker purple on hover */
+	background-color: #5a359e; /* Darker purple on hover */
 }
 
 .request-button:active {
-    background-color: #4a2c84; /* Even darker purple on click */
+	background-color: #4a2c84; /* Even darker purple on click */
 }
+/* 
+.ready-check {
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	background-color: green;
+	border-radius: 50%;
+	margin-left: 2px;
+} */
