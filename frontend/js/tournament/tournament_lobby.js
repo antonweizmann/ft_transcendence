@@ -14,17 +14,17 @@ function	setPlayerInLobby(amount, total) {
 
 function markPlayerAsReady(username) {
 	const player = document.getElementById(`${username}`);
+	let checkMark;
+
 	if (!player)
 		return;
-
-	let checkMark = player.querySelector('.ready-check');
-
-	if (!checkMark) {
-		checkMark = document.createElement('span');
-		checkMark.className = 'ready-check';
-		checkMark.textContent = ' ✅';
-		player.appendChild(checkMark);
-	}
+	checkMark = player.querySelector('.ready-check');
+	if (checkMark) 
+		return checkMark.style = 'display: block;';
+	checkMark = document.createElement('span');
+	checkMark.className = 'ready-check col-sm w-50';
+	checkMark.innerText = '✓';
+	player.appendChild(checkMark);
 }
 
 function	clearPlayerList() {
