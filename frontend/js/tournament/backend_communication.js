@@ -1,4 +1,4 @@
-import { getCookie } from "../utils.js";
+import { deactivateButton, getCookie } from "../utils.js";
 import { updateActive } from "../form_validation.js";
 import { closeMobileMenu, fetchPageContent } from "../main.js";
 import { sendToTournamentSocket, initTournamentSocket } from "./socket_management.js";
@@ -43,10 +43,9 @@ function parseTournamentMessage(data) {
 		console.log(message.details);
 		setPlayerInLobby(message.player_count, message.size);
 	} else if (message.type === 'ready_update') {
-		console.log(message.details);
-		console.log('Player ready:', message.players_ready);
-		markPlayerAsReady(message.player);
+		setPlayersReady(JSON.parse(message.players_ready));
 	} else if (message.type === 'pong_tournament_update') {
+		setTimeout(() => { deactivateButton('readyButton'); }, 500);
 		console.log(message.tournament_state);
 		const currentMatch = message.tournament_state.current_match;
 		if (!currentMatch) {
@@ -68,6 +67,16 @@ function parseTournamentMessage(data) {
 	}
 	else
 		console.log('Received message:', message);
+}
+
+function setPlayersReady(playersReady) {
+	for (const player in playersReady) {
+		if (playersReady[player] === true) {
+			markPlayerAsReady(player);
+			if (player === localStorage.getItem('username'))
+				deactivateButton('readyButton');
+		}
+	}
 }
 
 function joinTournament(lobbyId) {

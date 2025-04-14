@@ -1,4 +1,5 @@
 import threading
+import json
 
 from game_base.models import TournamentBaseModel
 from django.contrib.auth import get_user_model # type: ignore
@@ -65,7 +66,7 @@ class TournamentHandlerBase(CoreBaseHandler):
 			'type': 'ready_update',
 			'details': f'Player #{player_index} {player_str} is ready to start.',
 			'player': f'{player_str}',
-			'players_ready': f'{self._state['is_ready_to_start']}'
+			'players_ready':json.dumps(self._state['is_ready_to_start']),
 		})
 		if self.__ready_to_start():
 			self._start_tournament(player_index)
