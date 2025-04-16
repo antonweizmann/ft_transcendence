@@ -43,9 +43,9 @@ class TournamentHandlerBase(CoreBaseHandler):
 	def leave_tournament(self, player: Player): # type: ignore
 		super()._leave(player)
 		with self._lock:
-			if (player.username in self._state['is_ready_to_start'] and
+			if (player in self._state['is_ready_to_start'] and
 				self.get_status() == 'waiting'):
-				del self._state['is_ready_to_start'][player.username]
+				del self._state['is_ready_to_start'][player]
 			for player in self._state['is_ready_to_start']:
 				self._state['is_ready_to_start'][player] = False
 			self._send_func({
