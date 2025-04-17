@@ -14,8 +14,6 @@ async function initTournamentMatch(match_id, players) {
 		setTimeout(() => { initTournamentMatch(match_id, players); }, 500);
 		return;
 	}
-	// Update Leaderboard and add Leaderboard
-	// Add pending Matches
 	console.log('Initializing tournament match:', match_id, players);
 	if (pong_game.innerHTML === '') {
 		console.log('Loading tournament match page');

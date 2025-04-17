@@ -41,7 +41,6 @@ function parseTournamentMessage(data) {
 	} else if (message.type === 'lobby_update') {
 		updateTournamentLobby(message.players, message.size);
 	} else if (message.type === 'size_update') {
-		console.log(message.details);
 		setPlayerInLobby(message.player_count, message.size);
 	} else if (message.type === 'ready_update') {
 		setPlayersReady(JSON.parse(message.players_ready));

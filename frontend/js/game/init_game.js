@@ -42,7 +42,6 @@ function getAnimationId() {
 function ensureInit() {
 	if (window.gameState.initialized === true) return;
 
-	console.log('Ensuring initialization...');
 	if (document.readyState === 'complete') {
 		console.log('Document already complete, initializing now');
 		initGame();
@@ -61,7 +60,6 @@ function listenerGame() {
 }
 
 function initGame() {
-	console.log('=== Initializing Game ===');
 	const gameBoard = document.getElementById('gameBoard');
 
 	if (!gameBoard) {
