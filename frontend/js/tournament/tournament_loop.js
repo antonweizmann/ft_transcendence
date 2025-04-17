@@ -11,7 +11,7 @@ async function initTournamentMatch(match_id, players) {
 	const pong_game = document.getElementById('pong_game');
 
 	if (!pong_game) {
-		setTimeout(() => { initTournamentMatch(match_id, players); }, 500);
+		setTimeout(() => { initTournamentMatch(match_id, players); }, 100);
 		return;
 	}
 	console.log('Initializing tournament match:', match_id, players);
@@ -30,6 +30,10 @@ function setBoardForTournament(match_id, players) {
 	const lobbyInput = document.getElementById("lobbyInput");
 	const startButtonContainer = document.getElementById('startButtonContainer');
 
+	if (lobbyId.value === match_id) {
+		console.log('Already in tournament match:', match_id);
+		return ;
+	}
 	lobbyId.value = match_id;
 	gameModeSelector.value = 'online';
 	gameModeSelector.style.display = 'none';
@@ -44,7 +48,7 @@ function setBoardForTournament(match_id, players) {
 		}
 		else {
 			deactivateButton('startGame');
-			setTimeout(joinGame, 500);
+			setTimeout(joinGame, 100);
 		}
-	}, 500);
+	}, 150);
 }

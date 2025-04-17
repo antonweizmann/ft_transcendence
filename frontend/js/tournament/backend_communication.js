@@ -37,7 +37,6 @@ function parseTournamentMessage(data) {
 	console.log('Parsed message:', message);
 	if (message.type === 'pong_tournament_update') {
 		updateTournamentState(message.tournament_state);
-		updateLeaderboard(message.tournament_state.leaderboard);
 	} else if (message.type === 'lobby_update') {
 		updateTournamentLobby(message.players, message.size);
 	} else if (message.type === 'size_update') {
@@ -64,21 +63,27 @@ function updateTournamentState(tournamentState) {
 	let		match_id;
 
 	setTimeout(() => {
+		updateLeaderboard(tournamentState.leaderboard);
 		const readyButton = document.getElementById('readyButton');
 
 		if (readyButton)
 			readyButton.style.display = 'none';
-	}, 500);
+	}, 100);
 	if (!currentMatch) {
 		tournamentOver(tournamentState.leaderboard);
 		return;
 	}
-	match_id = Object.keys(currentMatch)[0]; // Get the first key as match_id
+	// Add pending Matches
+	match_id = Object.keys(currentMatch)[0];
 	players = currentMatch[match_id];
 	initTournamentMatch(match_id, players);
 }
 
 function setPlayersReady(playersReady) {
+	if (document.getElementById('pong_game').innerHTML !== '') {
+		console.log('Game already started, not setting players ready');
+		return ;
+	}
 	for (const player in playersReady) {
 		if (playersReady[player] === true) {
 			markPlayerAsReady(player);
