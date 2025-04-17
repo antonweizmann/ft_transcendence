@@ -148,7 +148,7 @@ html {
 .button-pressed {
     color: darkgrey;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Reduces shadow when pressed */
-    transform: scale(0.95); /* Slightly shrinks the button */
+    transform: scale(0.97); /* Slightly shrinks the button */
 }
 
 .responsive-title {

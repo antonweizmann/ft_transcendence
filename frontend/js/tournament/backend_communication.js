@@ -2,11 +2,11 @@ import { deactivateButton, getCookie, reactivateButton } from "../utils.js";
 import { updateActive } from "../form_validation.js";
 import { closeMobileMenu, fetchPageContent } from "../main.js";
 import { sendToTournamentSocket, initTournamentSocket } from "./socket_management.js";
-import { updateTournament, setTournamentData } from "./tournament.js";
+import { setTournamentData } from "./tournament.js";
 import { LoadDataFromBackend } from "../profile.js";
 import { updateTournamentLobby } from "./tournament_actions.js";
 import { showErrorInAllFields } from "../error_handling.js";
-import { setPlayerInLobby, markPlayerAsReady, tournamentOver } from "./tournament_lobby.js";
+import { setPlayerInLobby, markPlayerAsReady, tournamentOver, updateLeaderboard } from "./tournament_lobby.js";
 import { initTournamentMatch } from "./tournament_loop.js";
 import { showToast } from "../utils.js";
 
@@ -35,8 +35,9 @@ function parseTournamentMessage(data) {
 		return;
 	}
 	console.log('Parsed message:', message);
-	if (message.type === 'tournament_update') {
-		updateTournament(message.tournament_state);
+	if (message.type === 'pong_tournament_update') {
+		updateTournamentState(message.tournament_state);
+		updateLeaderboard(message.tournament_state.leaderboard);
 	} else if (message.type === 'lobby_update') {
 		updateTournamentLobby(message.players, message.size);
 	} else if (message.type === 'size_update') {
@@ -44,17 +45,6 @@ function parseTournamentMessage(data) {
 		setPlayerInLobby(message.player_count, message.size);
 	} else if (message.type === 'ready_update') {
 		setPlayersReady(JSON.parse(message.players_ready));
-	} else if (message.type === 'pong_tournament_update') {
-		setTimeout(() => { deactivateButton('readyButton'); }, 500);
-		console.log(message.tournament_state);
-		const currentMatch = message.tournament_state.current_match;
-		if (!currentMatch) {
-			tournamentOver(message.tournament_state.leaderboard);
-			return;
-		}
-		const match_id = Object.keys(currentMatch)[0]; // Get the first key as match_id
-		const players = currentMatch[match_id];
-		initTournamentMatch(match_id, players);
 	} else if (message.type === 'error') {
 		console.log('Error:', message.details);
 		showToast('Error', message.details);
@@ -67,6 +57,26 @@ function parseTournamentMessage(data) {
 	}
 	else
 		console.log('Received message:', message);
+}
+
+function updateTournamentState(tournamentState) {
+	const	currentMatch = tournamentState.current_match;
+	let		players;
+	let		match_id;
+
+	setTimeout(() => {
+		const readyButton = document.getElementById('readyButton');
+
+		if (readyButton)
+			readyButton.style.display = 'none';
+	}, 500);
+	if (!currentMatch) {
+		tournamentOver(tournamentState.leaderboard);
+		return;
+	}
+	match_id = Object.keys(currentMatch)[0]; // Get the first key as match_id
+	players = currentMatch[match_id];
+	initTournamentMatch(match_id, players);
 }
 
 function setPlayersReady(playersReady) {

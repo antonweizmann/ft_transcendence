@@ -4,6 +4,7 @@ export {
 	setPlayerInLobby,
 	markPlayerAsReady,
 	tournamentOver,
+	updateLeaderboard,
 };
 
 function	setPlayerInLobby(amount, total) {
@@ -20,54 +21,73 @@ function markPlayerAsReady(username) {
 		return;
 	if (player.querySelector('.ready-check'))
 		return;
-	checkMark = document.createElement('span');
-	checkMark.classList.add('ready-check', 'col-sm', 'w-50');
+	checkMark = player.querySelector('.text-end');
+	checkMark.classList.add('ready-check');
 	checkMark.textContent = '✓';
-	player.appendChild(checkMark);
 }
 
-function	clearPlayerList() {
-	document.getElementById('playerList').innerHTML = '';
+function clearPlayerList() {
+	const playerList = document.getElementById('playerList');
+	const template = document.getElementById('playerTemplate');
+
+	Array.from(playerList.children).forEach(child => {
+		if (child !== template) {
+			playerList.removeChild(child);
+		}
+	});
 }
 
 function	addPlayer(username) {
+	const playerTemplate = document.getElementById('playerTemplate');
 	const list = document.getElementById('playerList');
-	var item = document.getElementById('playerExample').cloneNode(true);
+	const newPlayerElement = playerTemplate.content.firstElementChild.cloneNode(true);
 
-	item.id = `${username}`;
-	item.style = 'display: block;';
-	item.querySelector('span').textContent = username;
+	if (document.getElementById(username)) {
+		return;
+	}
+	newPlayerElement.id = `${username}`;
+	const playerName = newPlayerElement.querySelector('.col');
+	if (!playerName) {
+		console.error('Player name element not found');
+		return;
+	}
+	playerName.innerText = username;
 
-	if (item.textContent != '')
-		list.appendChild(item);
+	list.appendChild(newPlayerElement);
 }
 
-function tournamentOver(Leaderboard) {
-	// Convert the Leaderboard object into an array of [username, points] pairs and sort it by points in descending order
+function updateLeaderboard(Leaderboard) {
 	const sortedLeaderboard = Object.entries(Leaderboard).sort(([, pointsA], [, pointsB]) => pointsB - pointsA);
 	const playerList = document.getElementById('playerList');
-	// Iterate over the sorted leaderboard and update the DOM
+
 	sortedLeaderboard.forEach(([username, points], index) => {
 		const playerElement = document.getElementById(username);
 		if (playerElement) {
-			const readyCheck = playerElement.querySelector('.ready-check');
+			const rankContainer = playerElement.querySelector('.text-end');
 			let rank;
 
-			if (readyCheck) {
-				readyCheck.remove();
-			}
 			if (index === 0) {
-				rank = "First place";
+				rankContainer.textContent = '🏆';
 			} else if (index === 1) {
-				rank = "Second place";
+				rankContainer.textContent = '🥈';
 			} else if (index === 2) {
-				rank = "Third place";
+				rankContainer.textContent = '🥉';
 			} else {
 				rank = `${index + 1}th place`;
 			}
-			playerElement.querySelector('span').textContent = `${rank}: ${username}`;
 			playerList.removeChild(playerElement);
 			playerList.appendChild(playerElement);
 		}
 	});
+}
+
+function tournamentOver(Leaderboard) {
+	updateLeaderboard(Leaderboard);
+	const tournamentOverSign = document.getElementById('tournamentOver');
+	const playerList = document.getElementById('playerList');
+	const firstPlayer = playerList.querySelector('.friend-name');
+
+	if (!tournamentOverSign)
+		console.error('Error loading tournament over sign');
+	tournamentOverSign.innerHTML = `🏆 <strong>GAME OVER</strong> 🏆<br>🎉 ${firstPlayer.textContent.trim()} won! 🎉`;
 }
