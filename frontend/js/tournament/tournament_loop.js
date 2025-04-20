@@ -39,7 +39,7 @@ function setBoardForTournament(match_id, players) {
 	gameModeSelector.style.display = 'none';
 	lobbyInput.style.display = "none";
 	changeGameMode();
-	winningScreen.innerHTML = '';
+	if (winningScreen) winningScreen.remove();
 	reactivateButton('startGame', startGameTimer);
 	startButtonContainer.classList.remove('col-md');
 	setTimeout(() => {
@@ -50,5 +50,5 @@ function setBoardForTournament(match_id, players) {
 			deactivateButton('startGame');
 			setTimeout(joinGame, 100);
 		}
-	}, 150);
+	}, 250);
 }
