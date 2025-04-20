@@ -172,7 +172,7 @@ function setButtonListeners() {
 	if (gameMode === 'online')
 	{
 		lobbyInput.style.display = "flex";
-		joinButton.addEventListener('click', joinGame, { once: true });
+		joinButton.addEventListener('click', joinGame);
 		startButton.addEventListener('click', startGameTimer);
 		if (!localStorage.getItem('username'))
 		{

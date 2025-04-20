@@ -13,6 +13,8 @@ import {
 	getAnimationId,
 } from "./init_game.js";
 import { changeLanguage } from "../translations.js";
+import { removeErrorMessage, showErrorMessage } from "../error_handling.js";
+import { showWinningScreen } from "../winning_screen.js";
 
 export {
 	socket,
@@ -70,13 +72,19 @@ function joinGame() {
 		return;
 	}
 	const player_pk = getCookie('user_id');
-	const lobby = document.getElementById('lobbyId').value;
+	const lobbyIdField = document.getElementById('lobbyId');
+	const lobbyId = lobbyIdField.value;
 	const lobbyContainer = document.getElementById('lobbyInput');
 
+	removeErrorMessage(lobbyIdField);
+	if (!lobbyId || lobbyId.trim() === '') {
+		showErrorMessage(lobbyIdField, 'Invalid lobby ID');
+		return;
+	}
 	const message = {
 		action: 'join_lobby',
 		player_pk: player_pk,
-		game_id: lobby,
+		game_id: lobbyId,
 	};
 	const messageJSON = JSON.stringify(message);
 	sendToSocket(messageJSON);
