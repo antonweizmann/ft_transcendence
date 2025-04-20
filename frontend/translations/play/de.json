@@ -1,0 +1,21 @@
+{
+	"player1":			"Spieler 1",
+	"player2":			"Spieler 2",
+	"ai":				"KI",
+	"waitingPlayer2":	"Warte auf Spieler 2...",
+	"waitingPlayer1":	"Warte auf Spieler 1...",
+
+	"start":			"Starten",
+	"reset":			"Zurücksetzen",
+	"local":			"Lokal",
+	"online":			"Online",
+	"singlePlayer":		"Einzelspieler",
+	"spectatorMode":	"Zuschauermodus",
+
+	"easy":				"Einfach",
+	"medium":			"Mittel",
+	"hard":				"Schwer",
+
+	"join":				"Beitreten",
+	"lobbyId":			"Lobby-ID"
+}

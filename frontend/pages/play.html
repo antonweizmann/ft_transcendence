@@ -4,40 +4,40 @@
 
 	<div class="g-2 playRow row mt-2 justify-content-between">
 		<div class="col-sm-4">
-			<div id="player1Name" class="player-name text-start text-truncate">Player 1</div>
+			<div id="player1Name" class="player-name text-start text-truncate" data-translate="player1">Player 1</div>
 		</div>
 		<div class="col-sm-3">
 			<div id="scoreGame" class="score text-center">0 : 0</div>
 		</div>
 		<div class="col-sm-4">
-			<div id="player2Name" class="player-name text-end text-truncate">Player 2</div>
+			<div id="player2Name" class="player-name text-end text-truncate" data-translate="player2">Player 2</div>
 		</div>
 	</div>
 
 	<div class="g-2 playRow row mt-2">
 		<div class="col-md" id="startButtonContainer">
-			<button id="startGame" class="w-100 button button-hover">Start</button>
+			<button id="startGame" class="w-100 button button-hover" data-translate="start">Start</button>
 		</div>
 		<div class="col-sm">
 			<select id="gameMode" class="w-100 h-100 button button-hover">
-				<option value="human">Local</option>
-				<option id="onlineOption" style="display:none;" value="online">Online</option>
-				<option value="ai">Single Player</option>
-				<option value="ai2">Spectator Mode</option>
+				<option value="human" data-translate="local">Local</option>
+				<option value="online" data-translate="online" id="onlineOption" style="display:none;">Online</option>
+				<option value="ai" data-translate="singlePlayer">Single Player</option>
+				<option value="ai2" data-translate="spectatorMode">Spectator Mode</option>
 			</select>
 		</div>
 		<div id="difficultyCol" class="col-sm" style="display: none;">
 			<select id="difficulty" class="w-100 h-100 button button-hover">
-				<option value="easy">Easy</option>
-				<option value="medium">Medium</option>
-				<option value="hard">Hard</option>
+				<option value="easy" data-translate="easy">Easy</option>
+				<option value="medium" data-translate="medium">Medium</option>
+				<option value="hard" data-translate="hard">Hard</option>
 			</select>
 		</div>
 	</div>
 	<div class="playRow row g-2 mt-2">
 		<div class="input-group" id="lobbyInput" style="display: none;">
 			<span class="button input-group-text" id="joinGame" onclick="" data-translate="join">Join</span>
-			<input type="text" class="form-control" placeholder="lobby id" aria-label="lobby ID" id="lobbyId">
+			<input type="text" class="form-control" placeholder="lobby id" aria-label="lobby ID" id="lobbyId" data-translate="lobbyId">
 		</div>
 	</div>
 	<div id="winningScreen" style="display: none;" class="winning-screen">

@@ -11,6 +11,7 @@ import {
 	getAnimationId,
 	setAnimationId
 } from "./init_game.js";
+import { changeLanguage } from "../translations.js";
 
 let	gameButton;
 let	eventListeners = [];
@@ -55,7 +56,9 @@ export function resetGame() {
 	cancelAnimationFrame(getAnimationId());
 	setAnimationId(null);
 	gameButton.textContent = 'Start';
+	gameButton.setAttribute('data-translate', 'start');
 	gameButton.addEventListener('click', startGameTimer);
+	changeLanguage();
 }
 
 //Clean Up

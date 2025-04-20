@@ -16,11 +16,9 @@ function changeLanguage(event) {
 	loadTranslations(selectedLanguage);
 }
 
-async function loadTranslations(language) {
-	console.log("Getting translations from", `/translations${window.location.pathname}/${language}.json`);
+function loadTranslations(language) {
 	LoadDataFromBackend(`/translations/index/${language}.json`, applyTranslations);
-	const response = await LoadDataFromBackend(`/translations${window.location.pathname}/${language}.json`, applyTranslations);
-	console.log("Translations loaded", response);
+	LoadDataFromBackend(`/translations${window.location.pathname}/${language}.json`, applyTranslations);
 }
 
 function applyTranslations(translations) {

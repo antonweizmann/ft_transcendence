@@ -13,6 +13,7 @@ import {
 	setAnimationId,
 	getAnimationId,
 } from "./init_game.js";
+import { changeLanguage } from "../translations.js";
 
 export {
 	socket,
@@ -200,21 +201,18 @@ function updateLobby(players) {
 
 	if (getAnimationId() !== null)
 		return;
-	player1Container.textContent = '';
-	player2Container.textContent = '';
+	player1Container.setAttribute('data-translate', 'waitingPlayer1');
+	player2Container.setAttribute('data-translate', 'waitingPlayer2');
 	for (const player of players) {
 		if (player.index === 0) {
-			player1Container.textContent = player.username;
+			player1Container.textContent = player.username.charAt(0).toUpperCase() + player.username.slice(1);
+			player1Container.setAttribute('data-translate', '');
 		} else if (player.index === 1) {
-			player2Container.textContent = player.username;
+			player2Container.textContent = player.username.charAt(0).toUpperCase() + player.username.slice(1);
+			player2Container.setAttribute('data-translate', '');
 		}
 	}
-	if (player2Container.textContent === '') {
-		player2Container.textContent = 'Waiting for player 2...';
-	}
-	if (player1Container.textContent === '') {
-		player1Container.textContent = 'Waiting for player 1...';
-	}
+	changeLanguage();
 }
 
 function showWinningScreen(game_state) {
