@@ -633,3 +633,8 @@ body {
         margin-left: 0px !important;
     }
 }
+
+select {
+    text-align: center;
+    text-align-last: center;
+}
