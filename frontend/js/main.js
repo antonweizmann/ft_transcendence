@@ -3,10 +3,10 @@ import { initProfile, LoadDataFromBackend } from './profile.js';
 import { initTournament } from './tournament/tournament.js';
 import { getCookie } from './utils.js';
 import { ensureInit } from './game/init_game.js';
+import { changeLanguage } from './translations.js';
 
 window.loadPage = loadPage;
 window.signUpInstead = signUpInstead;
-window.changeLanguage = changeLanguage;
 window.setImagePreview = setImagePreview;
 
 const startPage = 'home';
@@ -143,50 +143,6 @@ window.onload = function () {
 	console.log(`Loading path: ${path}`);
 	getPage(path);
 };
-
-function changeLanguage(event) {
-	const selectedLanguage = event ? event.target.value : localStorage.getItem('language') || 'en'; // Get the selected language (e.g., 'en' or 'es')
-
-	// Save the selected language in localStorage to persist across sessions
-	localStorage.setItem('language', selectedLanguage);
-
-	// Load the translations for the selected language
-	loadTranslations(selectedLanguage);
-}
-
-function loadTranslations(language) {
-	// Fetch the translations JSON file
-	fetch('/languages.json')
-		.then(response => response.json())
-		.then(data => {
-			// If the selected language exists in the translations file
-			if (data[language]) {
-				// Update the page content with the translations
-				updatePageContent(data[language]);
-			} else {
-				console.error(`Language ${language} not found in translations file.`);
-				// Optionally, fallback to a default language (e.g., 'en')
-				updatePageContent(data['en']);
-			}
-		})
-		.catch(error => {
-			console.error('Error loading translations:', error);
-			// Fallback to English if the JSON file cannot be loaded
-			loadTranslations('en'); // seems like a loop
-		});
-}
-
-function updatePageContent(translations) {
-	// Update each element with a data-translate attribute using the corresponding translation
-	document.querySelectorAll('[data-translate]').forEach(element => {
-		const translationKey = element.getAttribute('data-translate');
-
-		// If the translation exists for this key, update the element's text
-		if (translations[translationKey]) {
-			element.textContent = translations[translationKey];
-		}
-	});
-}
 
 window.addEventListener(`popstate`, function (event) {
 	if (event.state)

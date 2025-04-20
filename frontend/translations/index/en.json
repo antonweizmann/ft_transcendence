@@ -1,0 +1,27 @@
+{
+	"pongMaster":			"Pong Master",
+	"home":					"Home",
+	"play":					"Play",
+	"tournament":			"Tournament",
+
+	"friends":				"Friends",
+	"login":				"Login",
+	"username":				"Username",
+	"password":				"Password",
+	"signUp":				"Sign up",
+
+	"profile":				"Profile",
+	"myProfile":			"My Profile",
+	"settings":				"Settings",
+	"logOut":				"Log Out",
+
+	"friendsSidebar":		"Friends Menu",
+	"requestsTab":			"Requests",
+	"addFriends":			"Add Friends",
+	"newFriendPlaceholder":	"Enter a friend's username",
+	"searchUser":			"Search User",
+	"sendRequest":			"Send Request",
+	"unfriend":				"Unfriend",
+	"accept":				"Accept",
+	"decline":				"Decline"
+}

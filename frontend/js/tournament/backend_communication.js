@@ -9,6 +9,7 @@ import { showErrorInAllFields } from "../error_handling.js";
 import { setPlayerInLobby, markPlayerAsReady, tournamentOver, updateLeaderboard } from "./tournament_lobby.js";
 import { initTournamentMatch } from "./tournament_loop.js";
 import { showToast } from "../utils.js";
+import { changeLanguage } from "../translations.js";
 
 export {
 	loadTournament,
