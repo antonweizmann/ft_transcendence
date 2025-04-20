@@ -3,7 +3,6 @@ export {
 	clearPlayerList,
 	setPlayerInLobby,
 	markPlayerAsReady,
-	tournamentOver,
 	updateLeaderboard,
 };
 
@@ -79,23 +78,4 @@ function updateLeaderboard(Leaderboard) {
 			playerList.appendChild(playerElement);
 		}
 	});
-}
-
-function tournamentOver(Leaderboard) {
-	const sortedLeaderboard = Object.entries(Leaderboard).sort(([, pointsA], [, pointsB]) => pointsB - pointsA);
-	const tournamentOverSign = document.getElementById('tournamentOver');
-	const winner = sortedLeaderboard[0][0];
-
-	if (!tournamentOverSign)
-		console.error('Error loading tournament over sign');
-	tournamentOverSign.innerHTML = `🏆 <strong>GAME OVER</strong> 🏆<br>🎉 ${winner} won! 🎉`;
-	tournamentOverSign.style.position = 'fixed';
-	tournamentOverSign.style.top = '0';
-	tournamentOverSign.style.left = '0';
-	tournamentOverSign.style.width = '100%';
-	tournamentOverSign.style.height = '100%';
-	tournamentOverSign.style['z-index'] = '9999';
-	tournamentOverSign.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-	tournamentOverSign.style.alignContent = 'center';
-	tournamentOverSign.onclick = () => {window.loadPage('tournament');}
 }

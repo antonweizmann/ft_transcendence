@@ -17,5 +17,9 @@
 	"hard":				"Schwer",
 
 	"join":				"Beitreten",
-	"lobbyId":			"Lobby-ID"
+	"lobbyId":			"Lobby-ID",
+
+	"gameOver":			"Spiel beendet",
+	"won":				"hat gewonnen",
+	"draw":				"Unentschieden!"
 }

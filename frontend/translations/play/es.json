@@ -17,5 +17,9 @@
 	"hard":				"Difícil",
 
 	"join":				"Unirse",
-	"lobbyId":			"ID de la Sala"
+	"lobbyId":			"ID de la Sala",
+
+	"gameOver":			"¡Se Acabó el Juego!",
+	"won":				"ganó",
+	"draw":				"Empate!"
 }

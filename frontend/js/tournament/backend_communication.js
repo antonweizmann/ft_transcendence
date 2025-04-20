@@ -6,10 +6,11 @@ import { setTournamentData } from "./tournament.js";
 import { LoadDataFromBackend } from "../profile.js";
 import { updateTournamentLobby } from "./tournament_actions.js";
 import { showErrorInAllFields } from "../error_handling.js";
-import { setPlayerInLobby, markPlayerAsReady, tournamentOver, updateLeaderboard } from "./tournament_lobby.js";
+import { setPlayerInLobby, markPlayerAsReady, updateLeaderboard } from "./tournament_lobby.js";
 import { initTournamentMatch } from "./tournament_loop.js";
 import { showToast } from "../utils.js";
 import { changeLanguage } from "../translations.js";
+import { showWinningScreen } from "../winning_screen.js";
 
 export {
 	loadTournament,
@@ -71,7 +72,7 @@ function updateTournamentState(tournamentState) {
 			readyButton.style.display = 'none';
 	}, 100);
 	if (!currentMatch) {
-		tournamentOver(tournamentState.leaderboard);
+		showWinningScreen('tournamentOver', tournamentState.leaderboard, 'tournament');
 		return;
 	}
 	// Add pending Matches

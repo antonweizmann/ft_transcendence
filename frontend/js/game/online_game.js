@@ -3,7 +3,6 @@ import { updateElements } from "./draw_game.js";
 import { keysPressed } from "./movement_game.js";
 import { cleanupGame, resetGame } from "./game.js";
 import { getCookie } from "../utils.js";
-import { loadPage } from "../main.js";
 import { showToast, deactivateButton } from "../utils.js";
 import {
 	BOARD_HEIGHT,
@@ -182,8 +181,8 @@ function updateScore(score) {
 	const player2Score = score[player2Name];
 
 	// Update the frontend
-	player1Container.textContent = player1Name;
-	player2Container.textContent = player2Name;
+	player1Container.textContent = player1Name.charAt(0).toUpperCase() + player1Name.slice(1);
+	player2Container.textContent = player2Name.charAt(0).toUpperCase() + player2Name.slice(1);
 	scoreContainer.textContent = `${player1Score} : ${player2Score}`;
 }
 
@@ -192,7 +191,7 @@ function gameOver(game_state) {
 	resetSocket();
 	resetGame();
 	updateScore(game_state.score);
-	showWinningScreen(game_state);
+	showWinningScreen('winningScreen', game_state.score, 'play');
 }
 
 function updateLobby(players) {
@@ -213,30 +212,4 @@ function updateLobby(players) {
 		}
 	}
 	changeLanguage();
-}
-
-function showWinningScreen(game_state) {
-	const player1Container = document.getElementById('player1Name');
-	const player2Container = document.getElementById('player2Name');
-	const winnerMessage = document.getElementById('winnerMessage');
-	const winningScreen = document.getElementById('winningScreen');
-
-	const player1Score = game_state.score[player1Container.textContent];
-	const player2Score = game_state.score[player2Container.textContent];
-
-	let winnerText = 'Draw!';
-	if (winnerMessage === null)
-		return;
-	if (player1Score > player2Score) {
-		winnerText = `${player1Container.textContent} wins!`;
-	} else if (player2Score > player1Score) {
-		winnerText = `${player2Container.textContent} wins!`;
-	}
-
-	winnerMessage.textContent = winnerText;
-	winningScreen.style.display = 'flex';
-
-	setTimeout(() => {
-		loadPage('play');
-	}, 5000);
 }

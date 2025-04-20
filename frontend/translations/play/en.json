@@ -17,5 +17,9 @@
 	"hard":				"Hard",
 
 	"join":				"Join",
-	"lobbyId":			"Lobby ID"
+	"lobbyId":			"Lobby ID",
+
+	"gameOver":			"GAME OVER",
+	"won":				"won",
+	"draw":				"Draw!"
 }
