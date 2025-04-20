@@ -2,6 +2,7 @@ import { showErrorMessage, removeErrorMessage } from "./error_handling.js"
 import { authenticatedFetch } from './authentication.js';
 import { getCookie } from './utils.js';
 import { LoadDataFromBackend } from "./profile.js";
+import { changeLanguage } from "./translations.js";
 
 const userDetailURL = `https://localhost/api/player/${getCookie('user_id')}/`;
 
@@ -72,6 +73,7 @@ class Player {
 
 		requestButton.classList.add('request-button', 'button');
 		requestButton.textContent = 'Send Request';
+		requestButton.setAttribute('data-translate', 'sendRequest');
 		requestButton.addEventListener('click', () => {
 			sendRequest(this.id);
 			playerElement.remove();
@@ -87,6 +89,7 @@ class Player {
 
 		unfriendButton.classList.add('unfriend-button', 'btn', 'btn-danger', 'unfriend-button');
 		unfriendButton.textContent = 'Unfriend';
+		unfriendButton.setAttribute('data-translate', 'unfriend');
 		unfriendButton.addEventListener('click', () => {
 			unfriend(this.id);
 			playerElement.remove();
@@ -102,6 +105,7 @@ class Player {
 
 		acceptButton.classList.add('btn', 'btn-success', 'accept-button', 'me-2');
 		acceptButton.textContent = 'Accept';
+		acceptButton.setAttribute('data-translate', 'accept');
 		acceptButton.addEventListener('click', () => {
 			acceptRequest(this.id);
 			playerElement.remove();
@@ -109,6 +113,7 @@ class Player {
 
 		declineButton.classList.add('btn', 'btn-danger', 'decline-button');
 		declineButton.textContent = 'Decline';
+		declineButton.setAttribute('data-translate', 'decline');
 		declineButton.addEventListener('click', () => {
 			declineRequest(this.id);
 			playerElement.remove();
@@ -127,14 +132,16 @@ async function renderFriendList(data) {
 	friendsListElement.innerHTML = '';
 	if (!data || !data.friends)
 		return;
-	data.friends.forEach(async (friend) => {
-		LoadDataFromBackend(`https://localhost/api/player/${friend}/`, (friendData) => {
+	const friendPromises = data.friends.map(async (friend) => {
+		await LoadDataFromBackend(`https://localhost/api/player/${friend}/`, (friendData) => {
 			const friendElement = new Player(friendData.id, friendData.username).createFriendElement();
-			if (!friendsListElement)
-				return;
-			friendsListElement.appendChild(friendElement);
+			if (friendsListElement) {
+				friendsListElement.appendChild(friendElement);
+			}
 		});
 	});
+	await Promise.all(friendPromises);
+	changeLanguage();
 }
 
 function renderFriendRequests(data) {
@@ -175,6 +182,7 @@ async function findUsername(username, inputUsername) {
 			if (parentElement)
 				parentElement.appendChild(playerElement);
 		});
+		changeLanguage();
 	});
 }
 
