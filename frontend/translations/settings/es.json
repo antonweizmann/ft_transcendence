@@ -1,0 +1,18 @@
+{
+	"signUpNow": "Regístrate ahora!",
+	"pickPP": "Elige una foto de perfil",
+
+	"firstName": "Nombre",
+	"lastName": "Apellido",
+	"email": "Dirección de correo electrónico",
+
+	"newUsernamePlaceholder": "Ingresa un nuevo nombre de usuario",
+	"newEmailPlaceholder": "Ingresa una nueva dirección de correo electrónico",
+	"newPassword": "Nueva contraseña",
+	"repeatNewPassword": "Repite tu nueva contraseña",
+	"newPasswordPlaceholder": "Ingresa una nueva contraseña segura",
+	"repeatNewPasswordPlaceholder": "Confirma tu nueva contraseña",
+
+	"selectLanguage": "Selecciona tu idioma",
+	"saveChanges": "Guardar cambios"
+}
