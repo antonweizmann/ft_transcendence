@@ -1,4 +1,12 @@
 {
+	"createLobby":		"Create Lobby",
+	"lobbyID":			"Lobby ID",
+	"lobbySize":		"Lobby Size",
+
+	"availableLobbies":	"Available Lobbies:",
+	"refresh":			"Refresh",
+	"joinLobby":		"Join Lobby",
+
 	"gameOver":			"GAME OVER",
 	"won":				"won",
 	"draw":				"Draw!"

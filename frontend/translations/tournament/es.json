@@ -1,4 +1,12 @@
 {
+	"createLobby":		"Crear Sala",
+	"lobbyID":			"ID de la Sala",
+	"lobbySize":		"Tamaño de la Sala",
+
+	"availableLobbies":	"Salas Disponibles:",
+	"refresh":			"Actualizar",
+	"joinLobby":		"Unirse a la Sala",
+
 	"gameOver":			"¡Se Acabó el Juego!",
 	"won":				"ganó",
 	"draw":				"Empate!"

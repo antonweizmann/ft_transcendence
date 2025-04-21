@@ -1,4 +1,12 @@
 {
+	"createLobby":		"Lobby erstellen",
+	"lobbyID":			"Lobby-ID",
+	"lobbySize":		"Lobby-Größe",
+
+	"availableLobbies":	"Verfügbare Lobbys:",
+	"refresh":			"Aktualisieren",
+	"joinLobby":		"Lobby beitreten",
+
 	"gameOver":			"Spiel beendet",
 	"won":				"hat gewonnen",
 	"draw":				"Unentschieden!"
