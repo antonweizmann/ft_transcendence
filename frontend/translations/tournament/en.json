@@ -7,6 +7,13 @@
 	"refresh":			"Refresh",
 	"joinLobby":		"Join Lobby",
 
+	"playersInLobby":	"Players in Lobby:",
+	"readyUp":			"Ready Up",
+
+	"waitingPlayer2":	"Waiting for Player 2...",
+	"waitingPlayer1":	"Waiting for Player 1...",
+	"start":			"Start",
+
 	"gameOver":			"GAME OVER",
 	"won":				"won",
 	"draw":				"Draw!"

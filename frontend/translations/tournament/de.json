@@ -7,6 +7,13 @@
 	"refresh":			"Aktualisieren",
 	"joinLobby":		"Lobby beitreten",
 
+	"playersInLobby":	"Spieler in der Lobby:",
+	"readyUp":			"Bereit machen",
+
+	"waitingPlayer2":	"Warte auf Spieler 2...",
+	"waitingPlayer1":	"Warte auf Spieler 1...",
+	"start":			"Starten",
+
 	"gameOver":			"Spiel beendet",
 	"won":				"hat gewonnen",
 	"draw":				"Unentschieden!"

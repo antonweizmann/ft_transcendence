@@ -1,6 +1,7 @@
 import { changeGameMode, ensureInit, startGameTimer } from '../game/init_game.js';
 import { joinGame } from '../game/online_game.js';
 import { fetchPageContent } from '../main.js';
+import { changeLanguage } from '../translations.js';
 import { deactivateButton, reactivateButton } from '../utils.js';
 
 export {
@@ -18,6 +19,7 @@ async function initTournamentMatch(match_id, players) {
 	if (pong_game.innerHTML === '') {
 		console.log('Loading tournament match page');
 		pong_game.innerHTML = await fetchPageContent('play');
+		changeLanguage();
 		ensureInit();
 	}
 	setBoardForTournament(match_id, players);

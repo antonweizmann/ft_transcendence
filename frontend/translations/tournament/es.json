@@ -7,6 +7,13 @@
 	"refresh":			"Actualizar",
 	"joinLobby":		"Unirse a la Sala",
 
+	"playersInLobby":	"Jugadores en la Sala:",
+	"readyUp":			"Estoy listo",
+
+	"waitingPlayer2":	"Esperando Jugador 2...",
+	"waitingPlayer1":	"Esperando Jugador 1...",
+	"start":			"Iniciar",
+
 	"gameOver":			"¡Se Acabó el Juego!",
 	"won":				"ganó",
 	"draw":				"Empate!"
