@@ -45,9 +45,7 @@ function ensureInit() {
 
 	if (document.readyState === 'complete') {
 		console.log('Document already complete, initializing now');
-		initGame();
-		window.gameState.initialized = true;
-		window.gameState.cleanup = cleanupGame;
+		listenerGame();
 	} else {
 		console.log('Document not ready, adding listener');
 		document.addEventListener('DOMContentLoaded', listenerGame);
