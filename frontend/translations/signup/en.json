@@ -1,0 +1,11 @@
+{
+	"signUpNow": "Sign up now!",
+	"pickPP": "Pick a profile picture",
+
+	"firstName": "First name",
+	"lastName": "Last name",
+	"email": "Email address",
+	"repeatPassword": "Repeat password",
+	"passwordPlaceholder": "Enter a secure password",
+	"repeatPasswordPlaceholder": "Confirm your  secure password"
+}
