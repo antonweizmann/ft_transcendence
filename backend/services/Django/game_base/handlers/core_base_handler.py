@@ -102,16 +102,20 @@ class CoreBaseHandler:
 			return
 		self._send_lobby_update()
 
-	def _send_lobby_update(self):
+	def _send_lobby_update(self, extra_fields: Optional[Dict[str, Any]] = None):
 		with self._lock:
 			if self._send_func is None:
 				return
-			self._send_func({
+			message = {
 				'type': 'lobby_update',
 				f'{self._type.lower()}_id': self._id,
 				'players': [{'index': index, 'username': player.username} for\
 					index, player in self._indexes.items() if player in self.players]
-			})
+			}
+		if extra_fields:
+			message.update(extra_fields)
+		with self._lock:
+			self._send_func(message)
 
 	def _start(self, player_index: int, run_func: Optional[Callable]):
 		if not self._allowed_to_start(player_index):
@@ -132,11 +136,11 @@ class CoreBaseHandler:
 		with self._lock:
 			if self._send_func is None:
 				raise ValueError(f'You must join a {self._type} before sending state.')
-		self._send_func({
-			'type': f'{self._subtype.lower()}_{self._type.lower()}_update',
-			f'{self._type.lower()}_id': self._id,
-			f'{self._type.lower()}_state': self._serialize_state()
-		})
+			self._send_func({
+				'type': f'{self._subtype.lower()}_{self._type.lower()}_update',
+				f'{self._type.lower()}_id': self._id,
+				f'{self._type.lower()}_state': self._serialize_state()
+			})
 
 	def _allowed_to_join(self, player: Player, send_func: SendFunc): # type: ignore
 		with self._lock:

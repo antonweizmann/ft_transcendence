@@ -1,8 +1,6 @@
 import { authenticatedFetch } from './authentication.js';
 import { getCookie } from './utils.js';
 
-console.log("Profile JS pre-loaded");
-
 let current_user = null;
 
 export function initProfile() {
@@ -16,7 +14,6 @@ export function initProfile() {
 }
 
 function loadProfile() {
-	console.log("Profile JS loaded");
 	const userId = getCookie('user_id');
 	const username = localStorage.getItem('username');
 

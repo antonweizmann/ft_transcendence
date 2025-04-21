@@ -2,7 +2,6 @@ import { joinTournament, loadTournament, } from "./backend_communication.js";
 
 export {
 	initTournament,
-	updateTournament,
 	setTournamentData,
 	clearTournamentList
 }
@@ -14,18 +13,6 @@ function	initTournament() {
 	} else {
 		console.log('Document not ready, adding listener');
 		document.addEventListener('DOMContentLoaded', loadTournament);
-	}
-}
-
-function	updateTournament(tournament_state) {
-	const tournamentList = document.getElementById('tournamentList');
-	tournamentList.innerHTML = '';
-
-	for (const tournament of tournament_state) {
-		const item = document.createElement('div');
-		item.className = 'list-group-item';
-		item.textContent = tournament.name;
-		tournamentList.appendChild(item);
 	}
 }
 

@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model # type: ignore
+from django.db import transaction # type: ignore
 from game_base.handlers import TournamentHandlerBase
 from pong.models import PongTournamentModel
 from pong.handlers import PongGameHandler
@@ -19,7 +20,8 @@ class PongTournamentHandler(TournamentHandlerBase):
 		self.set_name("Tournament " + self._id.removesuffix('_tournament_pong'))
 		self.set_description("Pong Tournament " + self._id.removesuffix('_tournament_pong') + ", let's play!")
 		self._model.lobby_id = self._id.removesuffix('_tournament_pong')
-		self._model.save()
+		transaction.on_commit(lambda: self._model.save())
+		self._model.refresh_from_db()
 
 	def _set_matches(self, players_without_match: list[str]):
 		random.shuffle(players_without_match)
@@ -36,11 +38,6 @@ class PongTournamentHandler(TournamentHandlerBase):
 		if extra_player:
 			with self._lock:
 				self._state['pending_matches'].append([extra_player, None])
-
-	def leave_tournament(self, player: Player): # type: ignore
-		super().leave_tournament(player)
-		with self._lock:
-			self._state['pending_matches'] = []
 
 	def _start_tournament(self, player_index: int):
 		if not self._allowed_to_start(player_index):

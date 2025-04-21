@@ -4,6 +4,7 @@ export {
 	setPlayerInLobby,
 	markPlayerAsReady,
 	tournamentOver,
+	updateLeaderboard,
 };
 
 function	setPlayerInLobby(amount, total) {
@@ -14,63 +15,87 @@ function	setPlayerInLobby(amount, total) {
 
 function markPlayerAsReady(username) {
 	const player = document.getElementById(`${username}`);
+	let checkMark;
+
 	if (!player)
 		return;
-
-	let checkMark = player.querySelector('.ready-check');
-
-	if (!checkMark) {
-		checkMark = document.createElement('span');
-		checkMark.className = 'ready-check';
-		checkMark.textContent = ' ✅';
-		player.appendChild(checkMark);
-	}
+	if (player.querySelector('.ready-check'))
+		return;
+	checkMark = player.querySelector('.text-end');
+	checkMark.classList.add('ready-check');
+	checkMark.textContent = '✓';
 }
 
-function	clearPlayerList() {
-	document.getElementById('playerList').innerHTML = '';
+function clearPlayerList() {
+	const playerList = document.getElementById('playerList');
+	const template = document.getElementById('playerTemplate');
+
+	Array.from(playerList.children).forEach(child => {
+		if (child !== template) {
+			playerList.removeChild(child);
+		}
+	});
 }
 
 function	addPlayer(username) {
+	const playerTemplate = document.getElementById('playerTemplate');
 	const list = document.getElementById('playerList');
-	var item = document.getElementById('playerExample').cloneNode(true);
+	const newPlayerElement = playerTemplate.content.firstElementChild.cloneNode(true);
 
-	item.id = `${username}`;
-	item.style = 'display: block;';
-	item.querySelector('div').textContent = username;
+	if (document.getElementById(username)) {
+		return;
+	}
+	newPlayerElement.id = `${username}`;
+	const playerName = newPlayerElement.querySelector('.col');
+	if (!playerName) {
+		console.error('Player name element not found');
+		return;
+	}
+	playerName.innerText = username;
 
-	if (item.textContent != '')
-		list.appendChild(item);
+	list.appendChild(newPlayerElement);
 }
 
-function tournamentOver(Leaderboard) {
-	// Convert the Leaderboard object into an array of [username, points] pairs and sort it by points in descending order
+function updateLeaderboard(Leaderboard) {
 	const sortedLeaderboard = Object.entries(Leaderboard).sort(([, pointsA], [, pointsB]) => pointsB - pointsA);
+	const playerList = document.getElementById('playerList');
 
-	// Iterate over the sorted leaderboard and update the DOM
 	sortedLeaderboard.forEach(([username, points], index) => {
 		const playerElement = document.getElementById(username);
 		if (playerElement) {
-			// Remove the ready-check element if it exists
-			const readyCheck = playerElement.querySelector('.ready-check');
-			if (readyCheck) {
-				readyCheck.remove();
-			}
-
-			// Determine the rank (e.g., "First place", "Second place", etc.)
+			const rankContainer = playerElement.querySelector('.text-end');
 			let rank;
+
 			if (index === 0) {
-				rank = "First place";
+				rankContainer.textContent = '🏆';
 			} else if (index === 1) {
-				rank = "Second place";
+				rankContainer.textContent = '🥈';
 			} else if (index === 2) {
-				rank = "Third place";
+				rankContainer.textContent = '🥉';
 			} else {
 				rank = `${index + 1}th place`;
 			}
-
-			// Update the player's display with their rank, username, and score
-			playerElement.querySelector('div').textContent = `${rank}: ${username} - ${points} points`;
+			playerList.removeChild(playerElement);
+			playerList.appendChild(playerElement);
 		}
 	});
+}
+
+function tournamentOver(Leaderboard) {
+	const sortedLeaderboard = Object.entries(Leaderboard).sort(([, pointsA], [, pointsB]) => pointsB - pointsA);
+	const tournamentOverSign = document.getElementById('tournamentOver');
+	const winner = sortedLeaderboard[0][0];
+
+	if (!tournamentOverSign)
+		console.error('Error loading tournament over sign');
+	tournamentOverSign.innerHTML = `🏆 <strong>GAME OVER</strong> 🏆<br>🎉 ${winner} won! 🎉`;
+	tournamentOverSign.style.position = 'fixed';
+	tournamentOverSign.style.top = '0';
+	tournamentOverSign.style.left = '0';
+	tournamentOverSign.style.width = '100%';
+	tournamentOverSign.style.height = '100%';
+	tournamentOverSign.style['z-index'] = '9999';
+	tournamentOverSign.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+	tournamentOverSign.style.alignContent = 'center';
+	tournamentOverSign.onclick = () => {window.loadPage('tournament');}
 }

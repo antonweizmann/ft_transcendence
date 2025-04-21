@@ -16,8 +16,6 @@ window.gameState = {
 	cleanup: null
 };
 
-let addedScripts = []; // Array to store references to added scripts
-
 const restrictedPages = [
 	'profile',
 	'tournament',
@@ -48,15 +46,6 @@ export function updateUIBasedOnAuth() {
 		loginButton.style.display = 'block';
 		profileButton.style.display = 'none';
 	}
-}
-
-function removeAddedScripts() {
-	addedScripts.forEach(script => {
-		if (script.parentNode) {
-			script.parentNode.removeChild(script);
-		}
-	});
-	addedScripts = []; // Clear the array
 }
 
 /**
@@ -92,7 +81,6 @@ function cleanupPage()
 		window.gameState.cleanup();
 	if (window.resetTournamentSocket)
 		window.resetTournamentSocket();
-	removeAddedScripts();
 }
 
 export async function fetchPageContent(pageName) {
@@ -142,12 +130,8 @@ async function getPage(pageName) {
 
 window.onload = function () {
 	let path = window.location.pathname;
-	console.log(path);
-	// Remove leading and trailing slashes, and get the first segment of the path
-	path = path.replace(/^\/|\/$/g, '');
-	console.log(path);
 
-	// If path is empty or 'index.html', default to 'home'
+	path = path.replace(/^\/|\/$/g, '');
 	if (!path || path === 'index.html') {
 		loadPageReplace(startPage);
 		return;
@@ -203,13 +187,6 @@ function updatePageContent(translations) {
 		}
 	});
 }
-
-// window.addEventListener('load', () => {
-// 	const path = window.location.pathname;
-// 	console.log(`Loading path: ${path}`);
-// 	loadPage(path.substring(1) || 'home'); // Remove leading slash and default to 'home'
-//   });
-
 
 window.addEventListener(`popstate`, function (event) {
 	if (event.state)

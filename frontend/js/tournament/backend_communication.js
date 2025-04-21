@@ -1,12 +1,12 @@
-import { getCookie } from "../utils.js";
+import { deactivateButton, getCookie, reactivateButton } from "../utils.js";
 import { updateActive } from "../form_validation.js";
 import { closeMobileMenu, fetchPageContent } from "../main.js";
 import { sendToTournamentSocket, initTournamentSocket } from "./socket_management.js";
-import { updateTournament, setTournamentData } from "./tournament.js";
+import { setTournamentData } from "./tournament.js";
 import { LoadDataFromBackend } from "../profile.js";
 import { updateTournamentLobby } from "./tournament_actions.js";
 import { showErrorInAllFields } from "../error_handling.js";
-import { setPlayerInLobby, markPlayerAsReady, tournamentOver } from "./tournament_lobby.js";
+import { setPlayerInLobby, markPlayerAsReady, tournamentOver, updateLeaderboard } from "./tournament_lobby.js";
 import { initTournamentMatch } from "./tournament_loop.js";
 import { showToast } from "../utils.js";
 
@@ -35,27 +35,14 @@ function parseTournamentMessage(data) {
 		return;
 	}
 	console.log('Parsed message:', message);
-	if (message.type === 'tournament_update') {
-		updateTournament(message.tournament_state);
+	if (message.type === 'pong_tournament_update') {
+		updateTournamentState(message.tournament_state);
 	} else if (message.type === 'lobby_update') {
 		updateTournamentLobby(message.players, message.size);
 	} else if (message.type === 'size_update') {
-		console.log(message.details);
 		setPlayerInLobby(message.player_count, message.size);
 	} else if (message.type === 'ready_update') {
-		console.log(message.details);
-		console.log('Player ready:', message.players_ready);
-		markPlayerAsReady(message.player);
-	} else if (message.type === 'pong_tournament_update') {
-		console.log(message.tournament_state);
-		const currentMatch = message.tournament_state.current_match;
-		if (!currentMatch) {
-			tournamentOver(message.tournament_state.leaderboard);
-			return;
-		}
-		const match_id = Object.keys(currentMatch)[0]; // Get the first key as match_id
-		const players = currentMatch[match_id];
-		initTournamentMatch(match_id, players);
+		setPlayersReady(JSON.parse(message.players_ready));
 	} else if (message.type === 'error') {
 		console.log('Error:', message.details);
 		showToast('Error', message.details);
@@ -68,6 +55,44 @@ function parseTournamentMessage(data) {
 	}
 	else
 		console.log('Received message:', message);
+}
+
+function updateTournamentState(tournamentState) {
+	const	currentMatch = tournamentState.current_match;
+	let		players;
+	let		match_id;
+
+	setTimeout(() => {
+		updateLeaderboard(tournamentState.leaderboard);
+		const readyButton = document.getElementById('readyButton');
+
+		if (readyButton)
+			readyButton.style.display = 'none';
+	}, 100);
+	if (!currentMatch) {
+		tournamentOver(tournamentState.leaderboard);
+		return;
+	}
+	// Add pending Matches
+	match_id = Object.keys(currentMatch)[0];
+	players = currentMatch[match_id];
+	initTournamentMatch(match_id, players);
+}
+
+function setPlayersReady(playersReady) {
+	if (document.getElementById('pong_game').innerHTML !== '') {
+		console.log('Game already started, not setting players ready');
+		return ;
+	}
+	for (const player in playersReady) {
+		if (playersReady[player] === true) {
+			markPlayerAsReady(player);
+			if (player === localStorage.getItem('username'))
+				deactivateButton('readyButton');
+		} else if (player === localStorage.getItem('username')) {
+			reactivateButton('readyButton', setPlayerReady);
+		}
+	}
 }
 
 function joinTournament(lobbyId) {

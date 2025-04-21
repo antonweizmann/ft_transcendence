@@ -1,4 +1,5 @@
 import threading
+import json
 
 from game_base.models import TournamentBaseModel
 from django.contrib.auth import get_user_model # type: ignore
@@ -42,16 +43,23 @@ class TournamentHandlerBase(CoreBaseHandler):
 	def leave_tournament(self, player: Player): # type: ignore
 		super()._leave(player)
 		with self._lock:
-			if player.username in self._state['is_ready_to_start']:
-				del self._state['is_ready_to_start'][player.username]
-
+			if (player in self._state['is_ready_to_start'] and
+				self.get_status() == 'waiting'):
+				del self._state['is_ready_to_start'][player]
+			for player in self._state['is_ready_to_start']:
+				self._state['is_ready_to_start'][player] = False
+			if self._send_func is not None:
+				self._send_func({
+					'type': 'ready_update',
+					'players_ready':json.dumps(self._state['is_ready_to_start']),
+				})
 	def _start_tournament(self, player_index: int):
 		tournament_thread = threading.Thread(target=self._start_matches)
 		super()._start(player_index, tournament_thread.start)
 
 	def __ready_to_start(self)-> bool:
 		return (all(self._state['is_ready_to_start'].values())
-			and len(self.players) == self._required_players)
+			and len(self.players) >= self._required_players)
 
 	def mark_ready_and_start(self, player_index: int):
 		if not self._allowed_to_start(player_index):
@@ -62,7 +70,7 @@ class TournamentHandlerBase(CoreBaseHandler):
 			'type': 'ready_update',
 			'details': f'Player #{player_index} {player_str} is ready to start.',
 			'player': f'{player_str}',
-			'players_ready': f'{self._state['is_ready_to_start']}'
+			'players_ready':json.dumps(self._state['is_ready_to_start']),
 		})
 		if self.__ready_to_start():
 			self._start_tournament(player_index)
@@ -121,13 +129,10 @@ class TournamentHandlerBase(CoreBaseHandler):
 		raise NotImplementedError
 
 	def _send_lobby_update(self):
-		with self._lock:
-			if self._send_func is None:
-				return
-			self._send_func({
-				'type': 'lobby_update',
-				f'{self._type.lower()}_id': self._id,
-				'players': [{'index': index, 'username': player.username} for\
-					index, player in self._indexes.items() if player in self.players],
-				'size': self._required_players
-			})
+		status = self.get_status()
+		extra_fields = {
+			'size': self._required_players,
+		}
+		super()._send_lobby_update(extra_fields)
+		if status == 'in_progress':
+			self._send_state()
