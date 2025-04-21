@@ -519,7 +519,7 @@ body {
 /* Layout adjustments for the select-wrapper */
 .select-wrapper.d-flex {
     display: flex;
-    width: 60;
+    width: 60%;
     align-items: center; /* Keep vertical alignment */
     gap: 15px; /* Add space between selects */
 }
