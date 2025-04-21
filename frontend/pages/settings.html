@@ -1,19 +1,19 @@
 <!DOCTYPE html>
-<div class="container-xxl mt-5">
+<div class="container-sm mx-auto signup-container">
     <!-- Change Info Form -->
-    <form id="changeInfoForm" enctype="multipart/form-data" onsubmit="return validateChangeInfoForm(event)" class="container mt-5">
-        <div class="mb-3 text-center changeInfo-header">
+    <form id="changeInfoForm" enctype="multipart/form-data" onsubmit="return validateChangeInfoForm(event)">
+        <div class="mb-3 signup-header">
             <h2>Settings</h2>
             <h4>Leave empty to keep the old value</h4>
         </div>
 
         <!-- Profile Pic -->
         <div class="mb-3">
-            <div class="row align-items-center file-input-container">
-                <div class="col-md-3 text-center">
-                    <img id="previewImage" src="../assets/default_profile.png" class="profile-pic" alt="Default Profile Picture">
+            <div class="row align-items-center">
+                <div class="col-3 text-center">
+                    <img id="previewImage" src="../assets/default_profile.png" class="object-fit-cover profile-pic" alt="Default Profile Picture">
                 </div>
-                <div class="col-md-9">
+                <div class="col-9">
                     <label for="formFile" class="form-label">Pick profile picture</label>
                     <input class="form-control" type="file" id="formFile" onchange="setImagePreview(this)">
                 </div>
@@ -58,6 +58,8 @@
             <label for="changeInfoPasswordCurrent" class="form-label">Current password</label>
             <input type="password" class="form-control" placeholder="Enter your CURRENT password" id="changeInfoPasswordCurrent">
         </div> -->
+
+        <br>
 
         <!-- Submit Button -->
         <div class="text-center">
