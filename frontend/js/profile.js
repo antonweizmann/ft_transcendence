@@ -26,7 +26,7 @@ function setProfileData(data) {
 	const username = document.getElementById('username');
 	const profile_container = document.getElementById('profile_container');
 
-	username.textContent = data.username;
+	username.textContent = data.username.charAt(0).toUpperCase() + data.username.slice(1);
 	current_user = data.username;
 	if (data.profile_picture)
 		profile_pic.src = "https://localhost" + data.profile_picture;
