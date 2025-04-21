@@ -4,6 +4,7 @@ import { initTournament } from './tournament/tournament.js';
 import { getCookie } from './utils.js';
 import { ensureInit } from './game/init_game.js';
 import { changeLanguage } from './translations.js';
+import { initSettings } from './settings.js';
 
 window.loadPage = loadPage;
 window.signUpInstead = signUpInstead;
@@ -118,6 +119,9 @@ async function getPage(pageName) {
 		}
 		else if (pageName === 'tournament') {
 			setTimeout(initTournament, 500);
+		}
+		else if (pageName === 'settings') {
+			setTimeout(initSettings, 500);
 		}
 		changeLanguage();
 	}
