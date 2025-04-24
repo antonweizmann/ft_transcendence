@@ -1,0 +1,27 @@
+{
+	"pongMaster":			"Rey del Pong",
+	"home":					"Inicio",
+	"play":					"Jugar",
+	"tournament":			"Torneo",
+
+	"friends":				"Amigos",
+	"login":				"Iniciar sesión",
+	"username":				"Usuario",
+	"password":				"Contraseña",
+	"signUp":				"Registrarse",
+
+	"profile":				"Perfil",
+	"myProfile":			"Mi perfil",
+	"settings":				"Ajustes",
+	"logOut":				"Cerrar sesión",
+
+	"friendsSidebar":		"Menú de Amigos",
+	"requestsTab":			"Solicitudes",
+	"addFriends":			"Agregar amigos",
+	"newFriendPlaceholder":	"Ingresa el usuario",
+	"searchUser":			"Buscar usuario",
+	"sendRequest":			"Enviar solicitud",
+	"unfriend":				"Eliminar amigo",
+	"accept":				"Aceptar",
+	"decline":				"Rechazar"
+}

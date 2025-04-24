@@ -1,6 +1,7 @@
 import { changeGameMode, ensureInit, startGameTimer } from '../game/init_game.js';
 import { joinGame } from '../game/online_game.js';
 import { fetchPageContent } from '../main.js';
+import { changeLanguage } from '../translations.js';
 import { deactivateButton, reactivateButton } from '../utils.js';
 
 export {
@@ -18,6 +19,7 @@ async function initTournamentMatch(match_id, players) {
 	if (pong_game.innerHTML === '') {
 		console.log('Loading tournament match page');
 		pong_game.innerHTML = await fetchPageContent('play');
+		changeLanguage();
 		ensureInit();
 	}
 	setBoardForTournament(match_id, players);
@@ -39,7 +41,7 @@ function setBoardForTournament(match_id, players) {
 	gameModeSelector.style.display = 'none';
 	lobbyInput.style.display = "none";
 	changeGameMode();
-	winningScreen.innerHTML = '';
+	if (winningScreen) winningScreen.remove();
 	reactivateButton('startGame', startGameTimer);
 	startButtonContainer.classList.remove('col-md');
 	setTimeout(() => {
@@ -50,5 +52,5 @@ function setBoardForTournament(match_id, players) {
 			deactivateButton('startGame');
 			setTimeout(joinGame, 100);
 		}
-	}, 150);
+	}, 250);
 }

@@ -1,0 +1,25 @@
+{
+	"player1":			"Jugador 1",
+	"player2":			"Jugador 2",
+	"ai":				"IA",
+	"waitingPlayer2":	"Esperando Jugador 2...",
+	"waitingPlayer1":	"Esperando Jugador 1...",
+
+	"start":			"Iniciar",
+	"reset":			"Reiniciar",
+	"local":			"Local",
+	"online":			"En línea",
+	"singlePlayer":		"Un jugador",
+	"spectatorMode":	"Modo Espectador",
+
+	"easy":				"Fácil",
+	"medium":			"Medio",
+	"hard":				"Difícil",
+
+	"join":				"Unirse",
+	"lobbyId":			"ID de la Sala",
+
+	"gameOver":			"¡Se Acabó el Juego!",
+	"won":				"ganó",
+	"draw":				"Empate!"
+}

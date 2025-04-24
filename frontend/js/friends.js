@@ -2,6 +2,7 @@ import { showErrorMessage, removeErrorMessage } from "./error_handling.js"
 import { authenticatedFetch } from './authentication.js';
 import { getCookie } from './utils.js';
 import { LoadDataFromBackend } from "./profile.js";
+import { changeLanguage } from "./translations.js";
 
 const userDetailURL = `https://localhost/api/player/${getCookie('user_id')}/`;
 
@@ -40,7 +41,7 @@ async function declineRequest(user_id) {
 
 async function unfriend(user_id) {
 	try {
-		const response = await authenticatedFetch(`https://localhost/api/player/unfriend/${user_id}/`, {
+		await authenticatedFetch(`https://localhost/api/player/unfriend/${user_id}/`, {
 			method: 'POST'
 		});
 		console.log('Friend removed');
@@ -55,7 +56,7 @@ class Player {
 		this.username = username;
 	}
 
-	createElement() {
+	#createBaseElement() {
 		const playerElement = document.createElement('li');
 		const usernameSpan = document.createElement('span');
 
@@ -66,14 +67,15 @@ class Player {
 		return playerElement;
 	}
 
-	createRequestElement() {
-		const playerElement = this.createElement();
+	createSendRequestElement() {
+		const playerElement = this.#createBaseElement();
 		const requestButton = document.createElement('button');
 
 		requestButton.classList.add('request-button', 'button');
 		requestButton.textContent = 'Send Request';
+		requestButton.setAttribute('data-translate', 'sendRequest');
 		requestButton.addEventListener('click', () => {
-			this.sendRequest();
+			sendRequest(this.id);
 			playerElement.remove();
 		});
 
@@ -81,26 +83,44 @@ class Player {
 		return playerElement;
 	}
 
-	sendRequest() {
-		sendRequest(this.id);
-	}
-
 	createFriendElement() {
-		const playerElement = this.createElement();
+		const playerElement = this.#createBaseElement();
 		const unfriendButton = document.createElement('button');
 
 		unfriendButton.classList.add('unfriend-button', 'btn', 'btn-danger', 'unfriend-button');
 		unfriendButton.textContent = 'Unfriend';
+		unfriendButton.setAttribute('data-translate', 'unfriend');
 		unfriendButton.addEventListener('click', () => {
-			this.unfriend();
+			unfriend(this.id);
 			playerElement.remove();
 		});
 		playerElement.appendChild(unfriendButton);
 		return playerElement;
 	}
 
-	unfriend() {
-		unfriend(this.id);
+	createRequestActionElement() {
+		const playerElement = this.#createBaseElement();
+		const acceptButton = document.createElement('button');
+		const declineButton = document.createElement('button');
+
+		acceptButton.classList.add('btn', 'btn-success', 'accept-button', 'me-2');
+		acceptButton.textContent = 'Accept';
+		acceptButton.setAttribute('data-translate', 'accept');
+		acceptButton.addEventListener('click', () => {
+			acceptRequest(this.id);
+			playerElement.remove();
+		});
+
+		declineButton.classList.add('btn', 'btn-danger', 'decline-button');
+		declineButton.textContent = 'Decline';
+		declineButton.setAttribute('data-translate', 'decline');
+		declineButton.addEventListener('click', () => {
+			declineRequest(this.id);
+			playerElement.remove();
+		});
+		playerElement.appendChild(acceptButton);
+		playerElement.appendChild(declineButton);
+		return playerElement;
 	}
 }
 
@@ -112,56 +132,31 @@ async function renderFriendList(data) {
 	friendsListElement.innerHTML = '';
 	if (!data || !data.friends)
 		return;
-	data.friends.forEach(async (friend) => {
-		LoadDataFromBackend(`https://localhost/api/player/${friend}/`, (friendData) => {
+	const friendPromises = data.friends.map(async (friend) => {
+		await LoadDataFromBackend(`https://localhost/api/player/${friend}/`, (friendData) => {
 			const friendElement = new Player(friendData.id, friendData.username).createFriendElement();
-			if (!friendsListElement)
-				return;
-			friendsListElement.appendChild(friendElement);
+			if (friendsListElement) {
+				friendsListElement.appendChild(friendElement);
+			}
 		});
 	});
+	await Promise.all(friendPromises);
+	changeLanguage();
 }
 
-async function renderFriendRequests(data) {
+function renderFriendRequests(data) {
 	const requestsListElement = document.getElementById('requestsList');
+
 	if (!requestsListElement)
 		return;
-
 	requestsListElement.innerHTML = '';
-
 	if (!data.friend_requests_received)
 		return;
-
 	data.friend_requests_received.forEach((request) => {
-		const requestListItem = document.createElement('li');
-		requestListItem.classList.add('list-group-item');
-
-		const requestHTML = `
-			<div class="d-flex justify-content-between align-items-center">
-				<span>${request.username}</span>
-				<div class="d-flex justify-content-end">
-					<button class="btn btn-success accept-button me-2" data-user-id="${request.id}">Accept</button>
-					<button class="btn btn-danger decline-button" data-user-id="${request.id}">Decline</button>
-				</div>
-			</div>
-		`;
-		requestListItem.innerHTML = requestHTML;
-
+		const requestListItem = new Player(request.id, request.username).createRequestActionElement();
 		requestsListElement.appendChild(requestListItem);
-
-		const acceptButton = requestListItem.querySelector('.accept-button');
-		const declineButton = requestListItem.querySelector('.decline-button');
-
-		acceptButton.addEventListener('click', () => {
-			acceptRequest(request.id);
-			requestListItem.remove();
-		});
-
-		declineButton.addEventListener('click', () => {
-			declineRequest(request.id);
-			requestListItem.remove();
-		});
 	});
+	changeLanguage();
 }
 
 async function findUsername(username, inputUsername) {
@@ -169,9 +164,8 @@ async function findUsername(username, inputUsername) {
 	const parentElement = document.getElementById('addFriendsList');
 
 	LoadDataFromBackend(`https://localhost/api/player/list?username=${username}`, (results) => {
-		if (!UserData) {
+		if (!UserData)
 			return;
-		}
 		if (!results.length) {
 			showErrorMessage(inputUsername, "Username doesn't match any user");
 			return;
@@ -184,12 +178,11 @@ async function findUsername(username, inputUsername) {
 				return;
 			}
 			const player = new Player(result.id, result.username);
-			const playerElement = player.createRequestElement();
-			if (!parentElement) {
-				return;
-			}
-			parentElement.appendChild(playerElement);
+			const playerElement = player.createSendRequestElement();
+			if (parentElement)
+				parentElement.appendChild(playerElement);
 		});
+		changeLanguage();
 	});
 }
 

@@ -1,0 +1,25 @@
+{
+	"player1":			"Player 1",
+	"player2":			"Player 2",
+	"ai":				"AI",
+	"waitingPlayer2":	"Waiting for Player 2...",
+	"waitingPlayer1":	"Waiting for Player 1...",
+
+	"start":			"Start",
+	"reset":			"Reset",
+	"local":			"Local",
+	"online":			"Online",
+	"singlePlayer":		"Single Player",
+	"spectatorMode":	"Spectator Mode",
+
+	"easy":				"Easy",
+	"medium":			"Medium",
+	"hard":				"Hard",
+
+	"join":				"Join",
+	"lobbyId":			"Lobby ID",
+
+	"gameOver":			"GAME OVER",
+	"won":				"won",
+	"draw":				"Draw!"
+}

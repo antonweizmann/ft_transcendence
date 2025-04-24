@@ -13,7 +13,7 @@
 		<!--Navbar-->
 		<nav class="navbar navbar-expand-md navbar-dark bg-dark">
 			<div class="container-fluid">
-				<a class="navbar-brand" onclick="loadPage('home')">Pong Master</a>
+				<a class="navbar-brand" onclick="loadPage('home')" data-translate="pongMaster">Pong Master</a>
 
 				<!--Hamburger for Mobile and small pages-->
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle Navigation">
@@ -42,22 +42,22 @@
 							<button class="btn btn-outline-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="loginDropdownButton" data-translate="login">Login</button>
 							<form class="dropdown-menu dropdown-menu-end p-4 login-drop">
 								<div class="mb-3">
-									<h2 data-translate="loginHeader">Login</h2>
+									<h2 data-translate="login">Login</h2>
 								</div>
 								<div class="mb-3">
-									<label for="loginUsername" class="form-label" data-translate="usernameLabel">Username</label>
+									<label for="loginUsername" class="form-label" data-translate="username">Username</label>
 									<input type="username" class="form-control" placeholder="CoolUser123" id="loginUsername">
 								</div>
 								<div class="mb-3">
-									<label for="loginPassword" class="form-label" data-translate="passwordLabel">Password</label>
-									<input type="password" class="form-control" placeholder="Password" id="loginPassword">
+									<label for="loginPassword" class="form-label" data-translate="password">Password</label>
+									<input type="password" class="form-control" placeholder="Password" id="loginPassword" data-translate="password">
 								</div>
 								<div class="row g-2 align-items-center">
 									<div class="col-auto">
-										<button type="submit" class="btn btn-primary" data-translate="loginButton">Login</button>
+										<button type="submit" class="btn btn-primary" data-translate="login">Login</button>
 									</div>
 									<div class="col-auto">
-										<button type="button" class="sign-up-instead" onclick="signUpInstead()" data-translate="signUp">Sign up instead</button>
+										<button type="button" class="sign-up-instead" onclick="signUpInstead()" data-translate="signUp">Sign up</button>
 									</div>
 								</div>
 							</form>
@@ -65,16 +65,16 @@
 						<li class="nav-item dropdown" id="profileDropdown">
 							<a class="nav-link dropdown-toggle" href="#" id="profileButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-translate="profile">Profile</a>
 							<div class="dropdown-menu profile-drop" aria-labelledby="profileButton">
-								<a class="dropdown-item" onclick="loadPage('profile')" data-translate="viewProfile">View Profile</a>
+								<a class="dropdown-item" onclick="loadPage('profile')" data-translate="myProfile">My Profile</a>
 								<a class="dropdown-item" onclick="loadPage('settings')" data-translate="settings">Settings</a>
 								<a class="dropdown-item" onclick="logoutUser()" data-translate="logOut">Log Out</a>
 							</div>
 						</li>
 						<li class="nav-item">
 							<select id="languageDropdown" onchange="changeLanguage(event)" class="form-select dropdown" data-translate="languageSelector">
-								<option value="en" data-translate="english">English</option>
-								<option value="es" data-translate="spanish">Español</option>
-								<option value="de" data-translate="german">Deutsch</option>
+								<option value="en">English</option>
+								<option value="es">Español</option>
+								<option value="de">Deutsch</option>
 							</select>
 						</li>
 					</ul>
@@ -91,13 +91,13 @@
 				<!-- Tabs for Friends, Requests, and Add Friends -->
 				<ul class="nav nav-tabs nav-fill" id="friendsTab" role="tablist">
 					<li class="nav-item" role="presentation">
-						<button class="nav-link active" id="friends-tab" data-bs-toggle="tab" data-bs-target="#friends" type="button" role="tab" aria-controls="friends" aria-selected="true" data-translate="friendsTab">Friends</button>
+						<button class="nav-link active" id="friends-tab" data-bs-toggle="tab" data-bs-target="#friends" type="button" role="tab" aria-controls="friends" aria-selected="true" data-translate="friends">Friends</button>
 					</li>
 					<li class="nav-item" role="presentation">
 						<button class="nav-link" id="requests-tab" data-bs-toggle="tab" data-bs-target="#requests" type="button" role="tab" aria-controls="requests" aria-selected="false" data-translate="requestsTab">Requests</button>
 					</li>
 					<li class="nav-item" role="presentation">
-						<button class="nav-link" id="add-friends-tab" data-bs-toggle="tab" data-bs-target="#add-friends" type="button" role="tab" aria-controls="add-friends" aria-selected="false" data-translate="addFriendsTab">Add Friends</button>
+						<button class="nav-link" id="add-friends-tab" data-bs-toggle="tab" data-bs-target="#add-friends" type="button" role="tab" aria-controls="add-friends" aria-selected="false" data-translate="addFriends">Add Friends</button>
 					</li>
 				</ul>
 
@@ -119,7 +119,7 @@
 					<div class="tab-pane fade" id="add-friends" role="tabpanel" aria-labelledby="add-friends-tab">
 						<div class="input-group">
 							<input type="text" id="newFriendName" class="form-control" placeholder="Enter friend's username" data-translate="newFriendPlaceholder">
-							<span class="button input-group-text" data-translate="addFriendButton" id="searchFriendButton">Search User</span>
+							<span class="button input-group-text" data-translate="searchUser" id="searchFriendButton">Search User</span>
 						</div>
 						<br>
 						<ul id="addFriendsList" class="list-group">
@@ -142,7 +142,6 @@
 		<script type="module" src="/js/form_validation.js"></script>
 		<script type="module" src="/js/friends.js"></script>
 		<script type="module" src="/js/form_submission.js"></script>
-		<script type="module" src="/js/tournament.js"></script>
 		<script type="module" src="/js/authentication.js"></script>
 		<script type="module" src="/js/error_handling.js"></script>
 	</body>

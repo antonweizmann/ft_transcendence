@@ -3,7 +3,6 @@ import { updateElements } from "./draw_game.js";
 import { keysPressed } from "./movement_game.js";
 import { cleanupGame, resetGame } from "./game.js";
 import { getCookie } from "../utils.js";
-import { loadPage } from "../main.js";
 import { showToast, deactivateButton } from "../utils.js";
 import {
 	BOARD_HEIGHT,
@@ -13,6 +12,9 @@ import {
 	setAnimationId,
 	getAnimationId,
 } from "./init_game.js";
+import { changeLanguage } from "../translations.js";
+import { removeErrorMessage, showErrorMessage } from "../error_handling.js";
+import { showWinningScreen } from "../winning_screen.js";
 
 export {
 	socket,
@@ -70,13 +72,19 @@ function joinGame() {
 		return;
 	}
 	const player_pk = getCookie('user_id');
-	const lobby = document.getElementById('lobbyId').value;
+	const lobbyIdField = document.getElementById('lobbyId');
+	const lobbyId = lobbyIdField.value;
 	const lobbyContainer = document.getElementById('lobbyInput');
 
+	removeErrorMessage(lobbyIdField);
+	if (!lobbyId || lobbyId.trim() === '') {
+		showErrorMessage(lobbyIdField, 'Invalid lobby ID');
+		return;
+	}
 	const message = {
 		action: 'join_lobby',
 		player_pk: player_pk,
-		game_id: lobby,
+		game_id: lobbyId,
 	};
 	const messageJSON = JSON.stringify(message);
 	sendToSocket(messageJSON);
@@ -181,8 +189,8 @@ function updateScore(score) {
 	const player2Score = score[player2Name];
 
 	// Update the frontend
-	player1Container.textContent = player1Name;
-	player2Container.textContent = player2Name;
+	player1Container.textContent = player1Name.charAt(0).toUpperCase() + player1Name.slice(1);
+	player2Container.textContent = player2Name.charAt(0).toUpperCase() + player2Name.slice(1);
 	scoreContainer.textContent = `${player1Score} : ${player2Score}`;
 }
 
@@ -191,7 +199,7 @@ function gameOver(game_state) {
 	resetSocket();
 	resetGame();
 	updateScore(game_state.score);
-	showWinningScreen(game_state);
+	showWinningScreen('winningScreen', game_state.score, 'play');
 }
 
 function updateLobby(players) {
@@ -200,45 +208,16 @@ function updateLobby(players) {
 
 	if (getAnimationId() !== null)
 		return;
-	player1Container.textContent = '';
-	player2Container.textContent = '';
+	player1Container.setAttribute('data-translate', 'waitingPlayer1');
+	player2Container.setAttribute('data-translate', 'waitingPlayer2');
 	for (const player of players) {
 		if (player.index === 0) {
-			player1Container.textContent = player.username;
+			player1Container.textContent = player.username.charAt(0).toUpperCase() + player.username.slice(1);
+			player1Container.setAttribute('data-translate', '');
 		} else if (player.index === 1) {
-			player2Container.textContent = player.username;
+			player2Container.textContent = player.username.charAt(0).toUpperCase() + player.username.slice(1);
+			player2Container.setAttribute('data-translate', '');
 		}
 	}
-	if (player2Container.textContent === '') {
-		player2Container.textContent = 'Waiting for player 2...';
-	}
-	if (player1Container.textContent === '') {
-		player1Container.textContent = 'Waiting for player 1...';
-	}
-}
-
-function showWinningScreen(game_state) {
-	const player1Container = document.getElementById('player1Name');
-	const player2Container = document.getElementById('player2Name');
-	const winnerMessage = document.getElementById('winnerMessage');
-	const winningScreen = document.getElementById('winningScreen');
-
-	const player1Score = game_state.score[player1Container.textContent];
-	const player2Score = game_state.score[player2Container.textContent];
-
-	let winnerText = 'Draw!';
-	if (winnerMessage === null)
-		return;
-	if (player1Score > player2Score) {
-		winnerText = `${player1Container.textContent} wins!`;
-	} else if (player2Score > player1Score) {
-		winnerText = `${player2Container.textContent} wins!`;
-	}
-
-	winnerMessage.textContent = winnerText;
-	winningScreen.style.display = 'flex';
-
-	setTimeout(() => {
-		loadPage('play');
-	}, 5000);
+	changeLanguage();
 }

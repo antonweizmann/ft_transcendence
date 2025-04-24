@@ -5,6 +5,7 @@ import { gameLoop, cleanupGame, resetGame } from "./game.js"
 import { startGame, joinGame, initSocket, resetSocket } from "./online_game.js"
 import { getCookie } from "../utils.js";
 import { addGameListeners } from "./listeners_game.js";
+import { changeLanguage } from "../translations.js";
 
 export {
 	ensureInit,
@@ -44,9 +45,7 @@ function ensureInit() {
 
 	if (document.readyState === 'complete') {
 		console.log('Document already complete, initializing now');
-		initGame();
-		window.gameState.initialized = true;
-		window.gameState.cleanup = cleanupGame;
+		listenerGame();
 	} else {
 		console.log('Document not ready, adding listener');
 		document.addEventListener('DOMContentLoaded', listenerGame);
@@ -159,6 +158,7 @@ function changeGameMode() {
 	}
 	setNames();
 	setButtonListeners();
+	changeLanguage();
 }
 
 function setButtonListeners() {
@@ -170,7 +170,7 @@ function setButtonListeners() {
 	if (gameMode === 'online')
 	{
 		lobbyInput.style.display = "flex";
-		joinButton.addEventListener('click', joinGame, { once: true });
+		joinButton.addEventListener('click', joinGame);
 		startButton.addEventListener('click', startGameTimer);
 		if (!localStorage.getItem('username'))
 		{
@@ -186,27 +186,24 @@ function setNames() {
 	const	player1Name = document.getElementById("player1Name");
 	const	player2Name = document.getElementById("player2Name");
 	let		player_name = "Player 1";
-	let		opponent_name = "Player 2";
 
-	if (gameMode !== 'ai2')
+	if (gameMode !== 'ai2') {
 		player_name = localStorage.getItem('username') || 'Player 1';
+		player1Name.setAttribute('data-translate', 'player1');
+		if (player_name !== 'Player 1'){
+			player_name = player_name.charAt(0).toUpperCase() + player_name.slice(1);
+			player1Name.textContent = player_name;
+			player1Name.setAttribute('data-translate', '');
+		}
+	}
 	if (gameMode === 'human')
-		opponent_name = "Player 2";
-	else if (gameMode === 'ai')
-		opponent_name = "AI";
-	else if (gameMode === 'ai2')
-	{
-		player_name = "AI";
-		opponent_name = "AI";
-	}
-	else if (gameMode === 'online')
-	{
-		if (!localStorage.getItem('username'))
-			player_name = "Please Login"
-		opponent_name = 'Waiting for player 2...';
-	}
-	player1Name.textContent = player_name;
-	player2Name.textContent = opponent_name;
+		player2Name.setAttribute('data-translate', 'player2');
+	if (gameMode === 'ai' || gameMode === 'ai2')
+		player2Name.setAttribute('data-translate', 'ai');
+	if (gameMode === 'ai2')
+		player1Name.setAttribute('data-translate', 'ai');
+	if (gameMode === 'online')
+		player2Name.setAttribute('data-translate', 'waitingPlayer2');
 }
 
 function setGameBoardSize(isInitialSetup = false) {
@@ -247,6 +244,8 @@ async function startGameTimer() {
 		gameButton.removeEventListener('click', startGameTimer);
 		gameButton.addEventListener('click', resetGame, { once: true });
 		gameButton.textContent = 'Reset';
+		gameButton.setAttribute('data-translate', 'reset');
 		gameLoop();
 	}
+	changeLanguage();
 }

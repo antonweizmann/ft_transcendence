@@ -1,20 +1,20 @@
 <!DOCTYPE html>
-<div class="container-xxl mt-5">
+<div class="container-sm mx-auto signup-container">
     <!-- Change Info Form -->
-    <form id="changeInfoForm" enctype="multipart/form-data" onsubmit="return validateChangeInfoForm(event)" class="container mt-5">
-        <div class="mb-3 text-center changeInfo-header">
+    <form id="changeInfoForm" enctype="multipart/form-data" onsubmit="return validateChangeInfoForm(event)">
+        <div class="mb-3 signup-header">
             <h2>Settings</h2>
             <h4>Leave empty to keep the old value</h4>
         </div>
 
         <!-- Profile Pic -->
         <div class="mb-3">
-            <div class="row align-items-center file-input-container">
-                <div class="col-md-3 text-center">
-                    <img id="previewImage" src="../assets/default_profile.png" class="profile-pic" alt="Default Profile Picture">
+            <div class="row align-items-center">
+                <div class="col-3 text-center">
+                    <img id="previewImage" src="../assets/default_profile.png" class="object-fit-cover profile-pic" alt="Default Profile Picture">
                 </div>
-                <div class="col-md-9">
-                    <label for="formFile" class="form-label">Pick profile picture</label>
+                <div class="col-9">
+                    <label for="formFile" class="form-label" data-translate="pickPP">Pick a new profile picture</label>
                     <input class="form-control" type="file" id="formFile" onchange="setImagePreview(this)">
                 </div>
             </div>
@@ -22,34 +22,34 @@
 
         <!-- Username -->
         <div class="mb-3">
-            <label id="username" for="changeInfoUsername" class="form-label">Username</label>
+            <label id="username" for="changeInfoUsername" class="form-label" data-translate="username">Username</label>
             <input type="text" class="form-control" placeholder="Choose a new username" id="changeInfoUsername">
         </div>
 
         <!-- Email Address -->
         <div class="mb-3">
-            <label for="changeInfoEmail" class="form-label">Email address</label>
+            <label for="changeInfoEmail" class="form-label" data-translate="email">Email address</label>
             <input class="form-control" placeholder="Enter your new email address" id="changeInfoEmail">
         </div>
 
         <!-- Password -->
         <div class="mb-3">
-            <label for="changeInfoPassword" class="form-label">Password</label>
-            <input type="password" class="form-control" placeholder="Enter your new password" id="changeInfoPassword">
+            <label for="changeInfoPassword" class="form-label" data-translate="newPassword">Password</label>
+            <input type="password" class="form-control" placeholder="Enter your new password" id="changeInfoPassword" data-translate="newPasswordPlaceholder">
         </div>
 
         <!-- Repeat Password -->
         <div class="mb-3">
-            <label for="changeInfoPassword2" class="form-label">Repeat password</label>
-            <input type="password" class="form-control" placeholder="Repeat your new password" id="changeInfoPassword2">
+            <label for="changeInfoPassword2" class="form-label" data-translate="repeatNewPassword">Repeat password</label>
+            <input type="password" class="form-control" placeholder="Repeat your new password" id="changeInfoPassword2" data-translate="repeatNewPasswordPlaceholder">
         </div>
 
         <div class="mb-3">
-            <label for="languageSetting" class="form-label">Select default language</label>
-            <select id="languageSetting" class="form-select" data-translate="languageSelector">
-                <option value="en" data-translate="english">English</option>
-                <option value="es" data-translate="spanish">Español</option>
-                <option value="de" data-translate="german">Deutsch</option>
+            <label for="languageSetting" class="form-label" data-translate="selectLanguage">Select default language</label>
+            <select id="languageSetting" class="form-select"">
+                <option value="en">English</option>
+                <option value="es">Español</option>
+                <option value="de">Deutsch</option>
             </select>
         </div>
 
@@ -59,9 +59,11 @@
             <input type="password" class="form-control" placeholder="Enter your CURRENT password" id="changeInfoPasswordCurrent">
         </div> -->
 
+        <br>
+
         <!-- Submit Button -->
         <div class="text-center">
-            <button type="submit" class="btn btn-primary w-100">Change Info</button>
+            <button type="submit" class="btn btn-primary w-100" data-translate="saveChanges">Save changes</button>
         </div>
     </form>
 </div>

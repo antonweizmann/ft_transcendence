@@ -1,0 +1,11 @@
+{
+	"signUpNow": "Jetzt registrieren!",
+	"pickPP": "Wählen Sie ein Profilbild",
+
+	"firstName": "Vorname",
+	"lastName": "Nachname",
+	"email": "E-Mail-Adresse",
+	"repeatPassword": "Passwort wiederholen",
+	"passwordPlaceholder": "Geben Sie ein sicheres Passwort ein",
+	"repeatPasswordPlaceholder": "Bestätigen Sie Ihr sicheres Passwort"
+}

@@ -1,0 +1,18 @@
+{
+	"signUpNow": "Sign up now!",
+	"pickPP": "Pick a profile picture",
+
+	"firstName": "First name",
+	"lastName": "Last name",
+	"email": "Email address",
+
+	"newUsernamePlaceholder": "Enter a new username",
+	"newEmailPlaceholder": "Enter a new email address",
+	"newPassword": "New password",
+	"repeatNewPassword": "Repeat your new password",
+	"newPasswordPlaceholder": "Enter a new secure password",
+	"repeatPasswordPlaceholder": "Confirm your new secure password",
+
+	"selectLanguage": "Select your language",
+	"saveChanges": "Save changes"
+}

@@ -2,7 +2,7 @@
     <!-- SignUp Form -->
     <form id="signUpForm" enctype="multipart/form-data" onsubmit="return validateSignUpForm(event)">
         <div class="mb-3 signup-header">
-            <h2>Sign up now!</h2>
+            <h2 data-translate="signUpNow">Sign up now!</h2>
         </div>
 
         <!-- Profile Pic -->
@@ -12,7 +12,7 @@
                     <img id="previewImage" src="../assets/default_profile.png" class="object-fit-cover profile-pic" alt="Default Profile Picture">
                 </div>
                 <div class="col-9">
-                    <label for="formFile" class="form-label">Pick profile picture</label>
+                    <label for="formFile" class="form-label" data-translate="pickPP">Pick a profile picture</label>
                     <input class="form-control" type="file" id="formFile" onchange="setImagePreview(this)">
                 </div>
             </div>
@@ -20,42 +20,42 @@
 
         <!-- Username -->
         <div class="mb-3">
-            <label for="signUpUsername" class="form-label">Username</label>
-            <input type="text" class="form-control" placeholder="Choose a username" id="signUpUsername">
+            <label for="signUpUsername" class="form-label" data-translate="username">Username</label>
+            <input type="text" class="form-control" placeholder="CoolUser123" id="signUpUsername">
         </div>
         <div class="mb-3">
-            <label for="signUpFirstname" class="form-label">First Name</label>
-            <input type="text" class="form-control" placeholder="list your first name" id="signUpFirstName">
+            <label for="signUpFirstname" class="form-label" data-translate="firstName">First Name</label>
+            <input type="text" class="form-control" placeholder="Juan" id="signUpFirstName">
         </div>
 
         <div class="mb-3">
-            <label for="signUpLastName" class="form-label">Last Name</label>
-            <input type="text" class="form-control" placeholder="list your last name" id="signUpLastName">
+            <label for="signUpLastName" class="form-label" data-translate="lastName">Last Name</label>
+            <input type="text" class="form-control" placeholder="Perez" id="signUpLastName">
         </div>
 
         <!-- Email Address -->
         <div class="mb-3">
-            <label for="signUpEmail" class="form-label">Email address</label>
-            <input class="form-control" placeholder="email@example.com" id="signUpEmail">
+            <label for="signUpEmail" class="form-label" data-translate="email">Email address</label>
+            <input class="form-control" placeholder="email@mail.com" id="signUpEmail">
         </div>
 
         <!-- Password -->
         <div class="mb-3">
-            <label for="signUpPassword" class="form-label">Password</label>
-            <input type="password" class="form-control" placeholder="Enter your password" id="signUpPassword">
+            <label for="signUpPassword" class="form-label" data-translate="password">Password</label>
+            <input type="password" class="form-control" placeholder="Enter a secure password" id="signUpPassword" data-translate="passwordPlaceholder">
         </div>
 
         <!-- Repeat Password -->
         <div class="mb-3">
-            <label for="signUpPassword2" class="form-label">Repeat Password</label>
-            <input type="password" class="form-control" placeholder="Password" id="signUpPassword2">
+            <label for="signUpPassword2" class="form-label" data-translate="repeatPassword">Repeat password</label>
+            <input type="password" class="form-control" placeholder="Confirm your secure password" id="signUpPassword2" data-translate="confirmPasswordPlaceholder">
         </div>
 
         <br>
 
         <!-- Submit Button -->
         <div class="text-center">
-            <button type="submit" class="btn btn-primary w-100">Sign up</button>
+            <button type="submit" class="btn btn-primary w-100" data-translate="signUp">Sign up</button>
         </div>
     </form>
 </div>

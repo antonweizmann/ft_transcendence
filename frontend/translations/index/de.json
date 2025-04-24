@@ -1,0 +1,27 @@
+{
+	"pongMaster":			"Pong Meister",
+	"home":					"Startseite",
+	"play":					"Spielen",
+	"tournament":			"Turnier",
+
+	"friends":				"Freunde",
+	"login":				"Anmelden",
+	"username":				"Benutzername",
+	"password":				"Passwort",
+	"signUp":				"Registrieren",
+
+	"profile":				"Profil",
+	"myProfile":			"Mein Profil",
+	"settings":				"Einstellungen",
+	"logOut":				"Abmelden",
+
+	"friendsSidebar":		"Freunde Menü",
+	"requestsTab":			"Anfragen",
+	"addFriends":			"Freunde hinzufügen",
+	"newFriendPlaceholder":	"Freundesname eingeben",
+	"searchUser":			"Benutzer suchen",
+	"sendRequest":			"Anfrage senden",
+	"unfriend":				"Entfreunden",
+	"accept":				"Annehmen",
+	"decline":				"Ablehnen"
+}
