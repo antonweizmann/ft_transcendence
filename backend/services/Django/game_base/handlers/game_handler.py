@@ -3,6 +3,7 @@ import threading
 from game_base.models import GameBaseModel
 from django.contrib.auth import get_user_model # type: ignore
 from .core_base_handler import SendFunc, CoreBaseHandler
+from .tournament_handler import TournamentHandlerBase
 
 Player = get_user_model()
 
@@ -15,9 +16,10 @@ class GameHandlerBase(CoreBaseHandler):
 
 	def __init__(self, game_id: str):
 		super().__init__(game_id)
-		self._model: type[GameBaseModel] | None	= None
-		self._id								= game_id
-		self._state								= {'score': {}}
+		self._tournament: type[TournamentHandlerBase] | None	= None
+		self._model: type[GameBaseModel] | None					= None
+		self._state												= {'score': {}}
+		self._id												= game_id
 
 	def join_match(self, player: Player, send_func: SendFunc) -> int | None: # type: ignore
 		return super()._join(player, send_func)
@@ -45,7 +47,17 @@ class GameHandlerBase(CoreBaseHandler):
 # Don't forget to add the following code to the child class when the game is finished:
 		self._is_active = False
 		self._model.status = 'finished'
-		self._model.save()
 
 	def move(self, player_index, move):
 		raise NotImplementedError
+	
+	def tournament_setup(self, tournament):
+		with self._lock:
+			self._tournament = tournament
+			self._model.tournament = tournament._model
+			self._model.save()
+
+	def _update_tournament(self):
+		with self._lock:
+			if self._tournament is not None:
+				self._tournament._update_game_state()

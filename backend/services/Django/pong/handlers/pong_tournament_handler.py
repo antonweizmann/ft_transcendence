@@ -64,7 +64,7 @@ class PongTournamentHandler(TournamentHandlerBase):
 			if len(self._state['pending_matches']) != 0:
 				raise ValueError('There are still pending matches')
 		players_without_match = self.__qualify_players()
-		if match[1] is None:
+		if match and match[1] is None:
 			extra_player = match[0]
 			with self._lock:
 				self._state['leaderboard'][extra_player] += 1
@@ -77,7 +77,7 @@ class PongTournamentHandler(TournamentHandlerBase):
 				self._state['pending_matches'] = []
 				self._is_active = False
 
-	def _update_game_state(self, match_id: str):
+	def _update_game_state(self):
 		latest_match = self._model.matches.order_by('-created_at').first()
 
 		if latest_match:
@@ -88,46 +88,43 @@ class PongTournamentHandler(TournamentHandlerBase):
 		with self._lock:
 			self._state['current_match'] = None
 			self._state['finished_matches'].append(match_results['player_scores'])
+		self._next_match()
 
-	def _start_matches(self):
-		with self._lock:
-			self._model.status = 'in_progress'
-			self._model.save()
-			self._state['leaderboard'] = {player.username: 0 for player in self.players}
-		while True:
-			with self._lock:
-				if not self._is_active:
-					break
-			while True:
-				with self._lock:
-					if not self._state['pending_matches']:
-						break
-					match = self._state['pending_matches'].pop(0)
-				if match[1] is None:
-					break
-				self._start_match(match)
-				if self._send_func is None:
-					return
-				self._send_state()
-				with self._lock:
-					match_id = list(self._state['current_match'].keys())[0]
-				match_id += '_game_pong'
-				game = game_manager.get_game(PongGameHandler, match_id)
-				while True:
-					if game.get_status() == 'finished':
-						with self._lock:
-							self._model.matches.add(game._model)
-							self._model.save()
-						self._update_game_state(match_id)
-						break
-					sleep(3)
-			self._set_next_matches(match)
+	def _tournament_over(self):
 		with self._lock:
 			if self._model:
 				self._model.status = 'finished'
 				self._model.save()
-		if self._send_func != None:
+		if self._send_func is not None:
 			self._send_state()
+			self._send_func({
+				'type': 'tournament_over',
+				'message': 'Tournament is over. Thank you for playing!'
+			})
+
+	def _next_match(self):
+		match = None
+		with self._lock:
+			if not self._is_active:
+				return self._tournament_over()
+			if self._state['pending_matches'] != []:
+				match = self._state['pending_matches'].pop(0)
+		if match is None or match[1] is None:
+			self._set_next_matches(match)
+			return self._next_match()
+		self._start_match(match)
+		if self._send_func is None:
+			return
+		self._send_state()
+
+	def _start_matches(self):
+		with self._lock:
+			self._state['leaderboard'] = {player.username: 0 for player in self.players}
+			match = self._state['pending_matches'].pop(0)
+		self._start_match(match)
+		if self._send_func is None:
+			return
+		self._send_state()
 
 	def _generate_match_id(self):
 		letters = string.ascii_letters + string.digits
@@ -147,3 +144,5 @@ class PongTournamentHandler(TournamentHandlerBase):
 				'message': f'Match between {player_1} and {player_2} starting...',
 				'match_id': match_id
 			}))
+		game_handler = game_manager.get_game(PongGameHandler, match_id + '_game_pong')
+		game_handler.tournament_setup(self)

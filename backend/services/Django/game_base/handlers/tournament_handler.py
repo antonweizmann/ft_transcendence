@@ -53,6 +53,7 @@ class TournamentHandlerBase(CoreBaseHandler):
 					'type': 'ready_update',
 					'players_ready':json.dumps(self._state['is_ready_to_start']),
 				})
+
 	def _start_tournament(self, player_index: int):
 		tournament_thread = threading.Thread(target=self._start_matches)
 		super()._start(player_index, tournament_thread.start)
