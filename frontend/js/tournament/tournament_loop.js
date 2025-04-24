@@ -45,12 +45,8 @@ function setBoardForTournament(match_id, players) {
 	reactivateButton('startGame', startGameTimer);
 	startButtonContainer.classList.remove('col-md');
 	setTimeout(() => {
-		if (players.includes(localStorage.getItem('username'))) {
-			joinGame();
-		}
-		else {
+		if (!players.includes(localStorage.getItem('username')))
 			deactivateButton('startGame');
-			setTimeout(joinGame, 100);
-		}
-	}, 250);
+		joinGame();
+	}, 500);
 }

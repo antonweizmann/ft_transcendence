@@ -63,7 +63,6 @@ function updateLeaderboard(Leaderboard) {
 		const playerElement = document.getElementById(username);
 		if (playerElement) {
 			const rankContainer = playerElement.querySelector('.text-end');
-			let rank;
 
 			if (index === 0) {
 				rankContainer.textContent = '🏆';
@@ -72,7 +71,7 @@ function updateLeaderboard(Leaderboard) {
 			} else if (index === 2) {
 				rankContainer.textContent = '🥉';
 			} else {
-				rank = `${index + 1}th place`;
+				rankContainer.textContent = `${index + 1}th place`;
 			}
 			playerList.removeChild(playerElement);
 			playerList.appendChild(playerElement);
