@@ -45,7 +45,7 @@ class PongTournamentHandler(TournamentHandlerBase):
 		self._set_matches(list(player.username for player in self.players))
 		return super()._start_tournament(player_index)
 
-	def __qualify_players(self) -> set[str]:
+	def __get_top_players(self) -> set[str]:
 		players_without_match = set()
 		with self._lock:
 			max_score = max(self._state['leaderboard'].values())
@@ -58,12 +58,41 @@ class PongTournamentHandler(TournamentHandlerBase):
 				self._model.leaderboard = self._state['leaderboard']
 				self._model.save()
 		return players_without_match
+	
+	def __group_players_by_score(self) -> dict[int, str]:
+		score_groups = {}
+		with self._lock:
+			for player, score in self._state['leaderboard'].items():
+				if score not in score_groups:
+					score_groups[score] = []
+				score_groups[score].append(player)
+		return score_groups
 
-	def _set_next_matches(self, match: list[str, str]):
+	def _set_next_matches_no_tie(self, match: list[str, str]):
 		with self._lock:
 			if len(self._state['pending_matches']) != 0:
 				raise ValueError('There are still pending matches')
-		players_without_match = self.__qualify_players()
+		player_groups = self.__group_players_by_score()
+		if match and match[1] is None:
+			extra_player = match[0]
+			with self._lock:
+				self._state['leaderboard'][extra_player] += 3
+				self._model.leaderboard = self._state['leaderboard']
+				self._model.save()
+			player_groups[self._state["leaderboard"][extra_player]].append(extra_player)
+		player_groups = {score: players for score, players in player_groups.items() if len(players) > 1}
+		for player_group in player_groups.values():
+			self._set_matches(player_group)
+		if len(player_groups) == 0:
+			with self._lock:
+				self._state['pending_matches'] = []
+				self._is_active = False
+
+	def _set_next_matches_elimination(self, match: list[str, str]):
+		with self._lock:
+			if len(self._state['pending_matches']) != 0:
+				raise ValueError('There are still pending matches')
+		players_without_match = self.__get_top_players()
 		if match and match[1] is None:
 			extra_player = match[0]
 			with self._lock:
@@ -77,6 +106,15 @@ class PongTournamentHandler(TournamentHandlerBase):
 				self._state['pending_matches'] = []
 				self._is_active = False
 
+	def __update_leaderboard(self, match_results: dict[str, int]):
+		winner = max(match_results['player_scores'], key=match_results['player_scores'].get)
+		loser = min(match_results['player_scores'], key=match_results['player_scores'].get)
+		with self._lock:
+			self._state['leaderboard'][winner] += 3
+			self._state['leaderboard'][loser] -= 1
+			self._model.leaderboard = self._state['leaderboard']
+			self._model.save()
+
 	def _update_game_state(self):
 		latest_match = self._model.matches.order_by('-created_at').first()
 
@@ -88,6 +126,7 @@ class PongTournamentHandler(TournamentHandlerBase):
 		with self._lock:
 			self._state['current_match'] = None
 			self._state['finished_matches'].append(match_results['player_scores'])
+		self.__update_leaderboard(match_results)
 		self._next_match()
 
 	def _tournament_over(self):
@@ -110,7 +149,7 @@ class PongTournamentHandler(TournamentHandlerBase):
 			if self._state['pending_matches'] != []:
 				match = self._state['pending_matches'].pop(0)
 		if match is None or match[1] is None:
-			self._set_next_matches(match)
+			self._set_next_matches_no_tie(match)
 			return self._next_match()
 		self._start_match(match)
 		if self._send_func is None:
