@@ -64,6 +64,8 @@ function updateLeaderboard(Leaderboard) {
 		if (playerElement) {
 			const rankContainer = playerElement.querySelector('.text-end');
 
+			while (index > 0 && points === sortedLeaderboard[index - 1]?.[1]) 
+				index--;
 			if (index === 0) {
 				rankContainer.textContent = '🏆';
 			} else if (index === 1) {
