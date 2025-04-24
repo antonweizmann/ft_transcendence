@@ -51,11 +51,14 @@ class GameHandlerBase(CoreBaseHandler):
 	def move(self, player_index, move):
 		raise NotImplementedError
 	
-	def tournament_setup(self, tournament):
+	def tournament_setup(self, tournament, players):
 		with self._lock:
 			self._tournament = tournament
 			self._model.tournament = tournament._model
 			self._model.save()
+			for player in players:
+				self._get_index(player)
+			self._model.status = 'in_progress'
 
 	def _update_tournament(self):
 		with self._lock:

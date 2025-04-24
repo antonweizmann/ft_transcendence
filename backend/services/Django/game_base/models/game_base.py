@@ -32,14 +32,7 @@ class GameBaseModel(models.Model):
 		on_delete=models.CASCADE, null=True, blank=True)
 	
 	def __str__(self):
-		player_names = ', '.join(self.players.values_list('username', flat=True))
-		missing_players = self.required_players - self.players.count()
-		if missing_players > 0 and self.status == 'finished':
-			if missing_players < self.required_players:
-				player_names += ', '
-			player_names += ', '.join(['Deleted User'] * missing_players)
-		return (f"Game of {self.game_type} #{self.id} between {player_names}" + # type: ignore
-				f"\n\t- {self.get_status_display()}")
+		return (f"Game of {self.game_type} #{self.id}\n\t- {self.get_status_display()}")
 
 	def save(self, *args, **kwargs):
 		if not self.pk:

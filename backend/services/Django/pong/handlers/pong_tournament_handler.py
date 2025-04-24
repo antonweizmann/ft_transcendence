@@ -138,11 +138,12 @@ class PongTournamentHandler(TournamentHandlerBase):
 	def _start_match(self, match: list[str, str]):
 		match_id = self._generate_match_id()
 		player_1, player_2 = match
+		game_handler = game_manager.get_game(PongGameHandler, match_id + '_game_pong')
+		match = [Player.objects.get(username=player_1), Player.objects.get(username=player_2)]
+		game_handler.tournament_setup(self, match)
 		with self._lock:
 			self._state['current_match'] = {match_id: (player_1, player_2)}
 			self._send_func(json.dumps({
 				'message': f'Match between {player_1} and {player_2} starting...',
 				'match_id': match_id
 			}))
-		game_handler = game_manager.get_game(PongGameHandler, match_id + '_game_pong')
-		game_handler.tournament_setup(self)
