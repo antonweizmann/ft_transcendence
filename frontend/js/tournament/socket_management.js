@@ -1,3 +1,4 @@
+import { refreshAccessToken } from '../authentication.js';
 import { parseTournamentMessage } from './backend_communication.js';
 
 export {
@@ -10,14 +11,15 @@ window.resetTournamentSocket = resetTournamentSocket;
 
 let	tournamentSocket;
 
-function initTournamentSocket() {
+async function initTournamentSocket() {
 	if (tournamentSocket) {
 		console.warn('Tournament Socket already exists');
 		return;
 	}
+	await refreshAccessToken();
 	tournamentSocket = new WebSocket('wss://localhost/ws/tournament/');
 	tournamentSocket.onopen = () => {
-		console.log('Tournament WebSocket connection established');
+		console.log('Requesting tournament connection');
 	};
 	tournamentSocket.onmessage = (event) => {
 		parseTournamentMessage(event.data);

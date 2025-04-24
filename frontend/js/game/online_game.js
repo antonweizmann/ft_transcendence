@@ -15,6 +15,7 @@ import {
 import { changeLanguage } from "../translations.js";
 import { removeErrorMessage, showErrorMessage } from "../error_handling.js";
 import { showWinningScreen } from "../winning_screen.js";
+import { refreshAccessToken } from "../authentication.js";
 
 export {
 	socket,
@@ -66,11 +67,20 @@ function handleMovement() {
 		socket.send(messageJSON);
 };
 
+let retries = 0;
 function joinGame() {
 	if (!socket || socket.readyState !== WebSocket.OPEN) {
-		console.error('Error: WebSocket connection is not open');
+		console.warn('Error: WebSocket connection is not open');
+		if (retries < 10) {
+			setTimeout(joinGame, 100);
+			retries++;
+		} else {
+			console.error('Error: WebSocket connection failed to open');
+			showToast('Error', 'WebSocket connection failed to open, please try again later');
+		}
 		return;
 	}
+	retries = 0;
 	const player_pk = getCookie('user_id');
 	const lobbyIdField = document.getElementById('lobbyId');
 	const lobbyId = lobbyIdField.value;
@@ -83,7 +93,6 @@ function joinGame() {
 	}
 	const message = {
 		action: 'join_lobby',
-		player_pk: player_pk,
 		game_id: lobbyId,
 	};
 	const messageJSON = JSON.stringify(message);
@@ -101,11 +110,12 @@ function sendToSocket(message) {
 	socket.send(message);
 }
 
-function initSocket() {
+async function initSocket() {
 	if (socket) {
 		console.warn('Socket already exists');
 		return;
 	}
+	await refreshAccessToken();
 	socket = new WebSocket('wss://localhost/ws/pong/');
 	socket.onopen = () => {
 		console.log('WebSocket connection established');

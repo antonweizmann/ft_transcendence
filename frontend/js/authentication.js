@@ -1,4 +1,4 @@
-async function refreshAccessToken() {
+export async function refreshAccessToken() {
 	try {
 		const response = await fetch('https://localhost/api/token/refresh/', {
 			method: 'POST',

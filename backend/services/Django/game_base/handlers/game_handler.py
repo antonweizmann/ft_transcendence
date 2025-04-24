@@ -62,5 +62,5 @@ class GameHandlerBase(CoreBaseHandler):
 
 	def _update_tournament(self):
 		with self._lock:
-			if self._tournament is not None:
+			if self._tournament:
 				self._tournament._update_game_state()

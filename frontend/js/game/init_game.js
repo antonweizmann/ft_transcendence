@@ -133,13 +133,12 @@ function initGame() {
 		document.getElementById('onlineOption').style.display = "block";
 }
 
-function changeGameMode() {
+async function changeGameMode() {
 	const difficulty = document.getElementById("difficulty");
 	const difficultyCol = document.getElementById("difficultyCol");
 	const gameModeSelector = document.getElementById('gameMode');
 
 	gameMode = gameModeSelector.value;
-	console.log('Selected game mode:', gameMode);
 	resetGame();
 	if (getCookie('user_id'))
 		document.getElementById('onlineOption').style.display = "block";
@@ -152,7 +151,7 @@ function changeGameMode() {
 	if (gameMode === 'ai' || gameMode === 'ai2')
 		difficulty.addEventListener('change', setAiReaction);
 	if (gameMode === 'online')
-		initSocket();
+		await initSocket();
 	else {
 		resetSocket();
 	}

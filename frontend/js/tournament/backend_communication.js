@@ -92,7 +92,7 @@ function setPlayersReady(playersReady) {
 			if (player === localStorage.getItem('username'))
 				deactivateButton('readyButton');
 		} else if (player === localStorage.getItem('username')) {
-			reactivateButton('readyButton', setPlayerReady);
+			reactivateButton('readyButton');
 		}
 	}
 }
@@ -102,7 +102,6 @@ function joinTournament(lobbyId) {
 	const message = {
 		action: 'join_lobby',
 		tournament_id: lobbyId,
-		player_pk: getCookie('user_id'),
 	};
 	sendToTournamentSocket(message);
 }

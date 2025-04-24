@@ -8,6 +8,9 @@ from game_base.managers.manager_base import ManagerBase
 from game_base.handlers.core_base_handler import CoreBaseHandler
 from typing import Any, Tuple
 
+from player.middleware.jwt_cookie_auth import CookieJWTAuthentication
+from rest_framework_simplejwt.exceptions import InvalidToken # type: ignore
+
 Player = get_user_model()
 
 class CoreBaseConsumer(WebsocketConsumer):
@@ -51,6 +54,33 @@ class CoreBaseConsumer(WebsocketConsumer):
 
 	def connect(self):
 		super().connect()
+		cookies = self.scope['cookies']
+		if not 'access_token' in cookies:
+			self.send(json.dumps({
+				'type': 'error',
+				'details': 'No access token provided, please login.'
+			}))
+			self.close()
+			return
+		access_token = cookies.get('access_token')
+		try:
+			authenticator = CookieJWTAuthentication()
+			validated_token = authenticator.get_validated_token(access_token)
+			self.player = authenticator.get_user(validated_token)
+		except InvalidToken:
+			self.send(json.dumps({
+				'type': 'error',
+				'details': 'Invalid token.'
+			}))
+			self.close()
+			return
+		except Exception as e:
+			self.send(json.dumps({
+				'type': 'error',
+				'details': str(e)
+			}))
+			self.close()
+			return
 		self.send(json.dumps({
 			'message': f'Connected to {self._subtype} {self._type} server.'
 		}))
@@ -111,21 +141,12 @@ class CoreBaseConsumer(WebsocketConsumer):
 					'details': f'You are already in a {self._subtype} {self._type}.'
 				}))
 				return None, None
-			player_pk = text_data_json.get('player_pk')
 			object_id = text_data_json.get(f'{self._type.lower()}_id')
 			try:
-				if not player_pk:
-					self.send(json.dumps({'message': 'Player ID not provided.'}))
-					return None, None
-				player_pk = int(player_pk)
-				self.player = Player.objects.get(pk=player_pk)
 				if self.player == None:
 					raise Player.DoesNotExist
 			except Player.DoesNotExist:
 				self.send(json.dumps({'message': 'Player not found.'}))
-				return None, None
-			except ValueError:
-				self.send(json.dumps({'message': 'Invalid player ID.'}))
 				return None, None
 			self.join_lobby(object_id)
 			return None, None
