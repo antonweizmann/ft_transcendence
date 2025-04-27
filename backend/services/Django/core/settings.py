@@ -40,7 +40,7 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
-ALLOWED_HOSTS = [ 'nginx', 'localhost']
+ALLOWED_HOSTS = [ 'nginx', 'localhost', '*']
 
 
 # Application definition

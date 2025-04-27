@@ -116,7 +116,7 @@ async function initSocket() {
 		return;
 	}
 	await refreshAccessToken();
-	socket = new WebSocket('wss://localhost/ws/pong/');
+	socket = new WebSocket('/ws/pong/');
 	socket.onopen = () => {
 		console.log('WebSocket connection established');
 	};

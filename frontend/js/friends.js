@@ -6,7 +6,7 @@ import { changeLanguage } from "./translations.js";
 
 async function sendRequest(user_id) {
 	try {
-		await authenticatedFetch(`https://localhost/api/player/send_request/${user_id}/`, {
+		await authenticatedFetch(`/api/player/send_request/${user_id}/`, {
 			method: 'POST',
 		});
 		console.log('Request send');
@@ -17,7 +17,7 @@ async function sendRequest(user_id) {
 
 async function acceptRequest(user_id) {
 	try {
-		await authenticatedFetch(`https://localhost/api/player/accept_request/${user_id}/`, {
+		await authenticatedFetch(`/api/player/accept_request/${user_id}/`, {
 			method: 'POST',
 		});
 		console.log('Request accepted');
@@ -28,7 +28,7 @@ async function acceptRequest(user_id) {
 
 async function declineRequest(user_id) {
 	try {
-		await authenticatedFetch(`https://localhost/api/player/reject_request/${user_id}/`, {
+		await authenticatedFetch(`/api/player/reject_request/${user_id}/`, {
 			method: 'POST',
 		});
 		console.log('Request declined');
@@ -39,7 +39,7 @@ async function declineRequest(user_id) {
 
 async function unfriend(user_id) {
 	try {
-		await authenticatedFetch(`https://localhost/api/player/unfriend/${user_id}/`, {
+		await authenticatedFetch(`/api/player/unfriend/${user_id}/`, {
 			method: 'POST'
 		});
 		console.log('Friend removed');
@@ -140,7 +140,7 @@ async function renderFriendList(data) {
 	if (!data || !data.friends)
 		return;
 	const friendPromises = data.friends.map(async (friend) => {
-		await LoadDataFromBackend(`https://localhost/api/player/${friend}/`, (friendData) => {
+		await LoadDataFromBackend(`/api/player/${friend}/`, (friendData) => {
 			console.table(friendData);
 
 		// Check if last_login is within 5 minutes
@@ -178,10 +178,10 @@ function renderFriendRequests(data) {
 }
 
 async function findUsername(username, inputUsername) {
-	const UserData = await LoadDataFromBackend(`https://localhost/api/player/${getCookie('user_id')}/`);
+	const UserData = await LoadDataFromBackend(`/api/player/${getCookie('user_id')}/`);
 	const parentElement = document.getElementById('addFriendsList');
 
-	LoadDataFromBackend(`https://localhost/api/player/list?username=${username}`, (results) => {
+	LoadDataFromBackend(`/api/player/list?username=${username}`, (results) => {
 		if (!UserData)
 			return;
 		if (!results.length) {
@@ -209,8 +209,8 @@ document.addEventListener('DOMContentLoaded', () => {
 	const requestsTabElement = document.getElementById('requests-tab');
 	const searchFriendButton = document.getElementById('searchFriendButton');
 	const friendsTrigger = document.getElementById('friendsTrigger');
-	const loadFriendList = () => LoadDataFromBackend(`https://localhost/api/player/${getCookie('user_id')}/`, renderFriendList);
-	const loadFriendRequests = () => LoadDataFromBackend(`https://localhost/api/player/${getCookie('user_id')}/`, renderFriendRequests);
+	const loadFriendList = () => LoadDataFromBackend(`/api/player/${getCookie('user_id')}/`, renderFriendList);
+	const loadFriendRequests = () => LoadDataFromBackend(`/api/player/${getCookie('user_id')}/`, renderFriendRequests);
 
 	friendsTrigger.addEventListener('click', () => {
 		const activeTab = document.querySelector('#friendsTab .nav-link.active');

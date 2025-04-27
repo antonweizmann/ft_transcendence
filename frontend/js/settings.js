@@ -27,7 +27,7 @@ function setSettingsData(data) {
 	const languageSetting = document.getElementById('languageSetting');
 
 	if (data.profile_picture)
-		profile_pic.src = "https://localhost" + data.profile_picture;
+		profile_pic.src = data.profile_picture;
 	username.setAttribute('placeholder', data.username);
 	email.setAttribute('placeholder', data.email);
 	languageSetting.value = localStorage.getItem('language') || 'en';

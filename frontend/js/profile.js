@@ -30,7 +30,7 @@ function setProfileData(data) {
 	username.textContent = data.username.charAt(0).toUpperCase() + data.username.slice(1);
 	current_user = data.username;
 	if (data.profile_picture)
-		profile_pic.src = "https://localhost" + data.profile_picture;
+		profile_pic.src = data.profile_picture;
 	profile_container.classList.remove('loading');
 }
 

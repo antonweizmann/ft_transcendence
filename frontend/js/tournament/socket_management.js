@@ -17,7 +17,7 @@ async function initTournamentSocket() {
 		return;
 	}
 	await refreshAccessToken();
-	tournamentSocket = new WebSocket('wss://localhost/ws/tournament/');
+	tournamentSocket = new WebSocket('/ws/tournament/');
 	tournamentSocket.onopen = () => {
 		console.log('Requesting tournament connection');
 	};

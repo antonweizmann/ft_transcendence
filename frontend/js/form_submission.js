@@ -23,7 +23,7 @@ async function registerUser(fields)
 			form_data.append(key, field.value);
 	});
 	try {
-		const response = await fetch('https://localhost/api/player/register/', {
+		const response = await fetch('/api/player/register/', {
 			method: 'POST',
 			body: form_data,
 			credentials: 'include',
@@ -69,7 +69,7 @@ async function changeUserInfo(fields)
 	});
 
 	try {
-		const response = await authenticatedFetch(`https://localhost/api/player/${getCookie('user_id')}/`, {
+		const response = await authenticatedFetch(`/api/player/${getCookie('user_id')}/`, {
 		method: 'PUT',
 		body: form_data,
 		credentials: 'include',
@@ -108,7 +108,7 @@ async function loginUser(username, password)
 	form_data.append('username', username);
 	form_data.append('password', password);
 	try {
-		const response = await fetch('https://localhost/api/token/', {
+		const response = await fetch('/api/token/', {
 			method: 'POST',
 			body: form_data,
 		});
@@ -141,7 +141,7 @@ function logoutUser()
 {
 	const gameModeSelector = document.getElementById('gameMode');
 
-	fetch('https://localhost/api/token/logout/', {
+	fetch('/api/token/logout/', {
 		method: 'POST',
 	})
 	localStorage.removeItem('username');
