@@ -14,5 +14,6 @@
 	"repeatNewPasswordPlaceholder": "Bestätigen Sie Ihr neues sicheres Passwort",
 
 	"selectLanguage": "Wählen Sie Ihre Standardsprache",
-	"saveChanges": "Änderungen speichern"
+	"saveChanges": "Änderungen speichern",
+	"leaveEmpty": "Lassen Sie Felder leer, um die Einstellung gleich zu lassen"
 }

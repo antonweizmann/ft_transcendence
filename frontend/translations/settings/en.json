@@ -14,5 +14,6 @@
 	"repeatPasswordPlaceholder": "Confirm your new secure password",
 
 	"selectLanguage": "Select your language",
-	"saveChanges": "Save changes"
+	"saveChanges": "Save changes",
+	"leaveEmpty": "Leave empty to keep the old value"
 }

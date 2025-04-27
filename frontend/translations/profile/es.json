@@ -3,5 +3,6 @@
 	"gamesPlayed": "Partidas jugadas: ",
 	"wins": "Victorias: ",
 	"losses": "Derrotas: ",
-	"winRate": "Tasa de victorias: "
+	"winRate": "Tasa de victorias: ",
+	"noMatches": "No has jugado ninguna partida"
 }

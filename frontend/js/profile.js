@@ -1,4 +1,5 @@
 import { authenticatedFetch } from './authentication.js';
+import { changeLanguage } from './translations.js';
 import { getCookie } from './utils.js';
 
 let current_user = null;
@@ -59,8 +60,9 @@ function setStats(data) {
 	const user = current_user || localStorage.getItem('username');
 
 	if (data.length === 0) {
-		stats_container.innerHTML = "<p>No matches played yet.</p>";
+		stats_container.innerHTML = "<p data-translate='noMatches'>No matches played yet.</p>";
 		stats_container.classList.remove('loading');
+		changeLanguage();
 		return ;
 	}
 	data.forEach(match => {
