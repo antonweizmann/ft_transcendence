@@ -29,10 +29,10 @@ secrets/django_secret_key: | secrets
 
 secrets/django_superuser.env: | secrets
 	@echo "Generating Django default superuser credentials..."
-	@echo "Changing the default superuser credentials is highly recommended."
-	@echo "DJANGO_SUPERUSER_USERNAME=admin" > secrets/django_superuser.env
-	@echo "DJANGO_SUPERUSER_EMAIL=admin@email.com" >> secrets/django_superuser.env
-	@echo "DJANGO_SUPERUSER_PASSWORD=admin" >> secrets/django_superuser.env
+	@echo "Setting the default superuser credentials is needed."
+	@echo "DJANGO_SUPERUSER_USERNAME=" > secrets/django_superuser.env
+	@echo "DJANGO_SUPERUSER_EMAIL=" >> secrets/django_superuser.env
+	@echo "DJANGO_SUPERUSER_PASSWORD=" >> secrets/django_superuser.env
 
 secrets/postgres_password.env: | secrets
 	@echo "Generating Postgres password..."
