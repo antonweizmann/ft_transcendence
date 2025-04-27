@@ -1,6 +1,6 @@
 import { showErrors, removeErrorMessage, showErrorMessage, showErrorInAllFields } from './error_handling.js';
 import { authenticatedFetch } from './authentication.js';
-import { getCookie } from './utils.js';
+import { getCookie, showToast } from './utils.js';
 import { changeGameMode } from './game/init_game.js';
 import { loadPage, updateUIBasedOnAuth } from './main.js';
 
@@ -30,6 +30,11 @@ async function registerUser(fields)
 			mode: 'cors'
 		});
 		if (!response.ok) {
+			if (response.status === 413)
+			{
+				showToast("Error", "Image too large")
+				return false;
+			}
 			const errors = await response.json();
 			showErrors(fields, errors);
 			return false
@@ -66,6 +71,11 @@ async function changeUserInfo(fields)
 		});
 
 		if (!response.ok) {
+			if (response.status === 413)
+				{
+					showToast("Error", "Image too large")
+					return false;
+				}
 			const errors = await response.json();
 			showErrors(fields, errors);
 			return false;
