@@ -4,8 +4,6 @@ import { getCookie } from './utils.js';
 import { LoadDataFromBackend } from "./profile.js";
 import { changeLanguage } from "./translations.js";
 
-const userDetailURL = `https://localhost/api/player/${getCookie('user_id')}/`;
-
 async function sendRequest(user_id) {
 	try {
 		await authenticatedFetch(`https://localhost/api/player/send_request/${user_id}/`, {
@@ -51,18 +49,27 @@ async function unfriend(user_id) {
 }
 
 class Player {
-	constructor(id, username) {
+	constructor(id, username, online) {
 		this.id = id;
 		this.username = username;
+		this.online = online;
 	}
 
 	#createBaseElement() {
 		const playerElement = document.createElement('li');
 		const usernameSpan = document.createElement('span');
+		const statusDot = document.createElement('span');
 
 		playerElement.classList.add('possible-friend-container');
 		usernameSpan.classList.add('friend-name');
 		usernameSpan.textContent = this.username;
+
+		statusDot.classList.add('status-dot');
+		statusDot.classList.add(this.online ? 'online' : 'offline');
+		statusDot.title = this.online ? 'Online' : 'Offline';
+
+
+		playerElement.appendChild(statusDot);
 		playerElement.appendChild(usernameSpan);
 		return playerElement;
 	}
@@ -134,7 +141,18 @@ async function renderFriendList(data) {
 		return;
 	const friendPromises = data.friends.map(async (friend) => {
 		await LoadDataFromBackend(`https://localhost/api/player/${friend}/`, (friendData) => {
-			const friendElement = new Player(friendData.id, friendData.username).createFriendElement();
+			console.table(friendData);
+
+		// Check if last_login is within 5 minutes
+		const lastLoginTime = new Date(friendData.last_login);
+		const now = new Date();
+		const diffInMs = now - lastLoginTime;
+		const diffInMinutes = diffInMs / 1000 / 60;
+
+		const isOnline = diffInMinutes <= 5;
+
+		// Pass online status to Player
+		const friendElement = new Player(friendData.id, friendData.username, isOnline).createFriendElement();
 			if (friendsListElement) {
 				friendsListElement.appendChild(friendElement);
 			}
@@ -160,7 +178,7 @@ function renderFriendRequests(data) {
 }
 
 async function findUsername(username, inputUsername) {
-	const UserData = await LoadDataFromBackend(userDetailURL);
+	const UserData = await LoadDataFromBackend(`https://localhost/api/player/${getCookie('user_id')}/`);
 	const parentElement = document.getElementById('addFriendsList');
 
 	LoadDataFromBackend(`https://localhost/api/player/list?username=${username}`, (results) => {
@@ -191,8 +209,8 @@ document.addEventListener('DOMContentLoaded', () => {
 	const requestsTabElement = document.getElementById('requests-tab');
 	const searchFriendButton = document.getElementById('searchFriendButton');
 	const friendsTrigger = document.getElementById('friendsTrigger');
-	const loadFriendList = () => LoadDataFromBackend(userDetailURL, renderFriendList);
-	const loadFriendRequests = () => LoadDataFromBackend(userDetailURL, renderFriendRequests);
+	const loadFriendList = () => LoadDataFromBackend(`https://localhost/api/player/${getCookie('user_id')}/`, renderFriendList);
+	const loadFriendRequests = () => LoadDataFromBackend(`https://localhost/api/player/${getCookie('user_id')}/`, renderFriendRequests);
 
 	friendsTrigger.addEventListener('click', () => {
 		const activeTab = document.querySelector('#friendsTab .nav-link.active');
