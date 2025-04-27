@@ -34,7 +34,7 @@ function startGame() {
 	};
 	const messageJSON = JSON.stringify(message);
 	sendToSocket(messageJSON);
-	onlineGameLoop();
+	// onlineGameLoop();
 }
 
 //Main Loop
@@ -121,7 +121,7 @@ async function initSocket() {
 		console.log('WebSocket connection established');
 	};
 	socket.onmessage = (event) => {
-			parseMessage(event.data);
+		parseMessage(event.data);
 	};
 	socket.onerror = (error) => {
 		console.error('WebSocket Error:', error);
@@ -156,8 +156,8 @@ function parseMessage(data) {
 	} else if (message.type === 'lobby_update') {
 		updateLobby(message.players);
 	} else if (message.type === 'countdown' && message.message) {
-		if (getAnimationId() === null) 
-			setAnimationId(requestAnimationFrame(onlineGameLoop));
+		if (getAnimationId() === null)
+			onlineGameLoop();
 		deactivateButton('startGame');
 		gameTimer.textContent = message.message[17] + ' : ' + message.message[17];
 		console.log('Received message:', message.message);
