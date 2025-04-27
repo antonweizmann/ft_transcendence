@@ -58,6 +58,7 @@ function setStats(data) {
 	const games_lost = document.getElementById('games_lost');
 	const win_rate = document.getElementById('win_rate');
 	const user = current_user || localStorage.getItem('username');
+	const match_list = document.getElementById('matchHistoryList');
 
 	if (data.length === 0) {
 		stats_container.innerHTML = "<p data-translate='noMatches'>No matches played yet.</p>";
@@ -66,7 +67,18 @@ function setStats(data) {
 		return ;
 	}
 	data.forEach(match => {
-		const winner = getPongWinner(match.scores);
+		let template = document.getElementById('matchHistoryTemplate').cloneNode(true);
+		let player_1 = template.querySelector('#historyPlayer1');
+		let player_2 = template.querySelector('#historyPlayer2');
+		let score = template.querySelector('#historyScore');
+		let match_scores = Object.entries(match.scores)
+
+		player_1.textContent = match_scores[0][0];
+		player_2.textContent = match_scores[1][0];
+		score.textContent = match_scores[0][1] + " : " + match_scores[1][1];
+		match_list.appendChild(template);
+
+		const winner = getPongWinner(match_scores);
 		if (winner[0] === user) {
 			games_won.textContent = parseInt(games_won.textContent) + 1;
 		}
@@ -83,7 +95,7 @@ function setStats(data) {
 }
 
 function getPongWinner(scores) {
-	const	[player1, player2] = Object.entries(scores);
+	const	[player1, player2] = scores;
 	const	[player1_id, player1_score] = player1;
 	const	[player2_id, player2_score] = player2
 

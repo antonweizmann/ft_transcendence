@@ -7,13 +7,14 @@
 		</div>
 	</div>
 	<div class="row justify-content-center mt-4 profile-columns">
-		<article class="card col-md-4 mb-3">
+		<div class="card col-md-4 mb-3">
 			<div class="card-body">
 				<h2 class="card-title text-center" data-translate="stats">Stats</h2>
 				<div id="stats_container" class="loading card-text">
 					<p>
 						<span data-translate="gamesPlayed">Games Played:</span>
 						<span id="games_played">0</span>
+					</p>
 					<p>
 						<span data-translate="wins">Wins:</span>
 						<span id="games_won">0</span>
@@ -27,7 +28,25 @@
 						<span id="win_rate">0%</span>
 					</p>
 				</div>
+				<h2 class="card-title text-center" data-translate="matchHistory">Match history</h2>
+				<div id="history_container" class="card-text">
+					<div id="matchHistoryList" class='container'>
+						<div id="matchHistoryTemplate">
+							<div class="row align-items-center possible-friend-container">
+								<div id="historyPlayer1" class="col">
+									<div>Player1</div>
+								</div>
+								<div id="historyScore" class="col text-center">
+									<div>Score</div>
+								</div>
+								<div id="historyPlayer2" class="col text-end">
+									<div>Player2</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
-		</article>
+		</div>
 	</div>
 </div>
