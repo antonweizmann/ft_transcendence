@@ -50,6 +50,12 @@ async function changeUserInfo(fields)
 {
 	const form_data = new FormData();
 
+	const newLang = fields.find(f => f.key === 'language')?.field.value;
+	if (newLang)
+	{
+		localStorage.setItem('language', newLang);
+		document.getElementById('languageDropdown').value = newLang;
+	}
 	fields.forEach(({ key, field }) => {
 		if (field.type === 'file' && field.files.length > 0)
 			form_data.append(key, field.files[0]);
