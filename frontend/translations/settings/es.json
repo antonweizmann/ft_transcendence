@@ -14,5 +14,6 @@
 	"repeatNewPasswordPlaceholder": "Confirma tu nueva contraseña",
 
 	"selectLanguage": "Selecciona tu idioma",
-	"saveChanges": "Guardar cambios"
+	"saveChanges": "Guardar cambios",
+	"leaveEmpty": "Dejar vacío para mantener el valor antiguo"
 }

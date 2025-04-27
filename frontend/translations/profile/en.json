@@ -3,5 +3,6 @@
 	"gamesPlayed": "Games Played:",
 	"wins": "Wins:",
 	"losses": "Losses:",
-	"winRate": "Win Rate:"
+	"winRate": "Win Rate:",
+	"noMatches": "No matches played yet."
 }
