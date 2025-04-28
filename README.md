@@ -23,7 +23,7 @@ The project emphasizes modularity, security, and extensibility, providing a foun
 - Dockerized Deployment: Launch the entire stack with a single command for easy setup and portability
 
 ## Technology Stack
-<div align="center">
+<span align="center">
 	
 | Category         | Technology                                             |
 |------------------|--------------------------------------------------------|
@@ -35,7 +35,7 @@ The project emphasizes modularity, security, and extensibility, providing a foun
 | Authentication   | JWT |
 | Web Server       | Nginx |
 | Blockchain | Solidity & Etherium |
-</div>
+</span>
 
 ## Quickstart
 
@@ -104,16 +104,16 @@ make stop
 ```
 in another terminal.
 
-### License
+## License
 
-This project is licensed under the GNU General Public License v2.0. See the [LICENSE](https://github.com/JorFik/ft_transcendence/blob/main/LICENSE "GNL 2") file for details.
+This project is licensed under the GNU General Public License v2.0. See the [LICENSE](../main/LICENSE "GNL 2") file for details.
 
-### Credits
+## Credits
 
 Project inspired by the 42 curriculum and built by [JFikents](https://github.com/JorFik), [AWeizman](https://github.com/antonweizmann), [PAdam](https://github.com/myryk31415) and [AJakob](https://github.com/42ajakob)
 Special thanks to the 42 community for guidance and support.
 
-### Contact
+## Contact
 
 For questions or support, open an issue on GitHub or contact the maintainers directly.
 
