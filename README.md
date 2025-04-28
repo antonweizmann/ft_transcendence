@@ -23,7 +23,6 @@ The project emphasizes modularity, security, and extensibility, providing a foun
 - Dockerized Deployment: Launch the entire stack with a single command for easy setup and portability
 
 ## Technology Stack
-<span align="center">
 	
 | Category         | Technology                                             |
 |------------------|--------------------------------------------------------|
@@ -35,7 +34,6 @@ The project emphasizes modularity, security, and extensibility, providing a foun
 | Authentication   | JWT |
 | Web Server       | Nginx |
 | Blockchain | Solidity & Etherium |
-</span>
 
 ## Quickstart
 
