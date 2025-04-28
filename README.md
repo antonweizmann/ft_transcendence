@@ -40,7 +40,7 @@ The project emphasizes modularity, security, and extensibility, providing a foun
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/JorFik/ft_transcendence.git
+git clone https://github.com/JorFik/Pong_Masters.git ft_transcendence
 ```
 1. Go to the new repository in your machine
 ```bash
